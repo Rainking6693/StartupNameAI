@@ -1,0 +1,2 @@
+# StartupNameAI
+AI startup namer
