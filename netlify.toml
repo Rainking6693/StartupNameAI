@@ -1,15 +1,13 @@
 [build]
   base = "client/"
-  publish = "client/build/"
+  publish = "build/"
   command = "npm install && npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
   NPM_VERSION = "9"
-
-# Prevent Netlify from processing root workspace
-[build.processing]
-  skip_processing = false
+  CI = "false"
+  GENERATE_SOURCEMAP = "false"
 
 # SPA routing
 [[redirects]]
