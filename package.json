@@ -1,50 +1,13 @@
 {
-  "name": "startupnamer-org",
+  "name": "startupnamer-ai",
   "version": "1.0.0",
-  "description": "The definitive startup naming authority - AI-powered tools and expert guidance",
   "private": true,
-  "workspaces": [
-    "client",
-    "server"
-  ],
+  "description": "StartupNamer.ai - The AI-powered startup naming authority",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "cd client && npm start",
-    "server": "cd server && npm run dev",
-    "build": "cd client && npm run build",
-    "build:server": "cd server && npm run build",
-    "install:client": "cd client && npm install",
-    "install:server": "cd server && npm install",
-    "install:all": "npm install && npm run install:client && npm run install:server",
-    "test": "npm run test:client && npm run test:server",
-    "test:client": "cd client && npm test",
-    "test:server": "cd server && npm test",
-    "lint": "npm run lint:client && npm run lint:server",
-    "lint:client": "cd client && npm run lint",
-    "lint:server": "cd server && npm run lint",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "dev": "echo 'Use npm run dev from client or server directories'",
+    "info": "echo 'Client: cd client && npm start | Server: cd server && npm run dev'"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/StartupNamerai.git"
-  },
-  "keywords": [
-    "startup",
-    "naming",
-    "ai",
-    "branding",
-    "entrepreneurship",
-    "business-tools"
-  ],
-  "author": "StartupNamer.org",
-  "license": "MIT"
+    "node": ">=18.0.0"
+  }
 }
