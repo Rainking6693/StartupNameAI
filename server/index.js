@@ -5,11 +5,35 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 const morgan = require('morgan');
+const winston = require('winston');
 
-const NameGenerator = require('./services/nameGenerator');
+// Route imports
+const nameRoutes = require('./routes/names');
+const authRoutes = require('./routes/auth');
+const paymentRoutes = require('./routes/payments');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Logger configuration
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
+  ],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple()
+  }));
+}
 
 // Security middleware
 app.use(helmet({
@@ -20,321 +44,197 @@ app.use(helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "https://api.stripe.com"],
+      connectSrc: ["'self'", "https://api.stripe.com", "https://api.openai.com"],
     },
   },
+  crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration for StartupNamer.org
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || ['http://localhost:3000', 'https://startupnamer.org'],
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000').split(',');
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+};
+
+app.use(cors(corsOptions));
 
 // Rate limiting
-const limiter = rateLimit({
-  windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000, // 15 minutes
-  max: process.env.RATE_LIMIT_MAX || 100, // limit each IP to 100 requests per windowMs
+const generalLimiter = rateLimit({
+  windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000,
+  max: process.env.RATE_LIMIT_MAX || 100,
   message: {
     error: 'Too many requests from this IP, please try again later.',
-    retryAfter: 15 * 60 * 1000
+    retryAfter: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000
   },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-// Stricter rate limiting for AI name generation
+// Stricter rate limiting for AI endpoints
 const aiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 AI requests per windowMs
+  windowMs: (process.env.AI_RATE_LIMIT_WINDOW || 15) * 60 * 1000,
+  max: process.env.AI_RATE_LIMIT_MAX || 10,
   message: {
-    error: 'AI name generation limit exceeded. Please try again in 15 minutes or upgrade to premium.',
-    upgrade: 'https://startupnamer.org/pricing'
+    error: 'AI request limit exceeded. Please upgrade to premium for more requests.',
+    upgrade: 'https://startupnamer.org/pricing',
+    retryAfter: (process.env.AI_RATE_LIMIT_WINDOW || 15) * 60 * 1000
+  },
+  skip: (req) => {
+    // Skip rate limiting for premium users (implement your premium check logic)
+    return req.user && req.user.isPremium;
   }
 });
 
-app.use(limiter);
+// Middleware
+app.use(generalLimiter);
 app.use(compression());
-app.use(morgan('combined'));
+app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Initialize services
-const nameGenerator = new NameGenerator();
+// Trust proxy for production
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
     service: 'StartupNamer.org API',
-    version: '1.0.0',
+    version: process.env.API_VERSION || '1.0.0',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    features: {
+      community: process.env.ENABLE_COMMUNITY === 'true',
+      expertReviews: process.env.ENABLE_EXPERT_REVIEWS === 'true',
+      trademarkCheck: process.env.ENABLE_TRADEMARK_CHECK === 'true',
+      domainSuggestions: process.env.ENABLE_DOMAIN_SUGGESTIONS === 'true'
+    }
   });
 });
 
 // API Routes
+app.use('/api/names', aiLimiter, nameRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/payments', paymentRoutes);
 
-/**
- * Generate startup names with educational analysis
- * POST /api/names/generate
- */
-app.post('/api/names/generate', aiLimiter, async (req, res) => {
-  try {
-    const { industry, description, preferences = {} } = req.body;
-
-    // Input validation
-    if (!industry || !description) {
-      return res.status(400).json({
-        error: 'Missing required fields',
-        required: ['industry', 'description'],
-        provided: Object.keys(req.body)
-      });
-    }
-
-    if (description.length < 10) {
-      return res.status(400).json({
-        error: 'Description must be at least 10 characters long',
-        tip: 'Provide more details about your startup for better naming suggestions'
-      });
-    }
-
-    // Generate names with educational content
-    const startTime = Date.now();
-    const results = await nameGenerator.generateNames(industry, description, preferences);
-    const processingTime = Date.now() - startTime;
-
-    res.json({
-      success: true,
-      data: results,
-      meta: {
-        processingTime,
-        requestId: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        industry,
-        totalResults: results.allNames.length,
-        educationalContent: true
-      },
-      authority: {
-        analysisBy: 'StartupNamer.org Expert System',
-        basedOn: '10,000+ successful startup names',
-        methodology: 'Educational AI with expert validation'
-      }
-    });
-
-  } catch (error) {
-    console.error('Name generation error:', error);
-    
-    res.status(500).json({
-      error: 'Name generation failed',
-      message: 'Our AI naming experts are temporarily unavailable',
-      support: 'Contact support@startupnamer.org for assistance',
-      retryIn: '5 minutes'
-    });
-  }
-});
-
-/**
- * Analyze an existing name
- * POST /api/names/analyze
- */
-app.post('/api/names/analyze', aiLimiter, async (req, res) => {
-  try {
-    const { name, industry } = req.body;
-
-    if (!name || !industry) {
-      return res.status(400).json({
-        error: 'Missing required fields',
-        required: ['name', 'industry']
-      });
-    }
-
-    // Analyze the provided name
-    const analysis = await nameGenerator.addEducationalAnalysis({ name }, industry);
-
-    res.json({
-      success: true,
-      analysis: analysis.labAnalysis,
-      lessons: analysis.namingLesson,
-      recommendation: analysis.recommendationLevel,
-      meta: {
-        analyzedName: name,
-        industry,
-        analysisDate: new Date().toISOString()
-      }
-    });
-
-  } catch (error) {
-    console.error('Name analysis error:', error);
-    
-    res.status(500).json({
-      error: 'Name analysis failed',
-      message: 'Unable to analyze the provided name',
-      support: 'Contact support@startupnamer.org'
-    });
-  }
-});
-
-/**
- * Get industry insights and trends
- * GET /api/insights/:industry
- */
-app.get('/api/insights/:industry', (req, res) => {
-  try {
-    const { industry } = req.params;
-    const insights = nameGenerator.getIndustryInsights(industry);
-
-    res.json({
-      success: true,
-      industry,
-      insights,
-      authority: 'Based on analysis of 1,000+ successful startups in ' + industry,
-      lastUpdated: new Date().toISOString()
-    });
-
-  } catch (error) {
-    console.error('Industry insights error:', error);
-    
-    res.status(500).json({
-      error: 'Unable to fetch industry insights',
-      availableIndustries: ['tech', 'fintech', 'healthcare', 'ecommerce', 'saas']
-    });
-  }
-});
-
-/**
- * Check domain availability (mock endpoint)
- * POST /api/domains/check
- */
-app.post('/api/domains/check', async (req, res) => {
-  try {
-    const { domains } = req.body;
-
-    if (!Array.isArray(domains)) {
-      return res.status(400).json({
-        error: 'Domains must be an array',
-        example: { domains: ['example.com', 'example.io'] }
-      });
-    }
-
-    // Mock domain availability check
-    const results = domains.map(domain => ({
-      domain,
-      available: Math.random() > 0.6, // Mock availability
-      price: Math.floor(Math.random() * 50) + 10,
-      registrar: 'Namecheap',
-      alternatives: [
-        domain.replace('.com', '.io'),
-        domain.replace('.com', '.co'),
-        domain.replace('.com', '.ai')
-      ].slice(0, 2)
-    }));
-
-    res.json({
-      success: true,
-      results,
-      note: 'Domain availability changes rapidly. Check with registrar for real-time status.',
-      registrarPartner: 'Namecheap.com'
-    });
-
-  } catch (error) {
-    console.error('Domain check error:', error);
-    
-    res.status(500).json({
-      error: 'Domain availability check failed',
-      message: 'Please try again or check manually with a domain registrar'
-    });
-  }
-});
-
-/**
- * Educational content endpoints
- */
-
-// Get naming guides
-app.get('/api/guides', (req, res) => {
+// Root endpoint
+app.get('/', (req, res) => {
   res.json({
-    success: true,
-    guides: [
-      {
-        id: 'complete-startup-naming-guide',
-        title: 'The Complete Guide to Startup Naming',
-        description: 'Everything entrepreneurs need to know about naming their startup',
-        url: '/guides/complete-startup-naming-guide',
-        readTime: '15 min',
-        topics: ['Psychology', 'Legal', 'Branding', 'Domain Strategy']
-      },
-      {
-        id: 'industry-naming-patterns',
-        title: 'Industry-Specific Naming Patterns',
-        description: 'How successful startups name themselves by industry',
-        url: '/guides/industry-naming-patterns',
-        readTime: '10 min',
-        topics: ['Tech', 'Fintech', 'Healthcare', 'SaaS']
-      },
-      {
-        id: 'trademark-domain-guide',
-        title: 'Trademark and Domain Strategy',
-        description: 'Legal considerations and domain acquisition strategies',
-        url: '/guides/trademark-domain-guide',
-        readTime: '12 min',
-        topics: ['Legal', 'Domains', 'International', 'Protection']
-      }
-    ],
-    totalGuides: 15,
-    categories: ['Getting Started', 'Legal & Domains', 'Industry Specific', 'Advanced Strategies']
-  });
-});
-
-// Payment webhook (Stripe)
-app.post('/api/payments/webhook', express.raw({type: 'application/json'}), (req, res) => {
-  // Handle Stripe webhooks for subscription management
-  // Implementation depends on your payment flow
-  res.json({ received: true });
-});
-
-// Error handling middleware
-app.use((error, req, res, next) => {
-  console.error('Unhandled error:', error);
-  
-  res.status(500).json({
-    error: 'Internal server error',
-    message: 'Something went wrong on our end',
-    support: 'support@startupnamer.org',
-    timestamp: new Date().toISOString()
+    message: 'Welcome to StartupNamer.org API',
+    authority: 'The definitive startup naming authority',
+    documentation: 'https://docs.startupnamer.org',
+    version: process.env.API_VERSION || '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      names: '/api/names/*',
+      auth: '/api/auth/*',
+      payments: '/api/payments/*'
+    }
   });
 });
 
 // 404 handler
 app.use((req, res) => {
+  logger.warn(`404 - ${req.method} ${req.originalUrl}`);
+  
   res.status(404).json({
     error: 'Endpoint not found',
+    message: `The endpoint ${req.method} ${req.originalUrl} does not exist`,
     available: [
+      'GET /api/health',
       'POST /api/names/generate',
-      'POST /api/names/analyze', 
-      'GET /api/insights/:industry',
-      'POST /api/domains/check',
-      'GET /api/guides',
-      'GET /api/health'
+      'POST /api/names/analyze',
+      'GET /api/names/history',
+      'POST /api/auth/register',
+      'POST /api/auth/login',
+      'POST /api/payments/create-intent'
     ],
     documentation: 'https://docs.startupnamer.org'
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`
-🚀 StartupNamer.org API Server
-📍 Running on port ${PORT}
-🌍 Environment: ${process.env.NODE_ENV || 'development'}
-🔒 Security: Enabled
-⚡ Rate limiting: Active
-📚 Educational AI: Ready
-🎯 Authority positioning: Active
+// Global error handling middleware
+app.use((error, req, res, next) => {
+  logger.error(`Global error handler: ${error.message}`, {
+    stack: error.stack,
+    url: req.originalUrl,
+    method: req.method,
+    ip: req.ip,
+    userAgent: req.get('User-Agent')
+  });
+  
+  // Don't expose internal errors in production
+  if (process.env.NODE_ENV === 'production') {
+    res.status(500).json({
+      error: 'Internal server error',
+      message: 'Something went wrong on our end',
+      support: 'support@startupnamer.org',
+      timestamp: new Date().toISOString()
+    });
+  } else {
+    res.status(500).json({
+      error: 'Internal server error',
+      message: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 
-API Documentation: http://localhost:${PORT}/api/health
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM signal received: closing HTTP server');
+  server.close(() => {
+    logger.info('HTTP server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT signal received: closing HTTP server');
+  server.close(() => {
+    logger.info('HTTP server closed');
+    process.exit(0);
+  });
+});
+
+// Unhandled promise rejection handler
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Start server
+const server = app.listen(PORT, () => {
+  logger.info(`
+🚀 StartupNamer.org API Server Started
+📍 Port: ${PORT}
+🌍 Environment: ${process.env.NODE_ENV || 'development'}
+🔒 Security: Enhanced with Helmet
+⚡ Rate limiting: Active
+📚 AI-powered naming: Ready
+🎯 Authority positioning: Enabled
+📊 Logging: Winston configured
+🔧 Health check: /api/health
+
+${process.env.NODE_ENV === 'development' ? 
+  `🔗 Local URL: http://localhost:${PORT}` : 
+  '🔗 Production server running'}
   `);
 });
 
