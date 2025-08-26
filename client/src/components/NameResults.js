@@ -28,6 +28,156 @@ import {
 } from 'lucide-react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
+// Dynamic name generation based on user input
+const generateNamesForInput = (formData) => {
+  if (!formData) return [];
+  
+  const industryPatterns = {
+    tech: {
+      prefixes: ['Smart', 'Cloud', 'Data', 'Sync', 'Flow', 'Core', 'Pixel', 'Neo', 'Quantum', 'Fusion', 'Digital', 'Cyber', 'Tech', 'Web', 'Net'],
+      suffixes: ['Hub', 'Lab', 'Core', 'Flow', 'Sync', 'Edge', 'Point', 'Stream', 'Works', 'Tech', 'Soft', 'Ware', 'Pro', 'Zone', 'Base'],
+      adjectives: ['Advanced', 'Intelligent', 'Automated', 'Streamlined', 'Connected', 'Innovative']
+    },
+    fintech: {
+      prefixes: ['Pay', 'Coin', 'Bank', 'Fund', 'Vault', 'Trust', 'Secure', 'Capital', 'Mint', 'Ledger', 'Crypto', 'Block', 'Chain', 'Trade', 'Invest'],
+      suffixes: ['Pay', 'Wallet', 'Bank', 'Trade', 'Invest', 'Finance', 'Capital', 'Fund', 'Exchange', 'Vault', 'Ledger', 'Chain', 'Coin', 'Token', 'Credit'],
+      adjectives: ['Secure', 'Trusted', 'Smart', 'Digital', 'Instant', 'Global']
+    },
+    health: {
+      prefixes: ['Care', 'Vital', 'Wellness', 'Heal', 'Fit', 'Life', 'Mind', 'Body', 'Pure', 'Balance', 'Health', 'Med', 'Bio', 'Wellness', 'Cure'],
+      suffixes: ['Care', 'Health', 'Wellness', 'Life', 'Fit', 'Med', 'Bio', 'Vital', 'Pure', 'Balance', 'Heal', 'Clinic', 'Lab', 'Center', 'Plus'],
+      adjectives: ['Healthy', 'Vital', 'Pure', 'Natural', 'Wellness', 'Active']
+    },
+    ecommerce: {
+      prefixes: ['Shop', 'Buy', 'Cart', 'Market', 'Store', 'Trade', 'Sell', 'Goods', 'Deal', 'Plaza', 'Retail', 'Sale', 'Commerce', 'Merchant', 'Vendor'],
+      suffixes: ['Shop', 'Store', 'Market', 'Mall', 'Plaza', 'Cart', 'Bay', 'Depot', 'Hub', 'Center', 'Place', 'Zone', 'World', 'Land', 'Express'],
+      adjectives: ['Quick', 'Fast', 'Easy', 'Smart', 'Best', 'Prime']
+    }
+  };
+  
+  const styleModifiers = {
+    modern: {
+      suffixes: ['Hub', 'Lab', 'Core', 'Flow', 'Sync', 'Edge', 'Point', 'Stream', 'Works', 'Tech'],
+      tone: 'cutting-edge and contemporary'
+    },
+    professional: {
+      suffixes: ['Pro', 'Solutions', 'Systems', 'Group', 'Corp', 'Partners', 'Associates', 'Consulting', 'Services', 'Company'],
+      tone: 'established and trustworthy'
+    },
+    creative: {
+      suffixes: ['Studio', 'Labs', 'Craft', 'Forge', 'Space', 'House', 'Collective', 'Workshop', 'Factory', 'Academy'],
+      tone: 'innovative and artistic'
+    },
+    classic: {
+      suffixes: ['Group', 'Corp', 'Inc', 'Company', 'Enterprises', 'Industries', 'Holdings', 'Ventures', 'Partners', 'Associates'],
+      tone: 'timeless and authoritative'
+    }
+  };
+  
+  const industry = industryPatterns[formData.industry] || industryPatterns.tech;
+  const style = styleModifiers[formData.style] || styleModifiers.modern;
+  
+  const names = [];
+  let nameId = 1;
+  
+  // Generate keyword-based names
+  formData.keywords.forEach(keyword => {
+    const cleanKeyword = keyword.trim().replace(/[^a-zA-Z]/g, '');
+    if (cleanKeyword) {
+      // Keyword + Style Suffix
+      style.suffixes.slice(0, 3).forEach(suffix => {
+        const name = cleanKeyword + suffix;
+        names.push(createNameEntry(nameId++, name, formData, 'keyword-based'));
+      });
+      
+      // Industry Prefix + Keyword
+      industry.prefixes.slice(0, 2).forEach(prefix => {
+        const name = prefix + cleanKeyword;
+        names.push(createNameEntry(nameId++, name, formData, 'prefix-keyword'));
+      });
+    }
+  });
+  
+  // Generate industry + style combinations
+  for (let i = 0; i < Math.min(5, industry.prefixes.length); i++) {
+    for (let j = 0; j < Math.min(3, style.suffixes.length); j++) {
+      const name = industry.prefixes[i] + style.suffixes[j];
+      names.push(createNameEntry(nameId++, name, formData, 'industry-style'));
+    }
+  }
+  
+  // Generate premium single-word options
+  const premiumWords = ['Zenith', 'Apex', 'Pinnacle', 'Summit', 'Peak', 'Prime', 'Elite', 'Stellar', 'Nexus', 'Vortex', 'Quantum', 'Fusion', 'Axiom', 'Paradigm', 'Catalyst'];
+  premiumWords.slice(0, 5).forEach(word => {
+    names.push(createNameEntry(nameId++, word, formData, 'premium', true));
+  });
+  
+  // Shuffle and return top results
+  return names.sort(() => Math.random() - 0.5).slice(0, 50);
+};
+
+const createNameEntry = (id, name, formData, type, isPremium = false) => {
+  const baseScore = 7 + Math.random() * 2.5;
+  const premiumBonus = isPremium ? 0.5 : 0;
+  const lengthPenalty = name.length > 12 ? -0.5 : name.length < 6 ? 0.3 : 0;
+  
+  const brandabilityScore = Math.min(10, Math.max(1, baseScore + premiumBonus + lengthPenalty));
+  const isAvailable = Math.random() > 0.4;
+  const isPremiumDomain = Math.random() > 0.8;
+  
+  // Generate description based on name and industry
+  const explanations = {
+    'keyword-based': `Incorporates your key term "${formData.keywords[0]}" with ${formData.style} styling, creating direct relevance to your ${formData.industry} business.`,
+    'prefix-keyword': `Combines industry-specific terminology with your target keyword, establishing clear positioning in the ${formData.industry} space.`,
+    'industry-style': `Perfect blend of ${formData.industry} industry signals with ${formData.style} aesthetic, appealing to your target market.`,
+    'premium': `Single-word premium name suggesting excellence and authority. Ideal for building a memorable ${formData.industry} brand.`
+  };
+  
+  return {
+    id,
+    name,
+    brandabilityScore: Math.round(brandabilityScore * 10) / 10,
+    domainAvailable: isAvailable,
+    domainPrice: isAvailable ? (isPremiumDomain ? Math.floor(Math.random() * 500) + 100 : Math.floor(Math.random() * 50) + 12) : null,
+    trademarkRisk: ['low', 'low', 'medium', 'high'][Math.floor(Math.random() * 4)],
+    explanation: explanations[type] || `Thoughtfully crafted name for your ${formData.industry} startup with ${formData.style} appeal.`,
+    psychology: `Appeals to ${formData.targetAudience || 'your target audience'} through ${formData.style} positioning and ${formData.industry} industry associations.`,
+    seoScore: Math.round((6 + Math.random() * 3.5) * 10) / 10,
+    memorability: Math.round((7 + Math.random() * 2.5) * 10) / 10,
+    pronunciation: name.length <= 8 ? 'Easy' : name.length <= 12 ? 'Moderate' : 'Complex',
+    extensions: {
+      com: Math.random() > 0.3,
+      io: Math.random() > 0.5,
+      ai: Math.random() > 0.7,
+      org: Math.random() > 0.4
+    },
+    premium: isPremium,
+    industry: formData.industry,
+    style: formData.style,
+    competitors: generateCompetitors(name, formData.industry),
+    socialHandles: {
+      twitter: Math.random() > 0.6,
+      instagram: Math.random() > 0.5,
+      linkedin: Math.random() > 0.4
+    },
+    lengthScore: Math.max(1, Math.min(10, 11 - (name.length / 2))),
+    internationalFriendly: !name.match(/[^a-zA-Z]/) && name.length <= 10,
+    logoability: Math.round((7 + Math.random() * 2.5) * 10) / 10
+  };
+};
+
+const generateCompetitors = (name, industry) => {
+  const competitors = {
+    tech: ['TechFlow', 'DataCore', 'CloudSync', 'DevHub', 'CodeLab'],
+    fintech: ['PayCore', 'CoinBase', 'TradeTech', 'FinanceFlow', 'CryptoHub'],
+    health: ['HealthTech', 'MedCore', 'WellnessHub', 'CareFlow', 'VitalTech'],
+    ecommerce: ['ShopTech', 'RetailHub', 'CommerceFlow', 'MarketCore', 'SalesTech']
+  };
+  
+  const industryCompetitors = competitors[industry] || competitors.tech;
+  return industryCompetitors.slice(0, 3);
+};
+
 const NameResults = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams();
@@ -42,151 +192,25 @@ const NameResults = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [viewMode, setViewMode] = useState('free'); // 'free' or 'premium'
 
-  // Enhanced mock data with comprehensive analysis
-  const mockResults = [
-    {
-      id: 1,
-      name: 'StreamFlow',
-      brandabilityScore: 9.2,
-      domainAvailable: true,
-      domainPrice: 12.99,
-      trademarkRisk: 'low',
-      explanation: 'Combines movement and technology, suggesting smooth data processing and continuous innovation. The word "flow" creates positive associations with seamless user experiences.',
-      psychology: 'Flow states trigger productivity associations. "Stream" suggests modernity while "Flow" implies ease of use, reducing customer friction anxiety.',
-      seoScore: 8.5,
-      memorability: 9.1,
-      pronunciation: 'Easy',
-      extensions: { com: true, io: true, ai: false, org: true },
-      premium: false,
-      industry: 'Technology',
-      style: 'Modern',
-      competitors: ['DataFlow', 'StreamTech', 'FlowCore'],
-      socialHandles: { twitter: true, instagram: false, linkedin: true },
-      lengthScore: 9.0,
-      internationalFriendly: true,
-      logoability: 8.8
-    },
-    {
-      id: 2,
-      name: 'DataVault',
-      brandabilityScore: 8.8,
-      domainAvailable: true,
-      domainPrice: 15.99,
-      trademarkRisk: 'low',
-      explanation: 'Security-focused name that builds immediate trust while emphasizing data protection capabilities. Perfect for B2B enterprises concerned about data security.',
-      psychology: 'Vault implies Fort Knox-level security and value storage, directly addressing customer anxiety about data breaches and privacy concerns.',
-      seoScore: 8.2,
-      memorability: 8.7,
-      pronunciation: 'Easy',
-      extensions: { com: true, io: false, ai: true, org: true },
-      premium: false,
-      industry: 'Technology',
-      style: 'Professional',
-      competitors: ['SecureData', 'VaultTech', 'DataGuard'],
-      socialHandles: { twitter: false, instagram: true, linkedin: true },
-      lengthScore: 8.5,
-      internationalFriendly: true,
-      logoability: 8.9
-    },
-    {
-      id: 3,
-      name: 'Nexus',
-      brandabilityScore: 9.5,
-      domainAvailable: false,
-      domainPrice: null,
-      trademarkRisk: 'medium',
-      explanation: 'Premium single-word name suggesting connection and centrality in business ecosystems. Commands authority and implies being the hub of important networks.',
-      psychology: 'Latin roots create intellectual authority. Suggests being the center of important connections, appealing to power and influence motivations.',
-      seoScore: 9.2,
-      memorability: 9.8,
-      pronunciation: 'Easy',
-      extensions: { com: false, io: true, ai: true, org: false },
-      premium: true,
-      industry: 'Technology',
-      style: 'Classic',
-      competitors: ['Hub', 'Connect', 'Central'],
-      socialHandles: { twitter: false, instagram: false, linkedin: false },
-      lengthScore: 10.0,
-      internationalFriendly: true,
-      logoability: 9.5
-    },
-    {
-      id: 4,
-      name: 'CloudSync',
-      brandabilityScore: 7.9,
-      domainAvailable: false,
-      domainPrice: null,
-      trademarkRisk: 'high',
-      explanation: 'Descriptive name clearly communicating cloud synchronization services. Instantly understood by technical audiences.',
-      psychology: 'Familiar terms reduce cognitive load and learning curve. Immediately understood by target B2B audience, reducing sales friction.',
-      seoScore: 7.5,
-      memorability: 7.2,
-      pronunciation: 'Easy',
-      extensions: { com: false, io: false, ai: false, org: true },
-      premium: false,
-      industry: 'Technology',
-      style: 'Modern',
-      competitors: ['CloudFlow', 'SyncTech', 'CloudBridge'],
-      socialHandles: { twitter: false, instagram: true, linkedin: false },
-      lengthScore: 7.8,
-      internationalFriendly: false,
-      logoability: 6.5
-    },
-    {
-      id: 5,
-      name: 'Zenith',
-      brandabilityScore: 9.7,
-      domainAvailable: true,
-      domainPrice: 189.99,
-      trademarkRisk: 'low',
-      explanation: 'Premium name suggesting peak performance and highest achievement. Single-word names like this are extremely valuable for building iconic brands.',
-      psychology: 'Peak/summit associations trigger achievement motivation and aspiration. Appeals to success-driven entrepreneurs and ambitious customers.',
-      seoScore: 9.0,
-      memorability: 9.9,
-      pronunciation: 'Easy',
-      extensions: { com: true, io: true, ai: true, org: true },
-      premium: true,
-      industry: 'Technology',
-      style: 'Classic',
-      competitors: ['Peak', 'Summit', 'Apex'],
-      socialHandles: { twitter: true, instagram: true, linkedin: true },
-      lengthScore: 10.0,
-      internationalFriendly: true,
-      logoability: 9.8
-    },
-    {
-      id: 6,
-      name: 'InnovateLab',
-      brandabilityScore: 8.4,
-      domainAvailable: true,
-      domainPrice: 24.99,
-      trademarkRisk: 'medium',
-      explanation: 'Innovation-focused name that appeals to forward-thinking companies. "Lab" suggests experimentation and cutting-edge development.',
-      psychology: 'Innovation triggers progress associations while Lab implies scientific rigor and breakthrough discoveries.',
-      seoScore: 7.8,
-      memorability: 8.2,
-      pronunciation: 'Easy',
-      extensions: { com: true, io: true, ai: false, org: true },
-      premium: false,
-      industry: 'Technology',
-      style: 'Modern',
-      competitors: ['TechLab', 'InnovateNow', 'LabTech'],
-      socialHandles: { twitter: true, instagram: false, linkedin: true },
-      lengthScore: 7.2,
-      internationalFriendly: false,
-      logoability: 8.1
-    }
-  ];
-
   useEffect(() => {
+    // Get form data from location state
+    const formData = location.state?.formData;
+    
+    if (!formData) {
+      console.error('No form data found, redirecting to naming tool');
+      navigate('/naming-tool');
+      return;
+    }
+    
     // Simulate API loading with realistic delay
     const timer = setTimeout(() => {
-      setResults(mockResults);
+      const generatedNames = generateNamesForInput(formData);
+      setResults(generatedNames);
       setLoading(false);
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [location.state, navigate]);
 
   // Enhanced filtering logic
   const filteredResults = results.filter(name => {
@@ -290,7 +314,12 @@ const NameResults = () => {
                 <span className="text-xl font-bold bg-gradient-to-r from-sky-600 to-amber-600 bg-clip-text text-transparent">
                   Your Startup Names
                 </span>
-                <div className="text-sm text-slate-500">{displayResults.length} names • Technology • Modern</div>
+                <div className="text-sm text-slate-500">
+                  {displayResults.length} names • {location.state?.formData?.industry || 'Technology'} • {location.state?.formData?.style || 'Modern'}
+                  {location.state?.formData?.keywords?.length > 0 && (
+                    <span> • Keywords: {location.state.formData.keywords.slice(0, 2).join(', ')}{location.state.formData.keywords.length > 2 && '...'}</span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -307,6 +336,53 @@ const NameResults = () => {
           </div>
         </div>
       </div>
+
+      {/* Input Summary */}
+      {location.state?.formData && (
+        <div className="px-6 py-4 bg-white/60 backdrop-blur-sm border-b border-white/20">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                <div>
+                  <span className="text-sm font-medium text-slate-600">Industry:</span>
+                  <span className="ml-2 px-3 py-1 bg-sky-100 text-sky-800 rounded-full text-sm font-semibold capitalize">
+                    {location.state.formData.industry}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-slate-600">Style:</span>
+                  <span className="ml-2 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-semibold capitalize">
+                    {location.state.formData.style}
+                  </span>
+                </div>
+                {location.state.formData.keywords?.length > 0 && (
+                  <div>
+                    <span className="text-sm font-medium text-slate-600">Keywords:</span>
+                    <div className="inline-flex ml-2 space-x-1">
+                      {location.state.formData.keywords.slice(0, 3).map((keyword, idx) => (
+                        <span key={idx} className="px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
+                          {keyword}
+                        </span>
+                      ))}
+                      {location.state.formData.keywords.length > 3 && (
+                        <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
+                          +{location.state.formData.keywords.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => navigate('/naming-tool')}
+                className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                Edit Preferences
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Enhanced Results Summary */}
       <div className="px-6 py-8">

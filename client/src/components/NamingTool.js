@@ -126,16 +126,22 @@ const NamingTool = () => {
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
-      const names = await generateNames(formData);
-      setGeneratedNames(names);
-      // Navigate to results with session ID
+      // Generate session ID for tracking
       const sessionId = Date.now().toString();
+      
+      // Store session data in localStorage for backup
       localStorage.setItem(`session_${sessionId}`, JSON.stringify({
         formData,
-        names,
         timestamp: new Date().toISOString()
       }));
-      navigate(`/results/${sessionId}`);
+      
+      // Navigate to results page with form data in location.state
+      navigate(`/results/${sessionId}`, {
+        state: {
+          formData,
+          sessionId
+        }
+      });
     } catch (error) {
       console.error('Generation failed:', error);
       // Show error toast here
