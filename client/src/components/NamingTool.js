@@ -149,7 +149,7 @@ const NamingTool = () => {
       case 2: return formData.style;
       case 3: return formData.keywords.length > 0;
       case 4: return formData.description.trim().length > 10;
-      case 5: return formData.packageType;
+      case 5: return true; // Review step - always ready
       default: return false;
     }
   };
@@ -361,50 +361,71 @@ const NamingTool = () => {
           </div>
         )}
 
-        {/* Step 5: Package Selection */}
+        {/* Step 5: Review & Generate */}
         {currentStep === 5 && (
           <div className="space-y-8">
-            <div className="text-center">
-              <TrendingUp className="w-16 h-16 text-green-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">Choose your package</h2>
-              <p className="text-xl text-slate-600">Select the perfect plan for your naming needs</p>
+            <div className="text-center mb-12">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-4xl font-bold text-slate-800 mb-4">Ready to Generate!</h2>
+              <p className="text-xl text-slate-600">We'll create perfect startup names based on your preferences</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              {packages.map((pkg) => (
-                <button
-                  key={pkg.id}
-                  onClick={() => setFormData({ ...formData, packageType: pkg.id })}
-                  className={`p-8 rounded-2xl border-2 transition-all duration-300 text-left hover:shadow-lg relative ${
-                    formData.packageType === pkg.id
-                      ? 'border-sky-400 bg-sky-50 shadow-lg transform scale-105'
-                      : 'border-slate-200 bg-white/80 hover:border-sky-300'
-                  } ${pkg.popular ? 'ring-2 ring-amber-400' : ''}`}
-                >
-                  {pkg.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <span className="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-sky-200">
+                <h3 className="text-xl font-bold text-slate-800 mb-6">Your Requirements:</h3>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
+                    <span className="text-slate-600">Industry:</span>
+                    <span className="font-semibold text-slate-800 capitalize">{formData.industry}</span>
+                  </div>
                   
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold text-slate-800 mb-2">{pkg.name}</h3>
-                    <div className="text-4xl font-bold text-slate-800 mb-2">{pkg.price}</div>
-                    <div className="text-slate-600">{pkg.names} names included</div>
+                  <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
+                    <span className="text-slate-600">Style:</span>
+                    <span className="font-semibold text-slate-800 capitalize">{formData.style}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-start p-4 bg-slate-50 rounded-xl">
+                    <span className="text-slate-600">Keywords:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.keywords.map(keyword => (
+                        <span key={keyword} className="bg-sky-100 text-sky-800 px-2 py-1 rounded-full text-sm font-medium">
+                          {keyword}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
-                  <ul className="space-y-3">
-                    {pkg.features.map((feature, index) => (
-                      <li key={index} className="flex items-center text-sm text-slate-700">
-                        <CheckCircle className="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
+                  <div className="p-4 bg-slate-50 rounded-xl">
+                    <div className="text-slate-600 mb-2">Description:</div>
+                    <div className="font-medium text-slate-800 text-sm">{formData.description}</div>
+                  </div>
+                </div>
+
+                <div className="mt-8 p-6 bg-gradient-to-r from-sky-50 to-amber-50 rounded-xl border border-sky-200">
+                  <h4 className="font-bold text-slate-800 mb-2">What you'll get:</h4>
+                  <ul className="space-y-2 text-slate-600">
+                    <li className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <span>10 AI-generated names (free preview)</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <span>Basic brandability scores</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      <span>Domain availability check</span>
+                    </li>
                   </ul>
-                </button>
-              ))}
+                  
+                  <div className="mt-4 text-sm text-slate-500">
+                    Upgrade for 50+ more names, advanced analysis, and trademark screening
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -422,7 +443,11 @@ const NamingTool = () => {
           <button
             onClick={handleNext}
             disabled={!canProceed() || isGenerating}
-            className="flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-sky-500 to-amber-400 text-white rounded-xl font-semibold hover:from-sky-600 hover:to-amber-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              canProceed() && !isGenerating
+                ? 'bg-gradient-to-r from-sky-500 to-amber-400 text-white hover:from-sky-600 hover:to-amber-500 shadow-lg hover:shadow-xl'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}
           >
             {isGenerating ? (
               <>
@@ -431,8 +456,8 @@ const NamingTool = () => {
               </>
             ) : (
               <>
-                <span>{currentStep === totalSteps ? 'Generate Names' : 'Next'}</span>
-                <ArrowRight className="w-5 h-5" />
+                <span>{currentStep === totalSteps ? 'Generate Names (Free)' : 'Next'}</span>
+                {currentStep === totalSteps ? <Zap className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
               </>
             )}
           </button>

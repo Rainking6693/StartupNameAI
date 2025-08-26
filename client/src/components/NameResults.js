@@ -40,6 +40,7 @@ const NameResults = () => {
   const [showPaywall, setShowPaywall] = useState(false);
   const [selectedName, setSelectedName] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [viewMode, setViewMode] = useState('free'); // 'free' or 'premium'
 
   // Enhanced mock data with comprehensive analysis
   const mockResults = [
@@ -205,6 +206,11 @@ const NameResults = () => {
     return 0;
   });
 
+  // Show only first 10 results in free mode
+  const displayResults = viewMode === 'free' 
+    ? sortedResults.slice(0, 10) 
+    : sortedResults;
+
   const toggleFavorite = (nameId) => {
     setFavorites(prev => 
       prev.includes(nameId) 
@@ -284,7 +290,7 @@ const NameResults = () => {
                 <span className="text-xl font-bold bg-gradient-to-r from-sky-600 to-amber-600 bg-clip-text text-transparent">
                   Your Startup Names
                 </span>
-                <div className="text-sm text-slate-500">{sortedResults.length} names • Technology • Modern</div>
+                <div className="text-sm text-slate-500">{displayResults.length} names • Technology • Modern</div>
               </div>
             </div>
           </div>
@@ -369,6 +375,29 @@ const NameResults = () => {
             </div>
           </motion.div>
 
+          {/* Freemium Banner */}
+          {viewMode === 'free' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl p-6 mb-8 border border-purple-200"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">Free Preview: 10 of 50+ Names</h3>
+                  <p className="text-slate-600">Unlock all names + advanced analysis + trademark screening</p>
+                </div>
+                <button
+                  onClick={() => setShowPaywall(true)}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 flex items-center space-x-2"
+                >
+                  <Crown className="w-4 h-4" />
+                  <span>Upgrade Now</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           {/* Enhanced Filters and Sorting */}
           <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 mb-8 border border-white/20">
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -422,7 +451,7 @@ const NameResults = () => {
           {/* Enhanced Results Grid */}
           <div className="grid gap-6">
             <AnimatePresence>
-              {sortedResults.map((name, index) => (
+              {displayResults.map((name, index) => (
                 <motion.div
                   key={name.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -557,14 +586,13 @@ const NameResults = () => {
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="font-semibold text-green-800 text-lg">{name.name.toLowerCase()}.com</div>
-                              <div className="text-green-600 text-sm">Ready to purchase • International friendly: {name.internationalFriendly ? 'Yes' : 'No'}</div>
+                              <div className="text-green-600 text-sm">Available for registration</div>
                             </div>
                             <div className="text-right">
                               <div className="font-bold text-green-800 text-xl">${name.domainPrice}/year</div>
-                              <button className="text-green-600 text-sm hover:text-green-800 transition-colors flex items-center space-x-1 mt-1">
-                                <span>Buy now</span>
-                                <ExternalLink className="w-3 h-3" />
-                              </button>
+                              <div className="text-green-600 text-sm">
+                                Check GoDaddy • Namecheap • Google
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -639,7 +667,7 @@ const NameResults = () => {
           </div>
 
           {/* No Results State */}
-          {sortedResults.length === 0 && (
+          {displayResults.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -744,6 +772,70 @@ const NameResults = () => {
             </div>
           </motion.div>
         </div>
+      )}
+
+      {/* Paywall Modal */}
+      {showPaywall && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-3xl p-8 max-w-2xl w-full mx-auto shadow-2xl"
+          >
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Crown className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-3xl font-bold text-slate-800 mb-4">Unlock All Names</h3>
+              <p className="text-slate-600">Get the complete naming package with advanced analysis</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-4 mb-8">
+              {[
+                { name: 'Starter', price: '$19', names: '25 names' },
+                { name: 'Pro', price: '$39', names: '75 names', popular: true },
+                { name: 'Enterprise', price: '$79', names: '150 names' }
+              ].map((plan) => (
+                <div
+                  key={plan.name}
+                  className={`p-6 rounded-xl border-2 cursor-pointer transition-all ${
+                    plan.popular 
+                      ? 'border-purple-500 bg-purple-50' 
+                      : 'border-slate-200 hover:border-purple-300'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="font-bold text-slate-800">{plan.name}</div>
+                    <div className="text-2xl font-bold text-slate-800 my-2">{plan.price}</div>
+                    <div className="text-slate-600 text-sm">{plan.names}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setShowPaywall(false)}
+                className="flex-1 py-3 px-6 border border-slate-200 text-slate-600 rounded-xl font-semibold hover:bg-slate-50 transition-colors"
+              >
+                Maybe Later
+              </button>
+              <button
+                onClick={() => {
+                  setViewMode('premium');
+                  setShowPaywall(false);
+                }}
+                className="flex-1 py-3 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
+              >
+                Upgrade Now
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );
