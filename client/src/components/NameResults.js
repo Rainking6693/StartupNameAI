@@ -82,19 +82,19 @@ const NameResults = () => {
         id: index + 1,
         name: name,
         brandabilityScore: (7.0 + Math.random() * 3.0).toFixed(1),
-        domainAvailable: Math.random() > 0.5,
-        domainPrice: (Math.random() * 40 + 12).toFixed(2),
-        trademarkRisk: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
+        domainStatus: 'check-recommended',
+        domainGuidance: 'Verify availability at your preferred registrar',
+        namingGuidance: 'Research similar names in your industry and consider trademark search',
         explanation: `${name} is crafted for the ${industry} industry with ${style} styling, incorporating your keyword '${keywords[0]}' for brand relevance.`,
         psychology: `Appeals to ${industry} customers seeking ${style} solutions.`,
         seoScore: (6.5 + Math.random() * 3.0).toFixed(1),
         memorability: (7.0 + Math.random() * 2.5).toFixed(1),
         pronunciation: 'Easy',
-        extensions: {
-          com: Math.random() > 0.4,
-          io: Math.random() > 0.3,
-          ai: Math.random() > 0.7,
-          org: Math.random() > 0.5
+        extensionSuggestions: {
+          com: 'Popular choice - check availability',
+          io: 'Tech-focused - verify pricing',
+          ai: 'Premium option - research availability',
+          org: 'Alternative option - check status'
         },
         premium: Math.random() > 0.7,
         industry: industry,
@@ -189,6 +189,20 @@ const NameResults = () => {
         </div>
       </div>
 
+      {/* Disclaimer */}
+      <div className="px-6 py-4 bg-blue-50 border-y border-blue-200">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-start space-x-3">
+            <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
+              <span className="text-white text-xs font-bold">!</span>
+            </div>
+            <div className="text-sm text-blue-800">
+              <strong>Important:</strong> This tool provides naming suggestions and guidance. Always verify domain availability and trademark status through official channels before making business decisions. We recommend consulting with legal counsel for trademark clearance.
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Results */}
       <div className="px-6 py-8">
         <div className="max-w-7xl mx-auto">
@@ -201,7 +215,7 @@ const NameResults = () => {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-2xl font-bold text-slate-800 mb-2">{name.name}</h3>
                     <p className="text-slate-600">{name.explanation}</p>
@@ -209,6 +223,23 @@ const NameResults = () => {
                   <div className="text-right">
                     <div className="text-lg font-bold text-sky-600">{name.brandabilityScore}/10</div>
                     <div className="text-sm text-slate-500">Brandability</div>
+                  </div>
+                </div>
+                
+                {/* Domain and Naming Guidance */}
+                <div className="space-y-3">
+                  <div className="bg-sky-50 rounded-lg p-3">
+                    <div className="text-sm font-medium text-sky-800 mb-1">Domain Suggestions</div>
+                    <div className="text-xs text-sky-700">{name.domainGuidance}</div>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      <span className="text-xs bg-sky-100 text-sky-800 px-2 py-1 rounded">{name.name.toLowerCase()}.com - Check GoDaddy</span>
+                      <span className="text-xs bg-sky-100 text-sky-800 px-2 py-1 rounded">{name.name.toLowerCase()}.io - Check Namecheap</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-amber-50 rounded-lg p-3">
+                    <div className="text-sm font-medium text-amber-800 mb-1">Naming Guidance</div>
+                    <div className="text-xs text-amber-700">{name.namingGuidance}</div>
                   </div>
                 </div>
               </motion.div>

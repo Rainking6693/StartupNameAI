@@ -370,16 +370,16 @@ const LandingPage = () => {
                   <div className="flex items-start space-x-3">
                     <Globe className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
                     <div>
-                      <div className="font-semibold text-green-800">Domain-Checked Names</div>
-                      <div className="text-green-700 text-sm">Every name comes with .com availability status</div>
+                      <div className="font-semibold text-green-800">Domain Suggestions</div>
+                      <div className="text-green-700 text-sm">Domain recommendations with guidance to check availability</div>
                     </div>
                   </div>
                   
                   <div className="flex items-start space-x-3">
                     <Award className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
                     <div>
-                      <div className="font-semibold text-green-800">Trademark Screened</div>
-                      <div className="text-green-700 text-sm">AI checks for conflicts before you see the names</div>
+                      <div className="font-semibold text-green-800">Name Conflict Assessment</div>
+                      <div className="text-green-700 text-sm">Guidance on potential naming conflicts and brand positioning</div>
                     </div>
                   </div>
                   
@@ -503,7 +503,7 @@ const LandingPage = () => {
                 </div>
                 <div className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">Domain availability check</span>
+                  <span className="text-slate-700">Domain suggestion guidance</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
@@ -531,8 +531,11 @@ const LandingPage = () => {
               <div className="text-slate-600 mb-4">
                 <strong>Want more names and advanced features?</strong>
               </div>
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-slate-500 mb-4">
                 Upgrade options available after you see your free results
+              </div>
+              <div className="text-xs text-slate-400 max-w-md mx-auto">
+                <strong>Important:</strong> Domain availability and trademark status should be verified independently through official channels before making business decisions.
               </div>
             </div>
           </motion.div>
