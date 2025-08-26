@@ -1,7 +1,30 @@
+:root {
+  /* Soft Color Palette */
+  --color-primary-50: #f0f9ff;
+  --color-primary-500: #0ea5e9;
+  --color-primary-600: #0284c7;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #f59e0b;
+  --color-accent-500: #d97706;
+  --color-slate-50: #f8fafc;
+  --color-slate-600: #475569;
+  --color-slate-800: #1e293b;
+  
+  /* Shadows */
+  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-400));
+  --gradient-background: linear-gradient(135deg, var(--color-primary-50) 0%, #f0f9ff 50%, #fff9e6 100%);
+}
+
 .App {
   text-align: center;
 }
 
+/* Improved base styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -14,11 +37,35 @@ html {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  color: var(--color-slate-800);
+}
+
+/* Glass morphism utility classes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.soft-shadow {
+  box-shadow: var(--shadow-soft);
+}
+
+.medium-shadow {
+  box-shadow: var(--shadow-medium);
+}
+
+.large-shadow {
+  box-shadow: var(--shadow-large);
+}
+
+/* Smooth transitions */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Custom scrollbar */
@@ -27,23 +74,39 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--color-slate-50);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #667eea;
+  background: var(--color-primary-500);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #5a67d8;
+  background: var(--color-primary-600);
 }
 
 /* Focus styles for accessibility */
-button:focus,
-a:focus {
-  outline: 2px solid #667eea;
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Hover animations */
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-large);
 }
 
 /* Animations */
@@ -62,8 +125,23 @@ a:focus {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Responsive design helpers */
+/* Responsive typography */
 @media (max-width: 768px) {
+  .text-7xl {
+    font-size: 3.5rem !important;
+  }
+  
+  .text-5xl {
+    font-size: 2.75rem !important;
+  }
+  
+  .text-4xl {
+    font-size: 2.25rem !important;
+  }
+}
+
+/* Additional responsive breakpoints for better mobile experience */
+@media (max-width: 640px) {
   .text-7xl {
     font-size: 3rem !important;
   }
@@ -71,4 +149,51 @@ a:focus {
   .text-5xl {
     font-size: 2.5rem !important;
   }
+  
+  .text-4xl {
+    font-size: 2rem !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.75rem !important;
+  }
+  
+  /* Adjust padding for mobile */
+  .px-6 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .py-20 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+  
+  .py-24 {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+}
+
+/* Enhanced button styles */
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Text selection styling */
+::selection {
+  background: rgba(14, 165, 233, 0.2);
+  color: var(--color-slate-800);
+}
+
+::-moz-selection {
+  background: rgba(14, 165, 233, 0.2);
+  color: var(--color-slate-800);
 }
