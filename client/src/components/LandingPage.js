@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Sparkles, 
@@ -49,6 +49,36 @@ const LandingPage = () => {
     });
   };
 
+  useEffect(() => {
+    const handleSmoothScroll = (e) => {
+      e.preventDefault();
+      const href = e.currentTarget.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const targetId = href.substring(1);
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
+      }
+    };
+
+    // Add click handlers to navigation links
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+    navLinks.forEach(link => {
+      link.addEventListener('click', handleSmoothScroll);
+    });
+
+    return () => {
+      navLinks.forEach(link => {
+        link.removeEventListener('click', handleSmoothScroll);
+      });
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-amber-50">
       {/* Navigation */}
@@ -65,7 +95,7 @@ const LandingPage = () => {
           
           <div className="hidden md:flex items-center space-x-8">
             <a href="#problem" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">Problems We Solve</a>
-            <a href="#solution" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">How It Works</a>
+            <a href="#how-it-works" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">How It Works</a>
             <a href="#pricing" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">Pricing</a>
             <button 
               onClick={handleGetStarted}
@@ -373,7 +403,7 @@ const LandingPage = () => {
       </section>
 
       {/* Transformation Stories */}
-      <section className="px-6 py-20">
+      <section id="how-it-works" className="px-6 py-20">
         <div className="max-w-5xl mx-auto text-center">
           <motion.h2 
             className="text-4xl md:text-5xl font-bold text-slate-800 mb-4"
@@ -445,6 +475,70 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="px-6 py-20 bg-sky-50/50">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-slate-600 mb-12">
+              Stop wasting money on expensive naming agencies. Get better results for less.
+            </p>
+            
+            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl max-w-md mx-auto">
+              <div className="text-center mb-6">
+                <div className="text-5xl font-bold text-sky-600 mb-2">FREE</div>
+                <div className="text-slate-600">Get Started Today</div>
+              </div>
+              
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-slate-700">10 AI-generated names</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-slate-700">Domain availability check</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-slate-700">Basic brandability scores</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-slate-700">Instant results</span>
+                </div>
+              </div>
+              
+              <button
+                onClick={handleGetStarted}
+                className="w-full bg-gradient-to-r from-sky-500 to-amber-400 text-white py-4 rounded-2xl font-bold text-lg hover:from-sky-600 hover:to-amber-500 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Start Free Now
+              </button>
+              
+              <div className="text-center text-slate-500 text-sm mt-4">
+                No credit card required • Instant access
+              </div>
+            </div>
+            
+            <div className="mt-12 text-center">
+              <div className="text-slate-600 mb-4">
+                <strong>Want more names and advanced features?</strong>
+              </div>
+              <div className="text-sm text-slate-500">
+                Upgrade options available after you see your free results
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="px-6 py-20 bg-gradient-to-r from-sky-500/10 to-amber-400/10">
         <div className="max-w-4xl mx-auto text-center">
@@ -495,9 +589,9 @@ const LandingPage = () => {
             </div>
             
             <div className="flex items-center space-x-6 text-slate-500">
-              <a href="#" className="hover:text-sky-600 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-sky-600 transition-colors">Terms</a>
-              <a href="#" className="hover:text-sky-600 transition-colors">Support</a>
+              <button className="hover:text-sky-600 transition-colors">Privacy</button>
+              <button className="hover:text-sky-600 transition-colors">Terms</button>
+              <button className="hover:text-sky-600 transition-colors">Support</button>
             </div>
           </div>
           
