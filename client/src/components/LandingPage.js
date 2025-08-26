@@ -116,20 +116,20 @@ const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="bg-gradient-to-r from-sky-100 to-amber-100 text-slate-700 px-4 py-2 rounded-full inline-block mb-6 text-sm font-semibold">
-              🚀 Used by 10,000+ funded startups
+            <div className="bg-gradient-to-r from-purple-100 to-blue-100 text-slate-700 px-4 py-2 rounded-full inline-block mb-6 text-sm font-semibold">
+              🧠 AI trained on 50,000+ successful startups
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-slate-800 mb-6 leading-tight">
-              Stop Wasting Months on
+              Stop Wasting Time on
               <span className="bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent block mt-2">
-                Bad Startup Names
+                Amateur Name Ideas
               </span>
             </h1>
             
             <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-              Get the perfect startup name in 30 seconds. AI-powered, domain-checked, 
-              trademark-screened. <strong>No more endless brainstorming sessions.</strong>
+              Get AI-Powered Names Based on 50,000+ Successful Startups. 
+              <strong>What naming consultants charge $5,000 for, delivered in 30 seconds.</strong>
             </p>
 
             {/* Interactive Demo Button */}
@@ -164,16 +164,16 @@ const LandingPage = () => {
             {/* Social Proof Numbers */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
               <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
-                <div className="text-3xl font-bold text-slate-800 mb-2">$50M+</div>
-                <div className="text-slate-600">Funding Raised by Our Users</div>
+                <div className="text-3xl font-bold text-slate-800 mb-2">15</div>
+                <div className="text-slate-600">Industries Mastered</div>
               </div>
               <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
-                <div className="text-3xl font-bold text-slate-800 mb-2">10,000+</div>
-                <div className="text-slate-600">Startups Named Successfully</div>
+                <div className="text-3xl font-bold text-slate-800 mb-2">50,000+</div>
+                <div className="text-slate-600">Startups Analyzed</div>
               </div>
               <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
-                <div className="text-3xl font-bold text-slate-800 mb-2">98%</div>
-                <div className="text-slate-600">Find Their Perfect Name</div>
+                <div className="text-3xl font-bold text-slate-800 mb-2">94%</div>
+                <div className="text-slate-600">Name Approval Rate</div>
               </div>
             </div>
           </motion.div>
@@ -360,34 +360,34 @@ const LandingPage = () => {
                 
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
-                    <Zap className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-green-800">Names in 30 Seconds</div>
-                      <div className="text-green-700 text-sm">AI generates 50+ perfect names instantly</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Globe className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-green-800">Domain Suggestions</div>
-                      <div className="text-green-700 text-sm">Domain recommendations with guidance to check availability</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Award className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-green-800">Name Conflict Assessment</div>
-                      <div className="text-green-700 text-sm">Guidance on potential naming conflicts and brand positioning</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
                     <Brain className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
                     <div>
-                      <div className="font-semibold text-green-800">Scientifically Optimized</div>
-                      <div className="text-green-700 text-sm">Brandability scores based on startup psychology</div>
+                      <div className="font-semibold text-green-800">Trained on Success Patterns</div>
+                      <div className="text-green-700 text-sm">AI analyzed naming patterns from 50,000+ funded startups</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <Target className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-green-800">Industry-Specific Intelligence</div>
+                      <div className="text-green-700 text-sm">Understands naming psychology for your exact market</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <Lightbulb className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-green-800">Linguistic Pattern Analysis</div>
+                      <div className="text-green-700 text-sm">Brandability scores based on phonetic and cognitive research</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <Zap className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-green-800">Instant Expert-Level Ideas</div>
+                      <div className="text-green-700 text-sm">What naming consultants charge $5,000 for, delivered in 30 seconds</div>
                     </div>
                   </div>
                 </div>
@@ -420,10 +420,10 @@ const LandingPage = () => {
               {
                 name: 'TechFlow',
                 founder: 'Sarah Chen',
-                before: '"We spent 4 months arguing about names. Nothing felt right."',
-                after: '"Found TechFlow in 10 minutes. Raised $2.5M Series A."',
+                before: '"We brainstormed 200+ names over 4 months. Nothing felt right."',
+                after: '"The AI understood our market instantly. TechFlow was perfect."',
                 funding: '$2.5M raised',
-                time: '4 months → 10 minutes'
+                time: 'Amateur brainstorming → AI expertise'
               },
               {
                 name: 'DataVault',
@@ -554,7 +554,7 @@ const LandingPage = () => {
               Stop Wasting Time. Start Building.
             </h2>
             <p className="text-xl text-slate-600 mb-8">
-              Join 10,000+ founders who got their perfect name and moved on to what matters: building their business.
+              Join founders using AI that analyzed 50,000+ successful startups to understand what makes names convert customers and attract investors.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
