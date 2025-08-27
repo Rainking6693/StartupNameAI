@@ -12,15 +12,12 @@ import {
   Award,
   AlertTriangle,
   CheckCircle,
-  BarChart3,
   Star,
   Zap,
   Crown,
-  ExternalLink,
   Copy,
   Download,
   Heart,
-  DollarSign,
   Clock,
   Target,
   Lightbulb,
@@ -28,7 +25,8 @@ import {
   MessageSquare,
   Volume2,
   ChevronRight,
-  Info
+  Info,
+  Hash
 } from 'lucide-react';
 
 const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
