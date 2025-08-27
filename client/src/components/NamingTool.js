@@ -1,94 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, 
   ArrowRight, 
+  ArrowLeft, 
   Sparkles, 
-  Brain, 
-  Target, 
+  Brain,
+  Target,
   Zap,
   CheckCircle,
-  Loader,
-  Plus,
-  X,
   Lightbulb,
-  TrendingUp,
-  Globe
+  Building,
+  Palette,
+  Hash,
+  Clock,
+  AlertCircle
 } from 'lucide-react';
-import { generateNames, checkDomainAvailability } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
+import openaiService from '../services/openai';
 
 const NamingTool = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
+    keywords: [],
     industry: '',
     style: '',
-    keywords: [],
-    description: '',
-    targetAudience: '',
-    packageType: 'starter'
+    description: ''
   });
-  const [keywordInput, setKeywordInput] = useState('');
-  const [generatedNames, setGeneratedNames] = useState([]);
 
+  const totalSteps = 4;
+
+  // Industry options
   const industries = [
-    { id: 'tech', name: 'Technology & Software', icon: '💻', desc: 'SaaS, apps, AI, dev tools' },
-    { id: 'fintech', name: 'Financial Technology', icon: '💳', desc: 'Payments, crypto, banking' },
-    { id: 'health', name: 'Healthcare & Wellness', icon: '🏥', desc: 'Medical, fitness, mental health' },
-    { id: 'ecommerce', name: 'E-commerce & Retail', icon: '🛍️', desc: 'Online stores, marketplaces' },
-    { id: 'education', name: 'Education & Learning', icon: '📚', desc: 'EdTech, courses, training' },
-    { id: 'marketing', name: 'Marketing & Agency', icon: '📈', desc: 'Advertising, consulting, PR' },
-    { id: 'consulting', name: 'Business Consulting', icon: '💼', desc: 'Strategy, operations, coaching' },
-    { id: 'creative', name: 'Creative & Media', icon: '🎨', desc: 'Design, content, entertainment' }
+    { id: 'tech', name: 'Technology', icon: '💻', desc: 'SaaS, apps, software platforms' },
+    { id: 'health', name: 'Healthcare', icon: '🏥', desc: 'Medical, wellness, fitness' },
+    { id: 'fintech', name: 'FinTech', icon: '💳', desc: 'Banking, payments, crypto' },
+    { id: 'ecommerce', name: 'E-commerce', icon: '🛒', desc: 'Online retail, marketplaces' },
+    { id: 'education', name: 'Education', icon: '🎓', desc: 'EdTech, learning, training' },
+    { id: 'food', name: 'Food & Beverage', icon: '🍽️', desc: 'Restaurants, delivery, food tech' },
+    { id: 'travel', name: 'Travel', icon: '✈️', desc: 'Tourism, booking, hospitality' },
+    { id: 'other', name: 'Other', icon: '🎯', desc: 'Tell us more about your industry' }
   ];
 
+  // Style preferences
   const styles = [
-    { id: 'modern', name: 'Modern & Tech', desc: 'Clean, minimal, forward-thinking', color: 'from-sky-400 to-blue-500' },
-    { id: 'professional', name: 'Professional', desc: 'Trustworthy, established, corporate', color: 'from-slate-500 to-slate-600' },
-    { id: 'creative', name: 'Creative & Playful', desc: 'Unique, memorable, fun', color: 'from-amber-400 to-orange-500' },
-    { id: 'luxurious', name: 'Premium & Luxury', desc: 'Sophisticated, exclusive, high-end', color: 'from-purple-500 to-indigo-600' },
-    { id: 'friendly', name: 'Approachable', desc: 'Warm, accessible, human', color: 'from-emerald-400 to-teal-500' },
-    { id: 'innovative', name: 'Innovative', desc: 'Cutting-edge, disruptive, bold', color: 'from-rose-400 to-pink-500' }
+    { id: 'modern', name: 'Modern', icon: '⚡', desc: 'Clean, tech-forward, innovative' },
+    { id: 'classic', name: 'Classic', icon: '🏛️', desc: 'Timeless, established, trustworthy' },
+    { id: 'creative', name: 'Creative', icon: '🎨', desc: 'Unique, artistic, memorable' },
+    { id: 'professional', name: 'Professional', icon: '💼', desc: 'Corporate, enterprise-ready' }
   ];
-
-  const packages = [
-    {
-      id: 'starter',
-      name: 'Starter',
-      price: '$19',
-      names: 25,
-      features: ['25 AI names', 'Domain check', 'Basic scoring', 'PDF export']
-    },
-    {
-      id: 'professional',
-      name: 'Professional',
-      price: '$39',
-      names: 75,
-      features: ['75 AI names', 'Advanced analysis', 'Trademark check', 'Industry insights'],
-      popular: true
-    },
-    {
-      id: 'enterprise',
-      name: 'Enterprise',
-      price: '$79',
-      names: 150,
-      features: ['150 AI names', 'Full intelligence', 'Multi-domain check', 'Phone support']
-    }
-  ];
-
-  const suggestedKeywords = {
-    tech: ['smart', 'cloud', 'digital', 'data', 'connect', 'sync', 'flow', 'hub', 'core', 'pixel'],
-    fintech: ['pay', 'coin', 'bank', 'fund', 'vault', 'trust', 'secure', 'capital', 'mint', 'ledger'],
-    health: ['care', 'vital', 'wellness', 'heal', 'fit', 'life', 'mind', 'body', 'pure', 'balance'],
-    ecommerce: ['shop', 'buy', 'cart', 'market', 'store', 'trade', 'sell', 'goods', 'deals', 'plaza'],
-    education: ['learn', 'teach', 'study', 'academy', 'skill', 'knowledge', 'course', 'mentor', 'wise', 'bright'],
-    marketing: ['brand', 'grow', 'reach', 'scale', 'boost', 'launch', 'market', 'lead', 'convert', 'viral'],
-    consulting: ['advise', 'guide', 'strategy', 'solve', 'optimize', 'transform', 'excel', 'peak', 'success', 'impact'],
-    creative: ['design', 'create', 'studio', 'craft', 'vision', 'art', 'media', 'pixel', 'canvas', 'spark']
-  };
-
-  const totalSteps = 5;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -101,22 +63,19 @@ const NamingTool = () => {
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
-    } else {
-      navigate('/');
     }
   };
 
-  const addKeyword = (keyword) => {
-    if (keyword && !formData.keywords.includes(keyword)) {
+  const handleKeywordAdd = (keyword) => {
+    if (keyword.trim() && formData.keywords.length < 5 && !formData.keywords.includes(keyword.trim())) {
       setFormData({
         ...formData,
-        keywords: [...formData.keywords, keyword]
+        keywords: [...formData.keywords, keyword.trim()]
       });
-      setKeywordInput('');
     }
   };
 
-  const removeKeyword = (keyword) => {
+  const handleKeywordRemove = (keyword) => {
     setFormData({
       ...formData,
       keywords: formData.keywords.filter(k => k !== keyword)
@@ -124,351 +83,463 @@ const NamingTool = () => {
   };
 
   const handleGenerate = async () => {
-    setIsGenerating(true);
+    setIsLoading(true);
+    setError('');
+    
     try {
-      // Generate session ID for tracking
-      const sessionId = Date.now().toString();
+      // Test OpenAI connection first
+      const isConnected = await openaiService.testConnection();
+      if (!isConnected) {
+        throw new Error('Unable to connect to AI service. Please try again.');
+      }
+
+      // Generate names using OpenAI
+      const generatedNames = await openaiService.generateStartupNames(formData);
       
-      // Store session data in localStorage for backup
-      localStorage.setItem(`session_${sessionId}`, JSON.stringify({
+      if (!generatedNames || generatedNames.length === 0) {
+        throw new Error('No names were generated. Please try different keywords.');
+      }
+
+      // Store results and navigate to results page
+      const sessionId = Date.now().toString();
+      localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify({
         formData,
+        results: generatedNames,
         timestamp: new Date().toISOString()
       }));
+
+      navigate(`/results/${sessionId}`);
       
-      // Navigate to results page with form data in location.state
-      navigate(`/results/${sessionId}`, {
-        state: {
-          formData,
-          sessionId
-        }
-      });
     } catch (error) {
-      console.error('Generation failed:', error);
-      // Show error toast here
+      console.error('Name generation failed:', error);
+      setError(error.message || 'Failed to generate names. Please try again.');
+      setIsLoading(false);
     }
-    setIsGenerating(false);
   };
 
   const canProceed = () => {
     switch (currentStep) {
-      case 1: return formData.industry;
-      case 2: return formData.style;
+      case 1: return formData.industry !== '';
+      case 2: return formData.style !== '';
       case 3: return formData.keywords.length > 0;
-      case 4: return formData.description.trim().length > 10;
-      case 5: return true; // Review step - always ready
+      case 4: return true;
       default: return false;
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
+        <div className="text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 bg-gradient-to-r from-white to-purple-200 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <Brain className="w-8 h-8 text-purple-900" />
+          </motion.div>
+          <h2 className="text-2xl font-bold text-white mb-2">AI is Creating Your Names</h2>
+          <p className="text-white/80">Analyzing your requirements and generating perfect startup names...</p>
+          
+          <div className="mt-8 space-y-2 max-w-md mx-auto">
+            {[
+              'Processing your keywords...',
+              'Analyzing industry trends...',
+              'Generating brandable names...',
+              'Checking name psychology...',
+              'Almost ready!'
+            ].map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.8 }}
+                className="text-left text-white/70 flex items-center space-x-2"
+              >
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>{step}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-amber-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-sky-100 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-sky-400 to-amber-300 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <h1 className="text-xl font-bold text-slate-800">AI Startup Namer</h1>
+      <div className="px-6 py-6">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <Sparkles className="w-6 h-6 text-white" />
             </div>
-            
-            {/* Progress Bar */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-slate-600">Step {currentStep} of {totalSteps}</span>
-              <div className="w-32 bg-slate-200 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-sky-500 to-amber-400 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-                />
-              </div>
-            </div>
+            <span className="text-2xl font-bold text-white">
+              StartupNamer.org
+            </span>
+          </div>
+          
+          <button 
+            onClick={() => navigate('/')}
+            className="text-white/80 hover:text-white transition-colors"
+          >
+            ← Back to Home
+          </button>
+        </div>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="px-6 mb-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-white/80">Step {currentStep} of {totalSteps}</span>
+            <span className="text-sm font-medium text-white/80">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+          </div>
+          <div className="w-full bg-white/20 rounded-full h-2">
+            <motion.div
+              className="bg-gradient-to-r from-white to-purple-200 h-2 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
+              transition={{ duration: 0.5 }}
+            />
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        {/* Step 1: Industry Selection */}
-        {currentStep === 1 && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <Target className="w-16 h-16 text-sky-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">What's your industry?</h2>
-              <p className="text-xl text-slate-600">Help us understand your business sector for better name suggestions</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {industries.map((industry) => (
-                <button
-                  key={industry.id}
-                  onClick={() => setFormData({ ...formData, industry: industry.id })}
-                  className={`p-6 rounded-2xl border-2 transition-all duration-300 text-left hover:shadow-lg ${
-                    formData.industry === industry.id
-                      ? 'border-sky-400 bg-sky-50 shadow-lg transform scale-105'
-                      : 'border-slate-200 bg-white/80 hover:border-sky-300'
-                  }`}
-                >
-                  <div className="text-3xl mb-3">{industry.icon}</div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">{industry.name}</h3>
-                  <p className="text-sm text-slate-600">{industry.desc}</p>
-                </button>
-              ))}
+      {/* Error Display */}
+      {error && (
+        <div className="px-6 mb-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3">
+              <AlertCircle className="w-5 h-5 text-red-400" />
+              <span className="text-red-200">{error}</span>
+              <button 
+                onClick={() => setError('')}
+                className="ml-auto text-red-400 hover:text-red-200"
+              >
+                ×
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Step 2: Style Selection */}
-        {currentStep === 2 && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <Zap className="w-16 h-16 text-amber-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">Choose your style</h2>
-              <p className="text-xl text-slate-600">What personality should your startup name have?</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {styles.map((style) => (
-                <button
-                  key={style.id}
-                  onClick={() => setFormData({ ...formData, style: style.id })}
-                  className={`p-6 rounded-2xl border-2 transition-all duration-300 text-left hover:shadow-lg ${
-                    formData.style === style.id
-                      ? 'border-sky-400 bg-sky-50 shadow-lg transform scale-105'
-                      : 'border-slate-200 bg-white/80 hover:border-sky-300'
-                  }`}
-                >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${style.color} mb-4`} />
-                  <h3 className="text-xl font-semibold text-slate-800 mb-2">{style.name}</h3>
-                  <p className="text-slate-600">{style.desc}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Keywords */}
-        {currentStep === 3 && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <Lightbulb className="w-16 h-16 text-emerald-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">Add keywords</h2>
-              <p className="text-xl text-slate-600">Words that describe your product, values, or vision</p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-sky-200">
-              <div className="flex gap-3 mb-6">
-                <input
-                  type="text"
-                  value={keywordInput}
-                  onChange={(e) => setKeywordInput(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addKeyword(keywordInput);
-                    }
-                  }}
-                  placeholder="Type a keyword and press Enter"
-                  className="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                />
-                <button
-                  onClick={() => addKeyword(keywordInput)}
-                  className="px-6 py-3 bg-gradient-to-r from-sky-500 to-amber-400 text-white rounded-xl hover:from-sky-600 hover:to-amber-500 transition-all duration-300"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Current Keywords */}
-              {formData.keywords.length > 0 && (
-                <div className="mb-6">
-                  <h4 className="text-sm font-medium text-slate-700 mb-3">Your keywords:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {formData.keywords.map((keyword) => (
-                      <span
-                        key={keyword}
-                        className="px-3 py-1 bg-sky-100 text-sky-800 rounded-full text-sm flex items-center gap-2"
-                      >
-                        {keyword}
-                        <button
-                          onClick={() => removeKeyword(keyword)}
-                          className="text-sky-600 hover:text-sky-800"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
+      {/* Main Content */}
+      <div className="px-6 pb-20">
+        <div className="max-w-4xl mx-auto">
+          <AnimatePresence mode="wait">
+            {/* Step 1: Industry Selection */}
+            {currentStep === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Building className="w-8 h-8 text-white" />
                   </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">What's your industry?</h2>
+                  <p className="text-xl text-white/80">This helps our AI understand your market and naming conventions</p>
                 </div>
-              )}
 
-              {/* Suggested Keywords */}
-              {formData.industry && suggestedKeywords[formData.industry] && (
-                <div>
-                  <h4 className="text-sm font-medium text-slate-700 mb-3">Suggested for {formData.industry}:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {suggestedKeywords[formData.industry]
-                      .filter(keyword => !formData.keywords.includes(keyword))
-                      .slice(0, 8)
-                      .map((keyword) => (
-                        <button
-                          key={keyword}
-                          onClick={() => addKeyword(keyword)}
-                          className="px-3 py-1 bg-white border border-slate-300 text-slate-700 rounded-full text-sm hover:bg-sky-50 hover:border-sky-300 transition-all"
-                        >
-                          {keyword}
-                        </button>
-                      ))}
-                  </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {industries.map((industry) => (
+                    <motion.div
+                      key={industry.id}
+                      whileHover={{ y: -4 }}
+                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-all duration-300 border-2 ${
+                        formData.industry === industry.id 
+                          ? 'border-white shadow-lg bg-white/20' 
+                          : 'border-transparent hover:bg-white/15'
+                      }`}
+                      onClick={() => setFormData({...formData, industry: industry.id})}
+                    >
+                      <div className="flex items-start space-x-4">
+                        <div className="text-3xl">{industry.icon}</div>
+                        <div>
+                          <h3 className="text-lg font-bold text-white mb-1">{industry.name}</h3>
+                          <p className="text-white/70 text-sm">{industry.desc}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-              )}
-            </div>
-          </div>
-        )}
+              </motion.div>
+            )}
 
-        {/* Step 4: Description */}
-        {currentStep === 4 && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <Brain className="w-16 h-16 text-purple-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">Describe your startup</h2>
-              <p className="text-xl text-slate-600">Help our AI understand what makes your business unique</p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-sky-200 space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  What does your startup do? *
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="We're building an AI-powered platform that helps small businesses automate their customer support..."
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200 resize-none"
-                />
-                <div className="text-sm text-slate-500 mt-1">
-                  {formData.description.length}/500 characters
+            {/* Step 2: Style Selection */}
+            {currentStep === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Palette className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">What's your style?</h2>
+                  <p className="text-xl text-white/80">Choose the personality that best fits your brand vision</p>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Who's your target audience?
-                </label>
-                <input
-                  type="text"
-                  value={formData.targetAudience}
-                  onChange={(e) => setFormData({ ...formData, targetAudience: e.target.value })}
-                  placeholder="Small business owners, developers, healthcare professionals..."
-                  className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                />
-              </div>
-            </div>
-          </div>
-        )}
+                <div className="grid md:grid-cols-2 gap-6">
+                  {styles.map((style) => (
+                    <motion.div
+                      key={style.id}
+                      whileHover={{ y: -4 }}
+                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-8 cursor-pointer transition-all duration-300 border-2 ${
+                        formData.style === style.id 
+                          ? 'border-white shadow-lg bg-white/20' 
+                          : 'border-transparent hover:bg-white/15'
+                      }`}
+                      onClick={() => setFormData({...formData, style: style.id})}
+                    >
+                      <div className="text-center">
+                        <div className="text-4xl mb-4">{style.icon}</div>
+                        <h3 className="text-xl font-bold text-white mb-2">{style.name}</h3>
+                        <p className="text-white/70">{style.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
-        {/* Step 5: Review & Generate */}
-        {currentStep === 5 && (
-          <div className="space-y-8">
-            <div className="text-center mb-12">
-              <div className="w-16 h-16 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="w-8 h-8 text-white" />
-              </div>
-              <h2 className="text-4xl font-bold text-slate-800 mb-4">Ready to Generate!</h2>
-              <p className="text-xl text-slate-600">We'll create perfect startup names based on your preferences</p>
-            </div>
-
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-sky-200">
-                <h3 className="text-xl font-bold text-slate-800 mb-6">Your Requirements:</h3>
-                
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
-                    <span className="text-slate-600">Industry:</span>
-                    <span className="font-semibold text-slate-800 capitalize">{formData.industry}</span>
+            {/* Step 3: Keywords Input */}
+            {currentStep === 3 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Hash className="w-8 h-8 text-white" />
                   </div>
-                  
-                  <div className="flex justify-between items-center p-4 bg-slate-50 rounded-xl">
-                    <span className="text-slate-600">Style:</span>
-                    <span className="font-semibold text-slate-800 capitalize">{formData.style}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-start p-4 bg-slate-50 rounded-xl">
-                    <span className="text-slate-600">Keywords:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {formData.keywords.map(keyword => (
-                        <span key={keyword} className="bg-sky-100 text-sky-800 px-2 py-1 rounded-full text-sm font-medium">
-                          {keyword}
-                        </span>
-                      ))}
+                  <h2 className="text-4xl font-bold text-white mb-4">Add your keywords</h2>
+                  <p className="text-xl text-white/80">What words describe your startup? (1-5 keywords)</p>
+                </div>
+
+                <div className="max-w-2xl mx-auto">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <KeywordInput 
+                      keywords={formData.keywords}
+                      onAdd={handleKeywordAdd}
+                      onRemove={handleKeywordRemove}
+                    />
+                    
+                    <div className="mt-8">
+                      <label className="block text-white font-medium mb-3">
+                        Brief description (optional)
+                      </label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                        placeholder="Tell us more about your startup idea..."
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent resize-none text-white placeholder-white/50"
+                        rows={3}
+                      />
                     </div>
                   </div>
-
-                  <div className="p-4 bg-slate-50 rounded-xl">
-                    <div className="text-slate-600 mb-2">Description:</div>
-                    <div className="font-medium text-slate-800 text-sm">{formData.description}</div>
-                  </div>
                 </div>
-
-                <div className="mt-8 p-6 bg-gradient-to-r from-sky-50 to-amber-50 rounded-xl border border-sky-200">
-                  <h4 className="font-bold text-slate-800 mb-2">What you'll get:</h4>
-                  <ul className="space-y-2 text-slate-600">
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <span>10 AI-generated names (free preview)</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <span>Basic brandability scores</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <span>Domain availability check</span>
-                    </li>
-                  </ul>
-                  
-                  <div className="mt-4 text-sm text-slate-500">
-                    Upgrade for 50+ more names, advanced analysis, and trademark screening
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Navigation */}
-        <div className="flex justify-between items-center mt-12 pt-8 border-t border-slate-200">
-          <button
-            onClick={handleBack}
-            className="flex items-center space-x-2 px-6 py-3 text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>{currentStep === 1 ? 'Back to Home' : 'Previous'}</span>
-          </button>
-
-          <button
-            onClick={handleNext}
-            disabled={!canProceed() || isGenerating}
-            className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
-              canProceed() && !isGenerating
-                ? 'bg-gradient-to-r from-sky-500 to-amber-400 text-white hover:from-sky-600 hover:to-amber-500 shadow-lg hover:shadow-xl'
-                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-            }`}
-          >
-            {isGenerating ? (
-              <>
-                <Loader className="w-5 h-5 animate-spin" />
-                <span>Generating Names...</span>
-              </>
-            ) : (
-              <>
-                <span>{currentStep === totalSteps ? 'Generate Names (Free)' : 'Next'}</span>
-                {currentStep === totalSteps ? <Zap className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
-              </>
+              </motion.div>
             )}
-          </button>
+
+            {/* Step 4: Review */}
+            {currentStep === 4 && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">Ready to Generate!</h2>
+                  <p className="text-xl text-white/80">AI will create perfect startup names based on your preferences</p>
+                </div>
+
+                <div className="max-w-2xl mx-auto">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <h3 className="text-xl font-bold text-white mb-6">Your Requirements:</h3>
+                    
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-4 bg-white/10 rounded-xl">
+                        <span className="text-white/80">Industry:</span>
+                        <span className="font-semibold text-white capitalize">{formData.industry}</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center p-4 bg-white/10 rounded-xl">
+                        <span className="text-white/80">Style:</span>
+                        <span className="font-semibold text-white capitalize">{formData.style}</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-start p-4 bg-white/10 rounded-xl">
+                        <span className="text-white/80">Keywords:</span>
+                        <div className="flex flex-wrap gap-2">
+                          {formData.keywords.map(keyword => (
+                            <span key={keyword} className="bg-white/20 text-white px-2 py-1 rounded-full text-sm font-medium">
+                              {keyword}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 p-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
+                      <h4 className="font-bold text-white mb-2">What you'll get:</h4>
+                      <ul className="space-y-2 text-white/80">
+                        <li className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span>20 AI-generated names tailored to your industry</span>
+                        </li>
+                        <li className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span>Brandability scores and detailed explanations</span>
+                        </li>
+                        <li className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span>Psychology insights for each name</span>
+                        </li>
+                        <li className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span>Domain-friendly assessment</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-12">
+            <button
+              onClick={handleBack}
+              disabled={currentStep === 1}
+              className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                currentStep === 1 
+                  ? 'text-white/40 cursor-not-allowed' 
+                  : 'text-white hover:bg-white/10'
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Previous</span>
+            </button>
+
+            <div className="flex space-x-2">
+              {Array.from({ length: totalSteps }, (_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index + 1 <= currentStep 
+                      ? 'bg-white' 
+                      : 'bg-white/30'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                canProceed()
+                  ? 'bg-gradient-to-r from-white to-purple-200 text-purple-900 hover:from-purple-100 hover:to-purple-300 shadow-lg hover:shadow-xl'
+                  : 'bg-white/20 text-white/40 cursor-not-allowed'
+              }`}
+            >
+              <span>{currentStep === totalSteps ? 'Generate Names' : 'Next'}</span>
+              {currentStep === totalSteps ? <Zap className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+// Keyword Input Component
+const KeywordInput = ({ keywords, onAdd, onRemove }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      onAdd(inputValue);
+      setInputValue('');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="mb-6">
+        <div className="flex space-x-3">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Enter a keyword..."
+            className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder-white/50"
+            maxLength={20}
+          />
+          <button
+            type="submit"
+            disabled={!inputValue.trim() || keywords.length >= 5}
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              inputValue.trim() && keywords.length < 5
+                ? 'bg-white text-purple-900 hover:bg-purple-100'
+                : 'bg-white/20 text-white/40 cursor-not-allowed'
+            }`}
+          >
+            Add
+          </button>
+        </div>
+      </form>
+
+      <div className="flex flex-wrap gap-3">
+        {keywords.map((keyword, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full"
+          >
+            <span className="text-white font-medium">{keyword}</span>
+            <button
+              onClick={() => onRemove(keyword)}
+              className="text-white/70 hover:text-white transition-colors"
+            >
+              ×
+            </button>
+          </motion.div>
+        ))}
+      </div>
+
+      <p className="text-white/60 text-sm mt-3">
+        {keywords.length}/5 keywords added
+      </p>
     </div>
   );
 };

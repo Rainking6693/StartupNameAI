@@ -109,25 +109,49 @@ const NameResults = () => {
     console.log('useEffect triggered');
     setLoading(true);
     
-    // Get form data from navigation state or use test data
-    const formData = location.state?.formData || {
+    // Try to get data from localStorage first (from OpenAI integration)
+    let sessionData = null;
+    if (sessionId) {
+      const storedData = localStorage.getItem(`naming_session_${sessionId}`);
+      if (storedData) {
+        try {
+          sessionData = JSON.parse(storedData);
+          console.log('Loaded session data from localStorage:', sessionData);
+        } catch (error) {
+          console.error('Failed to parse stored session data:', error);
+        }
+      }
+    }
+    
+    // Fallback to location state or test data
+    const formData = sessionData?.formData || location.state?.formData || {
       industry: 'tech',
       style: 'modern',
       keywords: ['test'],
       description: 'Test business'
     };
+    
+    const existingResults = sessionData?.results;
 
     console.log('Using formData:', formData);
+    console.log('Existing results:', existingResults);
 
-    // Generate names immediately for testing
-    setTimeout(() => {
-      const dynamicResults = generateDynamicNames(formData);
-      console.log('Setting results:', dynamicResults);
-      setResults(dynamicResults);
+    // Use existing results if available, otherwise generate new ones
+    if (existingResults && existingResults.length > 0) {
+      console.log('Using existing results from OpenAI');
+      setResults(existingResults);
       setLoading(false);
-    }, 1500);
+    } else {
+      // Generate names for testing
+      setTimeout(() => {
+        const dynamicResults = generateDynamicNames(formData);
+        console.log('Setting generated results:', dynamicResults);
+        setResults(dynamicResults);
+        setLoading(false);
+      }, 1500);
+    }
 
-  }, [location.state]);
+  }, [sessionId, location.state]);
 
   if (loading) {
     return (
