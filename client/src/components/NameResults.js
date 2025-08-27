@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
+import NameAnalysisModal from './NameAnalysisModal';
 import { 
   ArrowLeft, 
   Download, 
@@ -24,6 +25,7 @@ const NameResults = () => {
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [sessionData, setSessionData] = useState(null);
+  const [analysisModal, setAnalysisModal] = useState({ isOpen: false, nameData: null });
 
   useEffect(() => {
     // Load session data from localStorage
@@ -118,6 +120,10 @@ const NameResults = () => {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     // You could add a toast notification here
+  };
+
+  const handleAnalyze = (nameData) => {
+    setAnalysisModal({ isOpen: true, nameData });
   };
 
   const getScoreColor = (score) => {
@@ -296,7 +302,10 @@ const NameResults = () => {
                       <Copy className="w-4 h-4" />
                       <span>Copy</span>
                     </button>
-                    <button className="flex items-center space-x-2 px-4 py-2 bg-white/10 text-white/80 rounded-xl hover:bg-white/20 transition-colors">
+                    <button 
+                      onClick={() => handleAnalyze(name)}
+                      className="flex items-center space-x-2 px-4 py-2 bg-white/10 text-white/80 rounded-xl hover:bg-white/20 transition-colors"
+                    >
                       <TrendingUp className="w-4 h-4" />
                       <span>Analyze</span>
                     </button>
@@ -330,6 +339,12 @@ const NameResults = () => {
           </motion.div>
         </div>
       </div>
+
+      <NameAnalysisModal
+        isOpen={analysisModal.isOpen}
+        onClose={() => setAnalysisModal({ isOpen: false, nameData: null })}
+        nameData={analysisModal.nameData}
+      />
     </div>
   );
 };
