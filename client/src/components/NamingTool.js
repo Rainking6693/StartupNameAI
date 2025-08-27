@@ -241,30 +241,6 @@ const NamingTool = () => {
         </div>
       )}
 
-      {/* DEBUG: Direct Navigation Test */}
-      <div className="px-6 mb-4">
-        <div className="max-w-4xl mx-auto">
-          <button
-            onClick={() => {
-              console.log('🧪 DIRECT TEST: Navigating to results...');
-              const testSessionId = Date.now().toString();
-              const testData = {
-                formData: { industry: 'ecommerce', style: 'modern', keywords: ['shoes'] },
-                results: [
-                  { id: 1, name: 'ShoeFlow', explanation: 'Test name', brandabilityScore: 8.5, domainFriendly: true }
-                ],
-                timestamp: new Date().toISOString()
-              };
-              localStorage.setItem(`naming_session_${testSessionId}`, JSON.stringify(testData));
-              navigate(`/results/${testSessionId}`);
-            }}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm"
-          >
-            🧪 DEBUG: Test Navigation
-          </button>
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="px-6 pb-20">
         <div className="max-w-4xl mx-auto">
