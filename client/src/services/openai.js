@@ -1,15 +1,26 @@
+import EnvironmentChecker from '../utils/envChecker';
+
 class OpenAIService {
   constructor() {
     this.apiKey = process.env.REACT_APP_OPENAI_API_KEY;
     this.baseURL = 'https://api.openai.com/v1';
     
+    // Check environment setup
+    EnvironmentChecker.checkOpenAIKey();
+    
     if (!this.apiKey) {
-      console.warn('OpenAI API key not found in environment variables');
+      console.warn('🚨 OpenAI API key not found. Name generation will use fallback mode.');
     }
   }
 
   async generateStartupNames(formData) {
     const { keywords, industry = 'tech', style = 'modern', description = '' } = formData;
+    
+    // Check if we have API key first
+    if (!this.apiKey) {
+      console.log('🔄 Using fallback name generation (no API key)');
+      return this.generateFallbackNames(formData);
+    }
     
     try {
       const prompt = this.buildNamingPrompt(keywords, industry, style, description);

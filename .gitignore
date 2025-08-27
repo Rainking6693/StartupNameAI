@@ -9,11 +9,16 @@ yarn.lock
 /client/build/
 /server/dist/
 
-# Environment
+# Environment files (NEVER commit these)
 .env
 .env.local
-.env.production
 .env.development
+.env.production
+.env.staging
+client/.env
+client/.env.local
+server/.env
+server/.env.local
 
 # IDE
 .vscode/
