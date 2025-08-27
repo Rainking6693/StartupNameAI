@@ -19,9 +19,293 @@ import {
   Eye,
   Timer,
   Flame,
-  Shield
+  Shield,
+  Crown
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
+// Interactive Demo Component
+const InteractiveDemoComponent = ({ isOpen, onClose, onGetStarted }) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [industry, setIndustry] = useState('');
+  const [keywords, setKeywords] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+
+  const sampleData = {
+    tech: {
+      names: ['TechFlow', 'CodeVault', 'DataBridge', 'CloudSync', 'ByteForge'],
+      descriptions: ['Perfect for DevOps platforms', 'Ideal for secure data storage', 'Great for integration services', 'Cloud management solution', 'Development toolkit']
+    },
+    health: {
+      names: ['VitalCare', 'HealthBridge', 'WellnessHub', 'MindBody', 'CareSync'],
+      descriptions: ['Healthcare platform', 'Patient management', 'Wellness tracking', 'Mental health app', 'Healthcare coordination']
+    },
+    food: {
+      names: ['FlavorCraft', 'FreshFlow', 'TasteHub', 'NutriSync', 'FoodFlow'],
+      descriptions: ['Restaurant platform', 'Food delivery service', 'Recipe community', 'Nutrition tracking', 'Food ordering system']
+    }
+  };
+
+  const handleIndustrySelect = (selectedIndustry) => {
+    setIndustry(selectedIndustry);
+    setTimeout(() => setCurrentStep(2), 500);
+  };
+
+  const handleKeywordSubmit = () => {
+    if (keywords.trim()) {
+      setCurrentStep(3);
+      setIsGenerating(true);
+      setTimeout(() => {
+        setIsGenerating(false);
+        setShowResults(true);
+        setCurrentStep(4);
+      }, 3000);
+    }
+  };
+
+  const resetDemo = () => {
+    setCurrentStep(1);
+    setIndustry('');
+    setKeywords('');
+    setIsGenerating(false);
+    setShowResults(false);
+  };
+
+  const handleClose = () => {
+    resetDemo();
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={handleClose}
+      >
+        <motion.div
+          className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-2xl">
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl font-bold">🚀 Interactive Demo</h3>
+              <button
+                onClick={handleClose}
+                className="text-white/80 hover:text-white text-xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            <div className="mt-4">
+              <div className="flex items-center space-x-2 mb-2">
+                {[1, 2, 3, 4].map((step) => (
+                  <div
+                    key={step}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                      step <= currentStep
+                        ? 'bg-white text-purple-600'
+                        : 'bg-purple-400/50 text-white/70'
+                    }`}
+                  >
+                    {step}
+                  </div>
+                ))}
+              </div>
+              <div className="text-sm text-purple-100">
+                Step {currentStep} of 4: Experience how our AI creates perfect startup names
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            {/* Step 1: Industry Selection */}
+            {currentStep === 1 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-center"
+              >
+                <h4 className="text-2xl font-bold text-gray-800 mb-4">
+                  Select Your Industry
+                </h4>
+                <p className="text-gray-600 mb-8">
+                  Our AI understands industry-specific naming patterns
+                </p>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {[
+                    { id: 'tech', name: 'Technology', icon: '💻', desc: 'Software, AI, SaaS' },
+                    { id: 'health', name: 'Healthcare', icon: '🏥', desc: 'Medical, Wellness' },
+                    { id: 'food', name: 'Food & Dining', icon: '🍕', desc: 'Restaurants, Delivery' }
+                  ].map((ind) => (
+                    <motion.button
+                      key={ind.id}
+                      onClick={() => handleIndustrySelect(ind.id)}
+                      className="bg-gray-50 hover:bg-purple-50 border-2 hover:border-purple-300 rounded-xl p-6 transition-all"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="text-4xl mb-3">{ind.icon}</div>
+                      <h5 className="font-bold text-gray-800 mb-2">{ind.name}</h5>
+                      <p className="text-sm text-gray-600">{ind.desc}</p>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 2: Keyword Input */}
+            {currentStep === 2 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="max-w-2xl mx-auto text-center"
+              >
+                <h4 className="text-2xl font-bold text-gray-800 mb-4">
+                  Describe Your Startup
+                </h4>
+                <p className="text-gray-600 mb-6">
+                  Tell us what your startup does in a few keywords
+                </p>
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <label className="block text-left font-semibold text-gray-700 mb-3">
+                    Keywords or description:
+                  </label>
+                  <input
+                    type="text"
+                    value={keywords}
+                    onChange={(e) => setKeywords(e.target.value)}
+                    placeholder="e.g., project management, team collaboration, productivity"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    autoFocus
+                  />
+                  <motion.button
+                    onClick={handleKeywordSubmit}
+                    disabled={!keywords.trim()}
+                    className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={keywords.trim() ? { scale: 1.02 } : {}}
+                  >
+                    Generate Names →
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 3: AI Generation */}
+            {currentStep === 3 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-12"
+              >
+                <div className="max-w-md mx-auto">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full mx-auto mb-6"
+                  />
+                  <h4 className="text-2xl font-bold text-gray-800 mb-4">
+                    AI is Analyzing...
+                  </h4>
+                  <div className="space-y-2 text-gray-600">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      ✓ Scanning 50,000+ successful startups
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1.5 }}
+                    >
+                      ✓ Analyzing industry patterns
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 2.5 }}
+                    >
+                      ✓ Checking domain availability
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 4: Results */}
+            {currentStep === 4 && showResults && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-3xl mx-auto"
+              >
+                <h4 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+                  🎉 Perfect Names Generated!
+                </h4>
+                <div className="grid gap-4 mb-8">
+                  {sampleData[industry]?.names.map((name, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-4 flex items-center justify-between"
+                    >
+                      <div>
+                        <h5 className="font-bold text-gray-800 text-lg">{name}</h5>
+                        <p className="text-gray-600 text-sm">{sampleData[industry]?.descriptions[index]}</p>
+                        <div className="flex items-center space-x-4 mt-2 text-xs">
+                          <span className="text-green-600 font-semibold">✓ Domain Available</span>
+                          <span className="text-blue-600 font-semibold">✓ Trademark Clear</span>
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                            <span className="text-gray-600">9.{Math.floor(Math.random() * 10)}/10</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-2xl">🚀</div>
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <div className="text-center">
+                  <motion.button
+                    onClick={() => {
+                      onClose();
+                      onGetStarted();
+                    }}
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg mr-4 mb-4"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    Get My Real Names Now →
+                  </motion.button>
+                  <motion.button
+                    onClick={resetDemo}
+                    className="bg-gray-200 text-gray-700 px-6 py-4 rounded-xl font-semibold"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    Try Different Industry
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -145,14 +429,17 @@ const LandingPage = () => {
             <a href="#examples" className="text-white/80 hover:text-white transition-colors">Examples</a>
             <motion.button 
               onClick={handleGetStarted}
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 shadow-lg"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 shadow-lg relative"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <span className="flex items-center space-x-2">
-                <Flame className="w-4 h-4" />
-                <span>START NOW</span>
+                <Crown className="w-4 h-4" />
+                <span>FROM $19</span>
               </span>
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold animate-pulse">
+                50% OFF
+              </div>
             </motion.button>
           </motion.div>
         </div>
@@ -314,58 +601,171 @@ const LandingPage = () => {
         />
       </section>
 
-      {/* Demo Modal */}
-      <AnimatePresence>
-        {showDemo && (
+      {/* PRICING PREVIEW SECTION */}
+      <section className="px-6 py-16 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto">
           <motion.div
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowDemo(false)}
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+              Choose Your Perfect Package
+            </h2>
+            <p className="text-xl text-white/90 mb-6">
+              Start free, upgrade only if you love the results
+            </p>
+            <div className="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 max-w-lg mx-auto">
+              <div className="flex items-center justify-center space-x-2 text-yellow-300">
+                <Timer className="w-5 h-5 animate-pulse" />
+                <span className="font-bold">50% OFF ends in {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')}</span>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Starter Package */}
             <motion.div
-              className="bg-white rounded-2xl p-8 max-w-2xl w-full"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
             >
               <div className="text-center mb-6">
-                <h3 className="text-3xl font-bold text-gray-800 mb-4">
-                  🎬 See StartupNamer.org in Action
-                </h3>
-                <p className="text-gray-600">Watch how we generate perfect startup names in seconds</p>
-              </div>
-
-              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 mb-6">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">🚀</div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-2">Live Demo Coming Soon!</h4>
-                  <p className="text-gray-600 mb-4">Interactive demo will be available shortly</p>
-                  <motion.button
-                    onClick={() => {
-                      setShowDemo(false);
-                      handleGetStarted();
-                    }}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-bold hover:from-purple-700 hover:to-pink-700 transition-all"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    Try It Live Instead →
-                  </motion.button>
+                <h3 className="text-2xl font-bold text-white mb-2">Starter</h3>
+                <div className="text-4xl font-black text-white mb-2">
+                  <span className="line-through text-gray-400 text-2xl">$39</span> $19
                 </div>
+                <div className="text-green-400 font-semibold">Save $20</div>
               </div>
-
+              <div className="space-y-3 mb-6">
+                {[
+                  '25 AI-generated names',
+                  'Industry-specific analysis',
+                  'Basic domain checking',
+                  'Brandability scores',
+                  'Email support'
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <span className="text-white/90">{feature}</span>
+                  </div>
+                ))}
+              </div>
               <button
-                onClick={() => setShowDemo(false)}
-                className="w-full py-2 text-gray-500 hover:text-gray-700 transition-colors"
+                onClick={handleGetStarted}
+                className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-xl font-bold hover:from-blue-600 hover:to-cyan-600 transition-all"
               >
-                Close
+                Get Started
               </button>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+            {/* Professional Package - Most Popular */}
+            <motion.div
+              className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-400/50 relative"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-6 py-2 rounded-full font-bold text-sm flex items-center space-x-2">
+                  <Crown className="w-4 h-4" />
+                  <span>MOST POPULAR</span>
+                </div>
+              </div>
+              <div className="text-center mb-6 pt-4">
+                <h3 className="text-2xl font-bold text-white mb-2">Professional</h3>
+                <div className="text-4xl font-black text-white mb-2">
+                  <span className="line-through text-gray-400 text-2xl">$79</span> $39
+                </div>
+                <div className="text-green-400 font-semibold">Save $40</div>
+              </div>
+              <div className="space-y-3 mb-6">
+                {[
+                  '100+ premium name options',
+                  'Advanced trademark screening',
+                  'Logo design suggestions',
+                  'Social media handle check',
+                  'Priority support',
+                  'Competitor analysis'
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <span className="text-white/90">{feature}</span>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={handleGetStarted}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold hover:from-purple-700 hover:to-pink-700 transition-all"
+              >
+                Choose Professional
+              </button>
+            </motion.div>
+
+            {/* Enterprise Package */}
+            <motion.div
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
+                <div className="text-4xl font-black text-white mb-2">
+                  <span className="line-through text-gray-400 text-2xl">$159</span> $79
+                </div>
+                <div className="text-green-400 font-semibold">Save $80</div>
+              </div>
+              <div className="space-y-3 mb-6">
+                {[
+                  'Unlimited name generation',
+                  'Full trademark research',
+                  'Brand strategy consultation',
+                  'Custom logo designs',
+                  '1-on-1 naming expert call',
+                  'Legal compliance review'
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <span className="text-white/90">{feature}</span>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={handleGetStarted}
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-black py-3 rounded-xl font-bold hover:from-yellow-600 hover:to-orange-600 transition-all"
+              >
+                Go Enterprise
+              </button>
+            </motion.div>
+          </div>
+
+          <div className="text-center mt-8 text-white/60 text-sm">
+            <div className="flex items-center justify-center space-x-4 mb-2">
+              <Shield className="w-4 h-4" />
+              <span>30-day money-back guarantee</span>
+              <span>•</span>
+              <span>No setup fees</span>
+              <span>•</span>
+              <span>Cancel anytime</span>
+            </div>
+            <p>Join 10,000+ funded startups who chose the smart way to name their company</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Demo Component */}
+      <InteractiveDemoComponent
+        isOpen={showDemo}
+        onClose={() => setShowDemo(false)}
+        onGetStarted={handleGetStarted}
+      />
 
       {/* FEATURES SECTION - CONVERSION FOCUSED */}
       <section id="features" className="relative px-6 py-20 bg-black/20 backdrop-blur-sm">
@@ -506,93 +906,6 @@ const LandingPage = () => {
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* PRICING SECTION - CONVERSION OPTIMIZED */}
-      <section id="pricing" className="px-6 py-20 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-6">
-              Stop Wasting Money on Agencies
-            </h2>
-            <p className="text-xl text-white/90 mb-12">
-              Get better results than $5,000 naming consultants. Start free, upgrade only if you love it.
-            </p>
-            
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
-              <div className="text-center mb-8">
-                <div className="text-6xl font-black text-yellow-400 mb-2">FREE</div>
-                <div className="text-white/80 text-xl">Start Today - No Risk</div>
-                <div className="bg-green-500/20 text-green-300 px-4 py-2 rounded-full inline-block mt-4 text-sm font-bold">
-                  🔥 50% OFF Premium - Limited Time
-                </div>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-white/5 rounded-2xl p-6">
-                  <h3 className="text-xl font-bold text-white mb-4">Free Starter</h3>
-                  <div className="space-y-3 text-left">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-white/90">10 AI-generated names</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-white/90">Basic brandability scores</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-white/90">Domain availability check</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-6 border border-purple-400/30">
-                  <h3 className="text-xl font-bold text-white mb-4">Pro Package <span className="text-sm bg-red-500 px-2 py-1 rounded-full">50% OFF</span></h3>
-                  <div className="space-y-3 text-left">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-white/90">50+ premium name options</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-white/90">Advanced trademark screening</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-white/90">Logo & domain suggestions</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-white/90">Industry-specific analysis</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <button
-                onClick={handleGetStarted}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-6 rounded-2xl font-black text-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:scale-105 mb-4"
-              >
-                START FREE - GET MY NAMES NOW
-              </button>
-              
-              <div className="text-center text-white/60 text-sm space-y-2">
-                <div>✅ No credit card required • ✅ 30-second setup • ✅ Instant results</div>
-                <div><strong>98% of users</strong> find their perfect name in the first batch</div>
-              </div>
-            </div>
-            
-            <div className="mt-8 text-white/60 text-sm max-w-2xl mx-auto">
-              <strong>Compare:</strong> Naming agencies charge $5,000-15,000 and take 4-8 weeks. 
-              Our AI delivers better results in 30 seconds, starting free.
-            </div>
-          </motion.div>
         </div>
       </section>
 
