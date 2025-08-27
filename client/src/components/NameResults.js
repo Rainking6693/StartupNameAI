@@ -15,7 +15,8 @@ import {
   Brain,
   Sparkles,
   Copy,
-  RefreshCw
+  RefreshCw,
+  BarChart3
 } from 'lucide-react';
 
 const NameResults = () => {
@@ -123,6 +124,7 @@ const NameResults = () => {
   };
 
   const handleAnalyze = (nameData) => {
+    console.log('Opening deep analysis for:', nameData.name);
     setAnalysisModal({ isOpen: true, nameData });
   };
 
@@ -304,10 +306,10 @@ const NameResults = () => {
                     </button>
                     <button 
                       onClick={() => handleAnalyze(name)}
-                      className="flex items-center space-x-2 px-4 py-2 bg-white/10 text-white/80 rounded-xl hover:bg-white/20 transition-colors"
+                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg"
                     >
-                      <TrendingUp className="w-4 h-4" />
-                      <span>Analyze</span>
+                      <BarChart3 className="w-4 h-4" />
+                      <span>Deep Analysis</span>
                     </button>
                   </div>
 
@@ -344,6 +346,10 @@ const NameResults = () => {
         isOpen={analysisModal.isOpen}
         onClose={() => setAnalysisModal({ isOpen: false, nameData: null })}
         nameData={analysisModal.nameData}
+        onUpgrade={() => {
+          console.log('Upgrade to premium analysis clicked');
+          // Handle upgrade flow
+        }}
       />
     </div>
   );
