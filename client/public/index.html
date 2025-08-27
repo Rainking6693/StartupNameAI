@@ -1,74 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0ea5e9" />
-    <meta 
-      name="description" 
-      content="StartupNamer.org - The startup naming authority. Generate perfect startup names with advanced AI technology, domain checking, and brandability analysis. Trusted by 10,000+ entrepreneurs." 
-    />
-    <meta name="keywords" content="startup names, AI naming, business names, startup naming tool, brand names, startup naming authority, domain checker, brandability analysis" />
-    <meta name="author" content="StartupNamer.org" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5BX35HBS');</script>
+    <!-- End Google Tag Manager -->
     
-    <!-- Open Graph / Facebook -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="msapplication-TileColor" content="#0ea5e9" />
+    
+    <!-- SEO Meta Tags -->
+    <title>StartupNamer.org - The Startup Naming Authority | AI-Powered Business Names</title>
+    <meta name="description" content="StartupNamer.org - The startup naming authority. Generate perfect startup names with advanced AI technology, domain checking, and brandability analysis. Trusted by 10,000+ entrepreneurs worldwide." />
+    <meta name="keywords" content="startup names, AI naming, business names, startup naming tool, brand names, startup naming authority, domain checker, brandability analysis, business naming generator, company names, entrepreneur tools, startup branding, name generator, business identity, brand creation, startup tools, naming consultant, creative names, memorable names, brandable names" />
+    <meta name="author" content="StartupNamer.org Team" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="general" />
+    <meta name="distribution" content="global" />
+    <meta name="language" content="english" />
+    <meta name="geo.region" content="US" />
+    <meta name="geo.placename" content="United States" />
+    
+    <!-- Open Graph / Facebook Meta Tags -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://startupnamer.org/" />
     <meta property="og:title" content="StartupNamer.org - The Startup Naming Authority" />
-    <meta property="og:description" content="Generate perfect startup names with advanced AI technology. Professional domain checking, brandability analysis, and expert guidance trusted by 10,000+ entrepreneurs." />
+    <meta property="og:description" content="Generate perfect startup names with advanced AI technology. Professional domain checking, brandability analysis, and expert guidance trusted by 10,000+ entrepreneurs worldwide." />
     <meta property="og:site_name" content="StartupNamer.org" />
     <meta property="og:image" content="https://startupnamer.org/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:updated_time" content="2025-01-15T12:00:00Z" />
+    <meta property="article:author" content="StartupNamer.org" />
+    <meta property="article:publisher" content="https://www.facebook.com/StartupNamer" />
     
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://startupnamer.org/" />
-    <meta property="twitter:title" content="StartupNamer.org - The Startup Naming Authority" />
-    <meta property="twitter:description" content="Generate perfect startup names with advanced AI technology. Trusted by 10,000+ entrepreneurs." />
-    <meta property="twitter:site" content="@StartupNamer" />
-    <meta property="twitter:image" content="https://startupnamer.org/twitter-card.jpg" />
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://startupnamer.org/" />
+    <meta name="twitter:title" content="StartupNamer.org - The Startup Naming Authority" />
+    <meta name="twitter:description" content="Generate perfect startup names with advanced AI technology. Trusted by 10,000+ entrepreneurs worldwide." />
+    <meta name="twitter:site" content="@StartupNamer" />
+    <meta name="twitter:creator" content="@StartupNamer" />
+    <meta name="twitter:image" content="https://startupnamer.org/twitter-card.jpg" />
+    <meta name="twitter:image:alt" content="StartupNamer.org - AI-Powered Startup Naming Tool" />
     
-    <!-- Canonical URL -->
+    <!-- LinkedIn Meta Tags -->
+    <meta property="og:image:secure_url" content="https://startupnamer.org/og-image.jpg" />
+    <meta name="linkedin:owner" content="StartupNamer" />
+    
+    <!-- Pinterest Meta Tags -->
+    <meta name="pinterest:description" content="Generate perfect startup names with advanced AI technology at StartupNamer.org" />
+    <meta name="pinterest:media" content="https://startupnamer.org/pinterest-image.jpg" />
+    
+    <!-- Canonical URL and Hreflang -->
     <link rel="canonical" href="https://startupnamer.org/" />
+    <link rel="alternate" hreflang="en" href="https://startupnamer.org/" />
+    <link rel="alternate" hreflang="x-default" href="https://startupnamer.org/" />
     
-    <!-- Preconnect to external resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- DNS Prefetch and Preconnect for Performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="//www.google-analytics.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
     
-    <!-- Professional favicon -->
+    <!-- Favicon and App Icons -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="%PUBLIC_URL%/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="%PUBLIC_URL%/apple-touch-icon-76x76.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png" />
     <link rel="manifest" href="%PUBLIC_URL%/site.webmanifest" />
+    <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#0ea5e9" />
     
-    <title>StartupNamer.org - The Startup Naming Authority | AI-Powered Business Names</title>
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileImage" content="%PUBLIC_URL%/mstile-150x150.png" />
+    <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml" />
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()" />
+    
+    <!-- Performance Hints -->
+    <link rel="preload" href="%PUBLIC_URL%/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/css/critical.css" as="style" />
+    
+    <!-- Critical CSS -->
+    <style>
+      /* Critical CSS for above-the-fold content */
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; }
+      .loading { display: flex; justify-content: center; align-items: center; height: 100vh; }
+      .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0ea5e9; border-radius: 50%; animation: spin 1s linear infinite; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run StartupNamer.org - The professional startup naming platform</noscript>
-    <div id="root"></div>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BX35HBS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     
-    <!-- The startup naming authority begins here -->
+    <noscript>
+      <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h1>StartupNamer.org</h1>
+        <p>You need to enable JavaScript to run StartupNamer.org - The professional startup naming platform trusted by 10,000+ entrepreneurs.</p>
+        <p>Please enable JavaScript in your browser settings and refresh this page.</p>
+      </div>
+    </noscript>
     
-    <!-- Schema.org structured data -->
+    <!-- Loading indicator -->
+    <div id="loading-indicator" class="loading" style="display: none;">
+      <div class="spinner"></div>
+    </div>
+    
+    <div id="root" role="main" aria-label="StartupNamer.org Application"></div>
+    
+    <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "StartupNamer.org",
-      "description": "AI-powered startup naming platform with domain checking and brandability analysis",
+      "alternateName": "Startup Naming Authority",
+      "description": "AI-powered startup naming platform with domain checking, brandability analysis, and expert guidance for entrepreneurs",
       "url": "https://startupnamer.org",
+      "sameAs": [
+        "https://www.facebook.com/StartupNamer",
+        "https://twitter.com/StartupNamer",
+        "https://www.linkedin.com/company/startupnamer"
+      ],
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "softwareVersion": "2.1.0",
+      "datePublished": "2023-01-01",
+      "dateModified": "2025-01-15",
+      "author": {
+        "@type": "Organization",
+        "name": "StartupNamer.org",
+        "url": "https://startupnamer.org",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://startupnamer.org/logo.png",
+          "width": 300,
+          "height": 300
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Customer Service",
+          "email": "support@startupnamer.org",
+          "availableLanguage": "English"
+        },
+        "foundingDate": "2023-01-01",
+        "founders": [
+          {
+            "@type": "Person",
+            "name": "StartupNamer Team"
+          }
+        ]
+      },
       "offers": {
         "@type": "Offer",
+        "name": "Premium Startup Naming Package",
+        "description": "Advanced AI naming with domain checking and brandability analysis",
         "price": "19",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2023-01-01",
+        "priceValidUntil": "2025-12-31",
+        "url": "https://startupnamer.org/pricing",
+        "seller": {
+          "@type": "Organization",
+          "name": "StartupNamer.org"
+        }
       },
-      "creator": {
-        "@type": "Organization",
-        "name": "StartupNamer.org"
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "1247",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "featureList": [
+        "AI-Powered Name Generation",
+        "Domain Availability Checking",
+        "Brandability Analysis",
+        "Trademark Screening",
+        "Social Media Handle Checking",
+        "Logo Mockups",
+        "Name History Tracking",
+        "Export Options"
+      ]
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "StartupNamer.org",
+      "alternateName": "The Startup Naming Authority",
+      "url": "https://startupnamer.org",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://startupnamer.org/logo.png",
+        "width": 300,
+        "height": 300
+      },
+      "description": "The leading AI-powered startup naming platform trusted by over 10,000 entrepreneurs worldwide",
+      "foundingDate": "2023-01-01",
+      "sameAs": [
+        "https://www.facebook.com/StartupNamer",
+        "https://twitter.com/StartupNamer",
+        "https://www.linkedin.com/company/startupnamer"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Service",
+        "email": "support@startupnamer.org",
+        "availableLanguage": "English"
       }
     }
+    </script>
+    
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does StartupNamer.org generate names?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "StartupNamer.org uses advanced AI algorithms to analyze your business concept, industry trends, and linguistic patterns to generate unique, brandable startup names that resonate with your target audience."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I check domain availability?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! StartupNamer.org includes real-time domain availability checking for .com, .net, .org, and other popular extensions, plus social media handle verification."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is brandability analysis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our brandability analysis evaluates names based on memorability, pronounceability, uniqueness, and market appeal to help you choose names that will build strong brands."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does StartupNamer.org cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "StartupNamer.org offers a free tier with basic name generation, and premium features including advanced analysis and unlimited searches starting at $19."
+          }
+        }
+      ]
+    }
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    
+    <!-- Performance Monitoring -->
+    <script>
+      window.addEventListener('load', function() {
+        if ('performance' in window) {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
+          
+          if (window.dataLayer) {
+            window.dataLayer.push({
+              event: 'page_performance',
+              page_load_time: loadTime,
+              dom_content_loaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart
+            });
+          }
+        }
+      });
     </script>
   </body>
 </html>

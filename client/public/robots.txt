@@ -1,0 +1,49 @@
+# StartupNamer.org - Robots.txt
+# The Startup Naming Authority
+
+User-agent: *
+Allow: /
+
+# High-priority pages for search engines
+Allow: /naming-tool
+Allow: /pricing
+Allow: /examples
+Allow: /privacy-policy
+Allow: /terms-of-service
+
+# Block admin/sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /results/
+Disallow: /payment/
+
+# Special instructions for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot  
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+# Block aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://startupnamer.org/sitemap.xml
+
+# Host preference (helps with www vs non-www)
+Host: startupnamer.org
