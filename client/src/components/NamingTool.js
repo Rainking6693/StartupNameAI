@@ -84,35 +84,50 @@ const NamingTool = () => {
   };
 
   const handleGenerate = async () => {
+    console.log('🚀 GENERATE CLICKED - Starting process...');
     setIsLoading(true);
     setError('');
     
     try {
-      // Test OpenAI connection first
-      const isConnected = await openaiService.testConnection();
-      if (!isConnected) {
-        throw new Error('Unable to connect to AI service. Please try again.');
-      }
-
-      // Generate names using OpenAI
-      const generatedNames = await openaiService.generateStartupNames(formData);
+      console.log('📊 Form data to process:', formData);
+      
+      // Generate names using fallback (skip OpenAI for now)
+      console.log('🔄 Generating fallback names...');
+      const generatedNames = openaiService.generateFallbackNames(formData);
+      console.log('✅ Generated names:', generatedNames);
       
       if (!generatedNames || generatedNames.length === 0) {
-        throw new Error('No names were generated. Please try different keywords.');
+        throw new Error('No names were generated');
       }
 
-      // Store results and navigate to results page
+      // Create session data
       const sessionId = Date.now().toString();
-      localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify({
+      const sessionData = {
         formData,
         results: generatedNames,
         timestamp: new Date().toISOString()
-      }));
-
-      navigate(`/results/${sessionId}`);
+      };
       
+      console.log('💾 Saving session data:', sessionId, sessionData);
+      
+      // Store in localStorage
+      try {
+        localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));
+        console.log('✅ Session data saved to localStorage');
+      } catch (storageError) {
+        console.error('❌ Failed to save to localStorage:', storageError);
+      }
+
+      console.log('🧭 Attempting navigation to:', `/results/${sessionId}`);
+      
+      // Try navigation with explicit delay
+      setTimeout(() => {
+        console.log('🧭 Navigating now...');
+        navigate(`/results/${sessionId}`);
+      }, 100);
+
     } catch (error) {
-      console.error('Name generation failed:', error);
+      console.error('❌ Name generation failed:', error);
       setError(error.message || 'Failed to generate names. Please try again.');
       setIsLoading(false);
     }
@@ -225,6 +240,30 @@ const NamingTool = () => {
           </div>
         </div>
       )}
+
+      {/* DEBUG: Direct Navigation Test */}
+      <div className="px-6 mb-4">
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={() => {
+              console.log('🧪 DIRECT TEST: Navigating to results...');
+              const testSessionId = Date.now().toString();
+              const testData = {
+                formData: { industry: 'ecommerce', style: 'modern', keywords: ['shoes'] },
+                results: [
+                  { id: 1, name: 'ShoeFlow', explanation: 'Test name', brandabilityScore: 8.5, domainFriendly: true }
+                ],
+                timestamp: new Date().toISOString()
+              };
+              localStorage.setItem(`naming_session_${testSessionId}`, JSON.stringify(testData));
+              navigate(`/results/${testSessionId}`);
+            }}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm"
+          >
+            🧪 DEBUG: Test Navigation
+          </button>
+        </div>
+      </div>
 
       {/* Main Content */}
       <div className="px-6 pb-20">

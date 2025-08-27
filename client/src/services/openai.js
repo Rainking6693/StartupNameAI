@@ -161,7 +161,14 @@ Focus on names that will help this ${industry} startup stand out and attract ${s
   }
 
   generateFallbackNames(formData) {
-    const { keywords, industry, style } = formData;
+    console.log('🔄 Fallback generation starting with:', formData);
+    
+    const { keywords = [], industry = 'tech', style = 'modern' } = formData;
+    
+    // Ensure we have at least one keyword
+    const workingKeywords = keywords.length > 0 ? keywords : ['startup'];
+    
+    console.log('🏭 Industry:', industry, 'Style:', style, 'Keywords:', workingKeywords);
     
     // Industry-specific word parts for fallback
     const industryWords = {
@@ -169,7 +176,10 @@ Focus on names that will help this ${industry} startup stand out and attract ${s
       health: ['Health', 'Care', 'Med', 'Vital', 'Life', 'Pulse', 'Heal', 'Wellness', 'Pure', 'Fit'],
       fintech: ['Pay', 'Coin', 'Bank', 'Fund', 'Cash', 'Finance', 'Capital', 'Invest', 'Money', 'Vault'],
       ecommerce: ['Shop', 'Buy', 'Cart', 'Market', 'Store', 'Trade', 'Sale', 'Deal', 'Retail', 'Commerce'],
-      education: ['Learn', 'Edu', 'Study', 'Know', 'Skill', 'Mind', 'Brain', 'Academy', 'Scholar', 'Teach']
+      education: ['Learn', 'Edu', 'Study', 'Know', 'Skill', 'Mind', 'Brain', 'Academy', 'Scholar', 'Teach'],
+      food: ['Taste', 'Fresh', 'Bite', 'Flavor', 'Cook', 'Chef', 'Kitchen', 'Recipe', 'Meal', 'Dish'],
+      travel: ['Go', 'Trip', 'Journey', 'Explore', 'Adventure', 'Wander', 'Roam', 'Discover', 'Venture', 'Quest'],
+      other: ['Pro', 'Max', 'Plus', 'Prime', 'Elite', 'Smart', 'Quick', 'Easy', 'Simple', 'Best']
     };
 
     const styleModifiers = {
@@ -182,26 +192,49 @@ Focus on names that will help this ${industry} startup stand out and attract ${s
     const baseWords = industryWords[industry] || industryWords.tech;
     const modifiers = styleModifiers[style] || styleModifiers.modern;
     
+    console.log('🧩 Using base words:', baseWords.slice(0, 5));
+    console.log('🎨 Using modifiers:', modifiers.slice(0, 3));
+    
     const fallbackNames = [];
     
     // Generate names using keywords + base words
-    keywords.forEach(keyword => {
+    workingKeywords.forEach((keyword, keywordIndex) => {
       const capitalizedKeyword = keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase();
       
-      baseWords.slice(0, 5).forEach(word => {
+      baseWords.slice(0, 4).forEach((word, wordIndex) => {
+        const nameId = (keywordIndex * 10) + wordIndex + 1;
+        
+        // Forward combination
         fallbackNames.push({
-          id: fallbackNames.length + 1,
+          id: nameId,
           name: capitalizedKeyword + word,
           explanation: `${capitalizedKeyword + word} combines your keyword '${keyword}' with ${industry} industry terminology, creating a brandable name that clearly communicates your focus area.`,
-          brandabilityScore: 7 + Math.random() * 2,
-          domainFriendly: true,
-          psychologyTriggers: ['clarity', 'industry-focus'],
+          brandabilityScore: parseFloat((7 + Math.random() * 2.5).toFixed(1)),
+          domainFriendly: Math.random() > 0.3,
+          psychologyTriggers: ['clarity', 'industry-focus', keyword.toLowerCase()],
           source: 'fallback'
         });
+        
+        // Reverse combination
+        if (fallbackNames.length < 15) {
+          fallbackNames.push({
+            id: nameId + 100,
+            name: word + capitalizedKeyword,
+            explanation: `${word + capitalizedKeyword} places industry terminology first, emphasizing your ${industry} expertise while incorporating '${keyword}' for brand personality.`,
+            brandabilityScore: parseFloat((7.2 + Math.random() * 2.3).toFixed(1)),
+            domainFriendly: Math.random() > 0.4,
+            psychologyTriggers: ['authority', 'expertise', keyword.toLowerCase()],
+            source: 'fallback'
+          });
+        }
       });
     });
-
-    return fallbackNames.slice(0, 20);
+    
+    const finalNames = fallbackNames.slice(0, 20);
+    console.log('✅ Generated fallback names:', finalNames.length, 'names');
+    console.log('📋 Sample names:', finalNames.slice(0, 3).map(n => n.name));
+    
+    return finalNames;
   }
 
   // Test API connection
