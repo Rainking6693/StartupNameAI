@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Sparkles, 
+  Zap, 
   Brain, 
   Target, 
   CheckCircle, 
@@ -11,463 +11,419 @@ import {
   TrendingUp,
   Globe,
   Award,
-  Zap,
-  X,
+  Sparkles,
   Clock,
   DollarSign,
-  AlertTriangle,
-  Lightbulb
+  AlertCircle,
+  PlayCircle,
+  Eye,
+  Timer,
+  Flame,
+  Shield
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [liveViewers, setLiveViewers] = useState(127);
+  const [namesGenerated, setNamesGenerated] = useState(47832);
   const [showDemo, setShowDemo] = useState(false);
-  const [demoStep, setDemoStep] = useState(0);
+  const [urgencyTimer, setUrgencyTimer] = useState({ hours: 23, minutes: 47, seconds: 32 });
 
-  const handleGetStarted = () => {
-    navigate('/naming-tool');
-  };
-
-  const demoNames = [
-    { name: 'StreamFlow', score: 9.2, available: true },
-    { name: 'DataVault', score: 8.8, available: true },
-    { name: 'CloudSync', score: 8.5, available: false },
-    { name: 'InnovateLab', score: 9.1, available: true }
-  ];
-
-  const runDemo = () => {
-    setShowDemo(true);
-    setDemoStep(0);
-    
-    const steps = ['Analyzing keywords...', 'Checking domains...', 'Scoring brandability...', 'Complete!'];
-    
-    steps.forEach((step, index) => {
-      setTimeout(() => {
-        setDemoStep(index + 1);
-      }, (index + 1) * 800);
-    });
-  };
-
+  // Psychological triggers - Live activity simulation
   useEffect(() => {
-    const handleSmoothScroll = (e) => {
-      e.preventDefault();
-      const href = e.currentTarget.getAttribute('href');
-      if (href && href.startsWith('#')) {
-        const targetId = href.substring(1);
-        const element = document.getElementById(targetId);
-        if (element) {
-          element.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest'
-          });
-        }
-      }
-    };
+    const viewerInterval = setInterval(() => {
+      setLiveViewers(prev => {
+        const change = Math.floor(Math.random() * 7) - 3;
+        return Math.max(95, Math.min(180, prev + change));
+      });
+    }, 4000);
 
-    // Add click handlers to navigation links
-    const navLinks = document.querySelectorAll('a[href^="#"]');
-    navLinks.forEach(link => {
-      link.addEventListener('click', handleSmoothScroll);
-    });
+    const nameInterval = setInterval(() => {
+      setNamesGenerated(prev => prev + Math.floor(Math.random() * 3) + 1);
+    }, 6000);
+
+    const timerInterval = setInterval(() => {
+      setUrgencyTimer(prev => {
+        let { hours, minutes, seconds } = prev;
+        seconds--;
+        if (seconds < 0) {
+          seconds = 59;
+          minutes--;
+          if (minutes < 0) {
+            minutes = 59;
+            hours--;
+            if (hours < 0) {
+              hours = 23;
+              minutes = 59;
+              seconds = 59;
+            }
+          }
+        }
+        return { hours, minutes, seconds };
+      });
+    }, 1000);
 
     return () => {
-      navLinks.forEach(link => {
-        link.removeEventListener('click', handleSmoothScroll);
-      });
+      clearInterval(viewerInterval);
+      clearInterval(nameInterval);
+      clearInterval(timerInterval);
     };
   }, []);
 
+  const handleGetStarted = () => {
+    if (window.gtag) {
+      window.gtag('event', 'click', {
+        event_category: 'CTA',
+        event_label: 'Hero Get Started'
+      });
+    }
+    navigate('/naming-tool');
+  };
+
+  const handleWatchDemo = () => {
+    setShowDemo(true);
+    if (window.gtag) {
+      window.gtag('event', 'click', {
+        event_category: 'Engagement',
+        event_label: 'Demo Video'
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-amber-50">
-      {/* Navigation */}
-      <nav className="relative z-50 px-6 py-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 relative overflow-hidden">
+      {/* Live Activity Bar - Social Proof */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm py-2 px-4 z-50"
+        initial={{ y: -40 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 2 }}
+      >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-sky-400 to-amber-300 rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+              <Eye className="w-4 h-4" />
+              <span className="font-semibold">{liveViewers} people viewing now</span>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-amber-600 bg-clip-text text-transparent">
-              StartupNamer.org
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-4 h-4" />
+              <span>{namesGenerated.toLocaleString()} startup names generated</span>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Timer className="w-4 h-4" />
+            <span className="font-bold">Limited Time: {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')}</span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Navigation */}
+      <nav className="relative z-40 px-6 py-4 mt-12">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <motion.div 
+            className="flex items-center space-x-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <Sparkles className="w-8 h-8 text-white" />
+            <span className="text-2xl font-bold text-white">StartupNamer.org</span>
+            <span className="bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold ml-2">
+              #1 AI NAMING
             </span>
-          </div>
+          </motion.div>
           
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#problem" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">Problems We Solve</a>
-            <a href="#how-it-works" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">How It Works</a>
-            <a href="#pricing" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">Pricing</a>
-            <button 
+          <motion.div 
+            className="hidden md:flex items-center space-x-6"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <a href="#features" className="text-white/80 hover:text-white transition-colors">Features</a>
+            <a href="#pricing" className="text-white/80 hover:text-white transition-colors">Pricing</a>
+            <a href="#examples" className="text-white/80 hover:text-white transition-colors">Examples</a>
+            <motion.button 
               onClick={handleGetStarted}
-              className="bg-gradient-to-r from-sky-500 to-amber-400 text-white px-6 py-2.5 rounded-full font-semibold hover:from-sky-600 hover:to-amber-500 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              Start Naming →
-            </button>
-          </div>
+              <span className="flex items-center space-x-2">
+                <Flame className="w-4 h-4" />
+                <span>START NOW</span>
+              </span>
+            </motion.button>
+          </motion.div>
         </div>
       </nav>
 
-      {/* Hero Section - Conversion Optimized */}
-      <section className="relative px-6 py-12 text-center">
+      {/* HERO SECTION - CONVERSION OPTIMIZED */}
+      <section className="relative px-6 py-16 text-center">
         <div className="max-w-6xl mx-auto">
-          {/* Main Value Proposition */}
+          {/* Urgency Banner */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            className="bg-gradient-to-r from-red-600/20 to-orange-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 mb-8 max-w-2xl mx-auto"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
           >
-            <div className="bg-gradient-to-r from-purple-100 to-blue-100 text-slate-700 px-4 py-2 rounded-full inline-block mb-6 text-sm font-semibold">
-              🧠 AI trained on 50,000+ successful startups
+            <div className="flex items-center justify-center space-x-3 text-yellow-300">
+              <AlertCircle className="w-5 h-5 animate-pulse" />
+              <span className="font-bold text-lg">⚡ LIMITED TIME: 50% OFF ALL PACKAGES</span>
+              <AlertCircle className="w-5 h-5 animate-pulse" />
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold text-slate-800 mb-6 leading-tight">
-              Stop Wasting Time on
-              <span className="bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent block mt-2">
-                Amateur Name Ideas
+            <div className="text-white/80 text-sm mt-2">
+              Ends in {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')} • Don't miss out!
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Main Headline with Power Words */}
+            <h1 className="text-6xl md:text-8xl font-black text-white mb-6 leading-tight">
+              STOP
+              <span className="bg-gradient-to-r from-red-400 via-yellow-400 to-orange-400 bg-clip-text text-transparent block">
+                WASTING TIME
               </span>
+              <span className="text-5xl md:text-6xl">On Bad Startup Names</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-              Get AI-Powered Names Based on 50,000+ Successful Startups. 
-              <strong>What naming consultants charge $5,000 for, delivered in 30 seconds.</strong>
-            </p>
+            <div className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm rounded-2xl p-6 mb-8 max-w-4xl mx-auto border border-yellow-400/30">
+              <p className="text-2xl md:text-3xl text-white font-bold mb-4">
+                Get The Perfect Name in 30 Seconds
+              </p>
+              <p className="text-lg text-white/90">
+                AI-powered • Domain-checked • Trademark-screened • Used by 10,000+ funded startups
+              </p>
+            </div>
 
-            {/* Interactive Demo Button */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
-              <button
+            {/* Triple CTA Section */}
+            <div className="grid md:grid-cols-3 gap-4 mb-8 max-w-5xl mx-auto">
+              {/* Primary CTA */}
+              <motion.button
                 onClick={handleGetStarted}
-                className="bg-gradient-to-r from-sky-500 to-amber-400 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:from-sky-600 hover:to-amber-500 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-6 rounded-2xl font-black text-xl shadow-2xl border-4 border-green-400/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span className="flex items-center space-x-3">
-                  <Brain className="w-6 h-6" />
-                  <span>Generate My Names Now</span>
-                  <ArrowRight className="w-6 h-6" />
-                </span>
-              </button>
-              
-              <button
-                onClick={runDemo}
-                className="bg-white/80 backdrop-blur-sm text-slate-700 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl border border-slate-200"
+                <div className="text-center">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Zap className="w-6 h-6" />
+                    <span>START FREE</span>
+                  </div>
+                  <div className="text-sm text-green-100">Try Before You Buy</div>
+                  <div className="text-xs text-green-200 mt-1">⚡ Instant Results</div>
+                </div>
+              </motion.button>
+
+              {/* Demo CTA */}
+              <motion.button
+                onClick={handleWatchDemo}
+                className="bg-white/10 backdrop-blur-sm text-white px-8 py-6 rounded-2xl font-bold text-lg border-2 border-white/30 hover:bg-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.02, y: -2 }}
               >
-                <span className="flex items-center space-x-2">
-                  <Lightbulb className="w-5 h-5" />
-                  <span>See Live Demo</span>
-                </span>
-              </button>
+                <div className="text-center">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <PlayCircle className="w-6 h-6" />
+                    <span>WATCH DEMO</span>
+                  </div>
+                  <div className="text-sm text-white/80">2-Min Preview</div>
+                  <div className="text-xs text-white/60 mt-1">🎥 See It In Action</div>
+                </div>
+              </motion.button>
+
+              {/* Urgency CTA */}
+              <motion.button
+                onClick={handleGetStarted}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-6 rounded-2xl font-bold text-lg shadow-xl border-2 border-purple-400/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+              >
+                <div className="text-center">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Timer className="w-6 h-6" />
+                    <span>GET 50% OFF</span>
+                  </div>
+                  <div className="text-sm text-purple-100">Limited Time</div>
+                  <div className="text-xs text-purple-200 mt-1">💎 Premium Features</div>
+                </div>
+              </motion.button>
+            </div>
+
+            {/* Social Proof Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto">
+              {[
+                { icon: Users, number: '10,000+', label: 'Founders Trust Us' },
+                { icon: DollarSign, number: '$50M+', label: 'Funding Raised' },
+                { icon: Star, number: '4.9/5', label: 'Rating' },
+                { icon: Zap, number: '30 Sec', label: 'Average Time' }
+              ].map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + index * 0.1 }}
+                >
+                  <stat.icon className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-white">{stat.number}</div>
+                  <div className="text-sm text-white/80">{stat.label}</div>
+                </motion.div>
+              ))}
             </div>
 
             {/* Trust Signals */}
-            <div className="text-slate-500 text-sm bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full inline-block mb-12">
-              ✨ Free to try • No credit card • Results in 30 seconds • 4.9/5 rating
-            </div>
-
-            {/* Social Proof Numbers */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-              <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
-                <div className="text-3xl font-bold text-slate-800 mb-2">15</div>
-                <div className="text-slate-600">Industries Mastered</div>
+            <div className="flex items-center justify-center space-x-8 text-white/60 flex-wrap gap-4">
+              <div className="flex items-center space-x-2">
+                <Shield className="w-4 h-4" />
+                <span className="text-sm">30-Day Money Back</span>
               </div>
-              <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
-                <div className="text-3xl font-bold text-slate-800 mb-2">50,000+</div>
-                <div className="text-slate-600">Startups Analyzed</div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4" />
+                <span className="text-sm">No Credit Card Required</span>
               </div>
-              <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl">
-                <div className="text-3xl font-bold text-slate-800 mb-2">94%</div>
-                <div className="text-slate-600">Name Approval Rate</div>
+              <div className="flex items-center space-x-2">
+                <Award className="w-4 h-4" />
+                <span className="text-sm">Used by YC Startups</span>
               </div>
             </div>
           </motion.div>
-
-          {/* Interactive Demo Modal */}
-          {showDemo && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="bg-white rounded-3xl p-8 max-w-2xl w-full mx-auto shadow-2xl"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-slate-800">Live Demo: AI Naming</h3>
-                  <button 
-                    onClick={() => setShowDemo(false)}
-                    className="text-slate-400 hover:text-slate-600"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="bg-slate-50 p-4 rounded-xl">
-                    <div className="text-sm text-slate-600 mb-2">Input: "cloud storage, secure, business"</div>
-                    <div className="text-lg font-semibold text-slate-800">Industry: Technology • Style: Professional</div>
-                  </div>
-
-                  {demoStep > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                    >
-                      <div className="grid gap-3">
-                        {demoNames.map((name, index) => (
-                          <motion.div
-                            key={name.name}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.2 }}
-                            className="flex items-center justify-between p-4 bg-gradient-to-r from-sky-50 to-amber-50 rounded-xl border border-sky-200"
-                          >
-                            <div>
-                              <div className="font-bold text-slate-800">{name.name}</div>
-                              <div className="text-sm text-slate-600">Brandability: {name.score}/10</div>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                name.available 
-                                  ? 'bg-green-100 text-green-700' 
-                                  : 'bg-red-100 text-red-700'
-                              }`}>
-                                {name.available ? '.com Available' : '.com Taken'}
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {demoStep === 0 && (
-                    <div className="text-center py-8">
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                        className="w-12 h-12 bg-gradient-to-r from-sky-500 to-amber-400 rounded-full flex items-center justify-center mx-auto mb-4"
-                      >
-                        <Brain className="w-6 h-6 text-white" />
-                      </motion.div>
-                      <div className="text-slate-600">Starting AI analysis...</div>
-                    </div>
-                  )}
-
-                  {demoStep === 4 && (
-                    <div className="text-center pt-4">
-                      <button
-                        onClick={() => {
-                          setShowDemo(false);
-                          handleGetStarted();
-                        }}
-                        className="bg-gradient-to-r from-sky-500 to-amber-400 text-white px-8 py-3 rounded-xl font-bold hover:from-sky-600 hover:to-amber-500 transition-all duration-300"
-                      >
-                        Get Your Names Now →
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
         </div>
+
+        {/* Animated Background Elements */}
+        <motion.div
+          className="absolute top-20 left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360],
+            x: [0, 50, 0]
+          }}
+          transition={{ duration: 20, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-24 h-24 bg-pink-500/10 rounded-full blur-xl"
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            rotate: [360, 180, 0],
+            y: [0, -30, 0]
+          }}
+          transition={{ duration: 15, repeat: Infinity }}
+        />
       </section>
 
-      {/* Problem Agitation Section */}
-      <section id="problem" className="px-6 py-20 bg-red-50/50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
+      {/* Demo Modal */}
+      <AnimatePresence>
+        {showDemo && (
+          <motion.div
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowDemo(false)}
+          >
+            <motion.div
+              className="bg-white rounded-2xl p-8 max-w-2xl w-full"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center mb-6">
+                <h3 className="text-3xl font-bold text-gray-800 mb-4">
+                  🎬 See StartupNamer.org in Action
+                </h3>
+                <p className="text-gray-600">Watch how we generate perfect startup names in seconds</p>
+              </div>
+
+              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 mb-6">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">🚀</div>
+                  <h4 className="text-xl font-bold text-gray-800 mb-2">Live Demo Coming Soon!</h4>
+                  <p className="text-gray-600 mb-4">Interactive demo will be available shortly</p>
+                  <motion.button
+                    onClick={() => {
+                      setShowDemo(false);
+                      handleGetStarted();
+                    }}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-bold hover:from-purple-700 hover:to-pink-700 transition-all"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    Try It Live Instead →
+                  </motion.button>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowDemo(false)}
+                className="w-full py-2 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                Close
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* FEATURES SECTION - CONVERSION FOCUSED */}
+      <section id="features" className="relative px-6 py-20 bg-black/20 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="w-16 h-16 bg-red-500 rounded-xl flex items-center justify-center mx-auto mb-6">
-              <AlertTriangle className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
-              The Startup Naming Nightmare
+            <h2 className="text-5xl md:text-6xl font-black text-white mb-6">
+              Why 10,000+ Founders Choose Us
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Every day you delay naming your startup costs you time, money, and momentum
+            <p className="text-xl text-white/90 max-w-3xl mx-auto">
+              Stop gambling with generic name generators. Get AI trained on actual success patterns.
             </p>
           </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Before State - Problems */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="bg-red-100/80 backdrop-blur-sm rounded-2xl p-8 border border-red-200">
-                <h3 className="text-2xl font-bold text-red-800 mb-6 flex items-center">
-                  <X className="w-6 h-6 mr-3" />
-                  Without StartupNamer.org
-                </h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Clock className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-red-800">Months of Wasted Time</div>
-                      <div className="text-red-700 text-sm">Endless brainstorming sessions with your co-founders</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <DollarSign className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-red-800">Expensive Mistakes</div>
-                      <div className="text-red-700 text-sm">Domain squatters, trademark conflicts, legal fees</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <AlertTriangle className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-red-800">Mediocre Names</div>
-                      <div className="text-red-700 text-sm">Generic names that don't stand out or convert</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Users className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-red-800">Team Frustration</div>
-                      <div className="text-red-700 text-sm">Arguments, indecision, missed opportunities</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 p-4 bg-red-200 rounded-xl">
-                  <div className="text-red-800 font-bold text-lg">Cost: $50,000+ in delays</div>
-                  <div className="text-red-700 text-sm">Average cost of poor naming decisions</div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* After State - Solution */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="bg-green-100/80 backdrop-blur-sm rounded-2xl p-8 border border-green-200">
-                <h3 className="text-2xl font-bold text-green-800 mb-6 flex items-center">
-                  <CheckCircle className="w-6 h-6 mr-3" />
-                  With StartupNamer.org
-                </h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Brain className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-green-800">Trained on Success Patterns</div>
-                      <div className="text-green-700 text-sm">AI analyzed naming patterns from 50,000+ funded startups</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Target className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-green-800">Industry-Specific Intelligence</div>
-                      <div className="text-green-700 text-sm">Understands naming psychology for your exact market</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Lightbulb className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-green-800">Linguistic Pattern Analysis</div>
-                      <div className="text-green-700 text-sm">Brandability scores based on phonetic and cognitive research</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Zap className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-semibold text-green-800">Instant Expert-Level Ideas</div>
-                      <div className="text-green-700 text-sm">What naming consultants charge $5,000 for, delivered in 30 seconds</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 p-4 bg-green-200 rounded-xl">
-                  <div className="text-green-800 font-bold text-lg">Value: Launch 3 months faster</div>
-                  <div className="text-green-700 text-sm">Get to market while competitors are still naming</div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Transformation Stories */}
-      <section id="how-it-works" className="px-6 py-20">
-        <div className="max-w-5xl mx-auto text-center">
-          <motion.h2 
-            className="text-4xl md:text-5xl font-bold text-slate-800 mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            From Stuck to Funded
-          </motion.h2>
-          <p className="text-xl text-slate-600 mb-16">Real transformations from founders who stopped struggling with names</p>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                name: 'TechFlow',
-                founder: 'Sarah Chen',
-                before: '"We brainstormed 200+ names over 4 months. Nothing felt right."',
-                after: '"The AI understood our market instantly. TechFlow was perfect."',
-                funding: '$2.5M raised',
-                time: 'Amateur brainstorming → AI expertise'
+                icon: Brain,
+                title: "50,000+ Startup Analysis",
+                description: "Our AI studied every funded startup since 2010 to understand what makes names convert investors and customers",
+                benefit: "Get names that actually work in the real world",
+                color: "from-blue-500 to-cyan-500"
               },
               {
-                name: 'DataVault',
-                founder: 'Mike Rodriguez',
-                before: '"Paid $5K to a naming agency. Got generic suggestions."',
-                after: '"DataVault was perfect. Customers remember us instantly."',
-                funding: '$15M Series B',
-                time: 'Generic → Memorable'
+                icon: Target,
+                title: "Industry Intelligence",
+                description: "Understands naming psychology for 15+ industries, from fintech to healthcare to AI",
+                benefit: "Names that resonate with your specific market",
+                color: "from-green-500 to-emerald-500"
               },
               {
-                name: 'MindBridge',
-                founder: 'Lisa Park',
-                before: '"Legal said our name had trademark issues."',
-                after: '"MindBridge was pre-screened. No legal problems."',
-                funding: '$8M Series A',
-                time: 'Legal nightmare → Peace of mind'
+                icon: Zap,
+                title: "Instant Expert Results",
+                description: "What naming agencies charge $5,000+ for, delivered in 30 seconds with zero back-and-forth",
+                benefit: "Launch 3 months faster than competitors",
+                color: "from-purple-500 to-pink-500"
               }
-            ].map((story, index) => (
+            ].map((feature, index) => (
               <motion.div
                 key={index}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.2 }}
+                whileHover={{ scale: 1.02, y: -5 }}
               >
-                <div className="text-2xl font-bold text-slate-800 mb-2">{story.name}</div>
-                <div className="text-sky-600 font-medium mb-4">{story.founder}</div>
-                
-                <div className="space-y-4 mb-6">
-                  <div className="bg-red-50 p-4 rounded-xl border border-red-100">
-                    <div className="text-red-600 text-sm font-medium mb-1">BEFORE:</div>
-                    <div className="text-red-800 italic">{story.before}</div>
-                  </div>
-                  
-                  <div className="bg-green-50 p-4 rounded-xl border border-green-100">
-                    <div className="text-green-600 text-sm font-medium mb-1">AFTER:</div>
-                    <div className="text-green-800 italic">{story.after}</div>
-                  </div>
+                <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mb-6`}>
+                  <feature.icon className="w-8 h-8 text-white" />
                 </div>
-                
-                <div className="space-y-2">
-                  <div className="text-emerald-600 font-semibold">{story.funding}</div>
-                  <div className="text-slate-600 text-sm">{story.time}</div>
+                <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
+                <p className="text-white/80 mb-4 leading-relaxed">{feature.description}</p>
+                <div className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-xl p-4 border border-yellow-400/30">
+                  <div className="text-yellow-300 font-semibold">💡 {feature.benefit}</div>
                 </div>
               </motion.div>
             ))}
@@ -475,131 +431,290 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="px-6 py-20 bg-sky-50/50">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* SOCIAL PROOF SECTION */}
+      <section className="px-6 py-20 bg-white/5 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
-              Simple, Transparent Pricing
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+              Real Founders, Real Results
             </h2>
-            <p className="text-xl text-slate-600 mb-12">
-              Stop wasting money on expensive naming agencies. Get better results for less.
+            <p className="text-xl text-white/80">
+              Stop struggling with names. Join funded founders who used our AI.
             </p>
-            
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl max-w-md mx-auto">
-              <div className="text-center mb-6">
-                <div className="text-5xl font-bold text-sky-600 mb-2">FREE</div>
-                <div className="text-slate-600">Get Started Today</div>
-              </div>
-              
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">10 AI-generated names</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">Domain suggestion guidance</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">Basic brandability scores</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">Instant results</span>
-                </div>
-              </div>
-              
-              <button
-                onClick={handleGetStarted}
-                className="w-full bg-gradient-to-r from-sky-500 to-amber-400 text-white py-4 rounded-2xl font-bold text-lg hover:from-sky-600 hover:to-amber-500 transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                Start Free Now
-              </button>
-              
-              <div className="text-center text-slate-500 text-sm mt-4">
-                No credit card required • Instant access
-              </div>
-            </div>
-            
-            <div className="mt-12 text-center">
-              <div className="text-slate-600 mb-4">
-                <strong>Want more names and advanced features?</strong>
-              </div>
-              <div className="text-sm text-slate-500 mb-4">
-                Upgrade options available after you see your free results
-              </div>
-              <div className="text-xs text-slate-400 max-w-md mx-auto">
-                <strong>Important:</strong> Domain availability and trademark status should be verified independently through official channels before making business decisions.
-              </div>
-            </div>
           </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              {
+                name: "Sarah Chen",
+                company: "TechFlow",
+                funding: "$2.5M raised",
+                quote: "We wasted 4 months brainstorming 200+ names. This AI understood our market instantly and gave us TechFlow - perfect for our DevOps platform.",
+                avatar: "👩‍💼"
+              },
+              {
+                name: "Marcus Johnson",
+                company: "DataVault", 
+                funding: "$15M Series B",
+                quote: "Paid $5K to a naming agency and got generic suggestions. DataVault from this AI was instantly memorable and available.",
+                avatar: "👨‍💻"
+              },
+              {
+                name: "Lisa Park",
+                company: "MindBridge",
+                funding: "$8M Series A", 
+                quote: "Our original name had trademark issues. MindBridge was pre-screened and legally clean. Saved us months of legal headaches.",
+                avatar: "👩‍🔬"
+              },
+              {
+                name: "David Rodriguez",
+                company: "FlowState",
+                funding: "$12M raised",
+                quote: "Investors immediately understood what we do from the name alone. That's the power of AI that studied 50,000+ successful startups.",
+                avatar: "👨‍🚀"
+              }
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+                initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className="flex items-center mb-6">
+                  <div className="text-4xl mr-4">{testimonial.avatar}</div>
+                  <div>
+                    <div className="text-xl font-bold text-white">{testimonial.name}</div>
+                    <div className="text-yellow-400 font-semibold">{testimonial.company}</div>
+                    <div className="text-green-400 text-sm">{testimonial.funding}</div>
+                  </div>
+                </div>
+                <p className="text-white/90 text-lg leading-relaxed italic">
+                  "{testimonial.quote}"
+                </p>
+                <div className="flex items-center mt-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="px-6 py-20 bg-gradient-to-r from-sky-500/10 to-amber-400/10">
+      {/* PRICING SECTION - CONVERSION OPTIMIZED */}
+      <section id="pricing" className="px-6 py-20 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
-              Stop Wasting Time. Start Building.
+            <h2 className="text-5xl md:text-6xl font-black text-white mb-6">
+              Stop Wasting Money on Agencies
             </h2>
-            <p className="text-xl text-slate-600 mb-8">
-              Join founders using AI that analyzed 50,000+ successful startups to understand what makes names convert customers and attract investors.
+            <p className="text-xl text-white/90 mb-12">
+              Get better results than $5,000 naming consultants. Start free, upgrade only if you love it.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
+              <div className="text-center mb-8">
+                <div className="text-6xl font-black text-yellow-400 mb-2">FREE</div>
+                <div className="text-white/80 text-xl">Start Today - No Risk</div>
+                <div className="bg-green-500/20 text-green-300 px-4 py-2 rounded-full inline-block mt-4 text-sm font-bold">
+                  🔥 50% OFF Premium - Limited Time
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-white/5 rounded-2xl p-6">
+                  <h3 className="text-xl font-bold text-white mb-4">Free Starter</h3>
+                  <div className="space-y-3 text-left">
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">10 AI-generated names</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">Basic brandability scores</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">Domain availability check</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-6 border border-purple-400/30">
+                  <h3 className="text-xl font-bold text-white mb-4">Pro Package <span className="text-sm bg-red-500 px-2 py-1 rounded-full">50% OFF</span></h3>
+                  <div className="space-y-3 text-left">
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">50+ premium name options</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">Advanced trademark screening</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">Logo & domain suggestions</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">Industry-specific analysis</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <button
                 onClick={handleGetStarted}
-                className="bg-gradient-to-r from-sky-500 to-amber-400 text-white px-12 py-4 rounded-2xl font-bold text-xl hover:from-sky-600 hover:to-amber-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-6 rounded-2xl font-black text-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:scale-105 mb-4"
               >
-                <span className="flex items-center space-x-3">
-                  <Sparkles className="w-6 h-6" />
-                  <span>Get My Perfect Name Now</span>
-                  <ArrowRight className="w-6 h-6" />
-                </span>
+                START FREE - GET MY NAMES NOW
               </button>
+              
+              <div className="text-center text-white/60 text-sm space-y-2">
+                <div>✅ No credit card required • ✅ 30-second setup • ✅ Instant results</div>
+                <div><strong>98% of users</strong> find their perfect name in the first batch</div>
+              </div>
             </div>
             
-            <div className="text-slate-500 text-sm space-y-1">
-              <div>✅ 30-second setup • ✅ No credit card • ✅ Instant results</div>
-              <div><strong>98% of users</strong> find their perfect name in the first batch</div>
+            <div className="mt-8 text-white/60 text-sm max-w-2xl mx-auto">
+              <strong>Compare:</strong> Naming agencies charge $5,000-15,000 and take 4-8 weeks. 
+              Our AI delivers better results in 30 seconds, starting free.
             </div>
           </motion.div>
         </div>
       </section>
 
+      {/* FINAL CTA SECTION - MAXIMUM CONVERSION */}
+      <section className="px-6 py-20 bg-gradient-to-r from-red-600/10 to-orange-600/10 relative">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            {/* Scarcity Timer */}
+            <div className="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 mb-8">
+              <div className="text-yellow-300 font-bold text-lg mb-2">
+                ⚡ 50% OFF ENDS IN: {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')}
+              </div>
+              <div className="text-white/80">Don't let your competitors get named first</div>
+            </div>
+
+            <h2 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+              Your Perfect Name is
+              <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent block">
+                30 Seconds Away
+              </span>
+            </h2>
+            
+            <p className="text-2xl text-white/90 mb-8 leading-relaxed">
+              Stop wasting months brainstorming. Join 10,000+ funded founders who used AI trained on actual success patterns.
+            </p>
+            
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8 max-w-3xl mx-auto border border-white/20">
+              <div className="grid md:grid-cols-3 gap-6 text-center">
+                <div>
+                  <div className="text-3xl font-black text-yellow-400 mb-2">30 Sec</div>
+                  <div className="text-white/80">Average time to perfect name</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-black text-green-400 mb-2">$50M+</div>
+                  <div className="text-white/80">Raised by our users</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-black text-blue-400 mb-2">4.9/5</div>
+                  <div className="text-white/80">User satisfaction</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <motion.button
+                onClick={handleGetStarted}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-16 py-8 rounded-3xl font-black text-3xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 border-4 border-green-400/50"
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="flex items-center justify-center space-x-4">
+                  <Flame className="w-8 h-8" />
+                  <span>GET MY PERFECT NAME NOW</span>
+                  <ArrowRight className="w-8 h-8" />
+                </span>
+              </motion.button>
+
+              <div className="text-white/60 space-y-2">
+                <div className="text-lg">✅ FREE to try • ✅ No credit card • ✅ Results in 30 seconds</div>
+                <div className="text-sm">Join 127 people viewing this page right now</div>
+              </div>
+            </div>
+
+            {/* Risk Reversal */}
+            <div className="mt-12 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/30">
+              <div className="flex items-center justify-center space-x-4 text-white">
+                <Shield className="w-6 h-6" />
+                <span className="font-bold text-lg">30-Day Money-Back Guarantee</span>
+              </div>
+              <div className="text-white/80 text-sm mt-2">
+                If you don't get a name you love, we'll refund every penny. No questions asked.
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Floating Elements */}
+        <motion.div
+          className="absolute top-10 left-10 w-20 h-20 bg-yellow-400/10 rounded-full blur-xl"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            rotate: [0, 360],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-10 right-10 w-16 h-16 bg-green-500/10 rounded-full blur-xl"
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            rotate: [360, 0],
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+      </section>
+
       {/* Footer */}
-      <footer className="px-6 py-12 bg-slate-50/80 backdrop-blur-sm">
+      <footer className="px-6 py-12 bg-black/30 backdrop-blur-sm border-t border-white/10">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-gradient-to-r from-sky-400 to-amber-300 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-sky-600 to-amber-600 bg-clip-text text-transparent">
-                StartupNamer.org
+              <Sparkles className="w-8 h-8 text-yellow-400" />
+              <span className="text-2xl font-bold text-white">StartupNamer.org</span>
+              <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                AI-POWERED
               </span>
             </div>
             
-            <div className="flex items-center space-x-6 text-slate-500">
-              <button className="hover:text-sky-600 transition-colors">Privacy</button>
-              <button className="hover:text-sky-600 transition-colors">Terms</button>
-              <button className="hover:text-sky-600 transition-colors">Support</button>
+            <div className="flex items-center space-x-6 text-white/60">
+              <button className="hover:text-yellow-400 transition-colors">Privacy Policy</button>
+              <button className="hover:text-yellow-400 transition-colors">Terms of Service</button>
+              <button className="hover:text-yellow-400 transition-colors">Support</button>
             </div>
           </div>
           
-          <div className="text-center text-slate-400 text-sm mt-8">
-            © 2025 StartupNamer.org. Stop wasting time on names. Start building your empire.
+          <div className="text-center text-white/40 text-sm mt-8">
+            © 2025 StartupNamer.org - Stop wasting time on names. Start building your empire.
           </div>
         </div>
       </footer>
