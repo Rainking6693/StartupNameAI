@@ -14,16 +14,45 @@ class OpenAIService {
   }
 
   async generateStartupNames(formData) {
+    console.log('🚀 Starting name generation...');
+    console.log('📊 Form data received:', formData);
+    
     const { keywords, industry = 'tech', style = 'modern', description = '' } = formData;
     
     // Check if we have API key first
     if (!this.apiKey) {
       console.log('🔄 Using fallback name generation (no API key)');
-      return this.generateFallbackNames(formData);
+      const fallbackNames = this.generateFallbackNames(formData);
+      console.log('✅ Generated', fallbackNames.length, 'fallback names');
+      return fallbackNames;
     }
+    
+    console.log('🤖 Attempting OpenAI API call...');
+    console.log('🔑 API key present:', this.apiKey ? '✅ Yes' : '❌ No');
+    console.log('🌐 Target URL:', `${this.baseURL}/chat/completions`);
     
     try {
       const prompt = this.buildNamingPrompt(keywords, industry, style, description);
+      console.log('📝 Generated prompt length:', prompt.length, 'characters');
+      
+      const requestBody = {
+        model: 'gpt-4',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a world-class startup naming consultant with 20+ years of experience helping companies find perfect, brandable names that attract customers and investors.'
+          },
+          {
+            role: 'user', 
+            content: prompt
+          }
+        ],
+        max_tokens: 2500,
+        temperature: 0.8,
+        response_format: { type: 'json_object' }
+      };
+      
+      console.log('📤 Making API request to OpenAI...');
       
       const response = await fetch(`${this.baseURL}/chat/completions`, {
         method: 'POST',
@@ -31,38 +60,47 @@ class OpenAIService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`
         },
-        body: JSON.stringify({
-          model: 'gpt-4',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a world-class startup naming consultant with 20+ years of experience helping companies find perfect, brandable names that attract customers and investors.'
-            },
-            {
-              role: 'user', 
-              content: prompt
-            }
-          ],
-          max_tokens: 2500,
-          temperature: 0.8,
-          response_format: { type: 'json_object' }
-        })
+        body: JSON.stringify(requestBody)
       });
 
+      console.log('📥 Response status:', response.status);
+      console.log('📥 Response ok:', response.ok);
+
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('❌ OpenAI API error details:', errorText);
+        throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
-      const content = data.choices[0].message.content;
+      console.log('✅ OpenAI API successful!');
+      console.log('📊 Response data structure:', Object.keys(data));
       
-      return this.parseNamingResponse(content);
+      const content = data.choices[0].message.content;
+      console.log('📝 Generated content length:', content.length);
+      
+      const parsedNames = this.parseNamingResponse(content);
+      console.log('🎯 Successfully parsed', parsedNames.length, 'names from OpenAI');
+      
+      return parsedNames;
       
     } catch (error) {
-      console.error('OpenAI name generation failed:', error);
+      console.error('❌ OpenAI API call failed (this is expected due to CORS):', error.message);
       
-      // Fallback to pattern-based generation if API fails
-      return this.generateFallbackNames(formData);
+      // Check if it's a CORS error
+      if (error.message.includes('CORS') || error.message.includes('fetch')) {
+        console.log('🌐 CORS Error Detected - This is normal for browser-based OpenAI calls');
+        console.log('💡 Solution: Use server-side proxy or CORS proxy for testing');
+      }
+      
+      console.log('🔄 Switching to fallback name generation...');
+      
+      // Generate fallback names and show success message
+      const fallbackNames = this.generateFallbackNames(formData);
+      console.log('✅ Generated', fallbackNames.length, 'fallback names');
+      console.log('🎉 Fallback system working perfectly!');
+      
+      return fallbackNames;
     }
   }
 

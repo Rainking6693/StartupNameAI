@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import openaiService from '../services/openai';
+import '../utils/apiTester'; // Auto-runs in debug mode
 
 const NamingTool = () => {
   const navigate = useNavigate();
