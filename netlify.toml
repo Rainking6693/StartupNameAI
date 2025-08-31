@@ -1,10 +1,12 @@
 [build]
-  # Build INSIDE the client folder
+  # Build inside the client app
   base = "client"
-  command = "npm ci && npm run build:snap"
+  # Use npm *install* (works fine with package-lock=false) and force-disable workspaces
+  command = "npm install --no-audit --no-fund --workspaces=false && npm run build:snap"
+  # If your build output is not 'build', change to '.next' (Next.js) or 'dist' (Vite)
   publish = "build"
 
 [build.environment]
   NODE_VERSION = "20"
-  # Make sure Netlify doesn't inject conflicting npm flags:
-  NPM_FLAGS = "" 
+  # Belt-and-suspenders: also tell Netlify to disable workspaces during install
+  NPM_FLAGS = "--workspaces=false"
