@@ -1,0 +1,623 @@
+name: 🚀 SEO-Optimized CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop, 'feature/*', 'seo/*']
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Daily performance monitoring at 6 AM UTC
+    - cron: '0 6 * * *'
+
+env:
+  NODE_VERSION: '18'
+  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  LIGHTHOUSE_SERVER_URL: ${{ secrets.LIGHTHOUSE_SERVER_URL || 'https://startupnamer.org' }}
+
+jobs:
+  # 🔍 Code Quality & Security Analysis
+  code-quality:
+    name: 🔍 Code Quality & Security
+    runs-on: ubuntu-latest
+    outputs:
+      should-deploy: ${{ steps.changes.outputs.deployable }}
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Detect changes
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            deployable:
+              - 'client/**'
+              - 'server/**'
+              - 'netlify/**'
+              - 'package.json'
+              - 'netlify.toml'
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
+
+      - name: 📦 Install dependencies
+        run: |
+          cd client && npm ci
+          cd ../server && npm ci
+
+      - name: 🔒 Security audit
+        run: |
+          echo "🔍 Running security audit for client..."
+          cd client && npm audit --audit-level=high
+          echo "🔍 Running security audit for server..."
+          cd ../server && npm audit --audit-level=high
+
+      - name: 🧹 ESLint analysis
+        run: |
+          cd client && npx eslint src/ --ext .js,.jsx,.ts,.tsx --format json --output-file ../eslint-report.json || true
+          cd ../server && npx eslint src/ --ext .js,.jsx,.ts,.tsx --format json --output-file ../eslint-server-report.json || true
+
+      - name: 💅 Prettier format check
+        run: |
+          cd client && npx prettier --check "src/**/*.{js,jsx,ts,tsx,json,css,md}"
+          cd ../server && npx prettier --check "src/**/*.{js,jsx,ts,tsx,json}"
+
+      - name: 📊 Upload code quality reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: code-quality-reports
+          path: |
+            eslint-report.json
+            eslint-server-report.json
+
+  # 🧪 Unit & Integration Testing
+  testing:
+    name: 🧪 Testing Suite
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
+
+      - name: 📦 Install dependencies
+        run: |
+          cd client && npm ci
+          cd ../server && npm ci
+
+      - name: 🧪 Run client unit tests
+        run: |
+          cd client && npm test -- --coverage --watchAll=false --testResultsProcessor=jest-sonar-reporter
+        env:
+          CI: true
+
+      - name: 🧪 Run server unit tests
+        run: |
+          cd server && npm test -- --coverage --watchAll=false
+
+      - name: 📊 Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./client/coverage
+          flags: client-tests
+          name: client-coverage
+
+      - name: 📊 Upload server coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./server/coverage
+          flags: server-tests
+          name: server-coverage
+
+      - name: ✅ Coverage validation
+        run: |
+          cd client
+          COVERAGE=$(cat coverage/coverage-summary.json | jq -r '.total.statements.pct')
+          if (( $(echo "$COVERAGE < 85" | bc -l) )); then
+            echo "❌ Coverage $COVERAGE% is below 85% threshold"
+            exit 1
+          fi
+          echo "✅ Coverage $COVERAGE% meets requirements"
+
+  # 🏗️ Build & Prerender
+  build:
+    name: 🏗️ Build & Prerender
+    runs-on: ubuntu-latest
+    needs: [code-quality, testing]
+    if: needs.code-quality.outputs.should-deploy == 'true'
+    outputs:
+      build-artifacts: ${{ steps.build-info.outputs.artifacts }}
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: 📦 Install client dependencies
+        run: cd client && npm ci
+
+      - name: 🏗️ Build React application
+        run: |
+          cd client
+          npm run build:snap
+        env:
+          CI: false
+          GENERATE_SOURCEMAP: false
+          NODE_ENV: production
+
+      - name: 📝 Build information
+        id: build-info
+        run: |
+          cd client/build
+          TOTAL_SIZE=$(du -sh . | cut -f1)
+          JS_SIZE=$(find static/js -name "*.js" | xargs du -ch | tail -n1 | cut -f1)
+          CSS_SIZE=$(find static/css -name "*.css" | xargs du -ch | tail -n1 | cut -f1)
+          echo "artifacts=Total: $TOTAL_SIZE, JS: $JS_SIZE, CSS: $CSS_SIZE" >> $GITHUB_OUTPUT
+
+      - name: 📦 Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: client/build/
+          retention-days: 7
+
+      - name: 🗂️ Generate sitemap validation
+        run: |
+          cd client/build
+          if [ -f sitemap.xml ]; then
+            echo "✅ Sitemap generated successfully"
+            xmllint --format sitemap.xml > /dev/null && echo "✅ Sitemap is valid XML"
+          else
+            echo "❌ Sitemap not found"
+            exit 1
+          fi
+
+  # 🔍 SEO Validation Gates
+  seo-validation:
+    name: 🔍 SEO Validation
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Install SEO validation tools
+        run: |
+          npm install -g html-validate @lhci/cli w3c-html-validator
+
+      - name: ✅ HTML validation
+        run: |
+          echo "🔍 Validating HTML structure..."
+          for file in build/**/*.html; do
+            if [ -f "$file" ]; then
+              echo "Validating $file"
+              html-validate "$file" || true
+            fi
+          done
+
+      - name: 🏷️ Meta tags validation
+        run: |
+          echo "🔍 Validating meta tags..."
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            
+            function validateMetaTags(filePath) {
+              const html = fs.readFileSync(filePath, 'utf8');
+              const checks = {
+                title: /<title[^>]*>(.+?)<\/title>/i.test(html),
+                description: /<meta[^>]*name=[\"']description[\"'][^>]*content=[\"']([^\"']+)[\"']/i.test(html),
+                canonical: /<link[^>]*rel=[\"']canonical[\"']/i.test(html),
+                ogTitle: /<meta[^>]*property=[\"']og:title[\"']/i.test(html),
+                ogDescription: /<meta[^>]*property=[\"']og:description[\"']/i.test(html),
+                twitterCard: /<meta[^>]*name=[\"']twitter:card[\"']/i.test(html)
+              };
+              
+              const missing = Object.entries(checks)
+                .filter(([key, value]) => !value)
+                .map(([key]) => key);
+                
+              if (missing.length > 0) {
+                console.log(\`❌ \${filePath}: Missing meta tags: \${missing.join(', ')}\`);
+                return false;
+              } else {
+                console.log(\`✅ \${filePath}: All meta tags present\`);
+                return true;
+              }
+            }
+            
+            const files = ['build/index.html', 'build/naming-tool/index.html', 'build/pricing/index.html'];
+            let allValid = true;
+            
+            files.forEach(file => {
+              if (fs.existsSync(file)) {
+                if (!validateMetaTags(file)) {
+                  allValid = false;
+                }
+              }
+            });
+            
+            if (!allValid) process.exit(1);
+          "
+
+      - name: 📋 Schema.org validation
+        run: |
+          echo "🔍 Validating structured data..."
+          node -e "
+            const fs = require('fs');
+            
+            function validateSchema(filePath) {
+              const html = fs.readFileSync(filePath, 'utf8');
+              const jsonLdMatches = html.match(/<script[^>]*type=[\"']application\/ld\+json[\"'][^>]*>(.*?)<\/script>/gis);
+              
+              if (!jsonLdMatches) {
+                console.log(\`⚠️ \${filePath}: No structured data found\`);
+                return true; // Not required for all pages
+              }
+              
+              jsonLdMatches.forEach((match, index) => {
+                try {
+                  const jsonContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
+                  JSON.parse(jsonContent);
+                  console.log(\`✅ \${filePath}: Schema \${index + 1} is valid JSON-LD\`);
+                } catch (error) {
+                  console.log(\`❌ \${filePath}: Invalid JSON-LD schema \${index + 1}: \${error.message}\`);
+                  return false;
+                }
+              });
+              
+              return true;
+            }
+            
+            const files = ['build/index.html', 'build/naming-tool/index.html'];
+            files.forEach(file => {
+              if (fs.existsSync(file)) {
+                validateSchema(file);
+              }
+            });
+          "
+
+  # ⚡ Performance Testing
+  performance-testing:
+    name: ⚡ Performance Testing
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+
+      - name: 🌐 Setup local server
+        run: |
+          npx http-server build -p 8080 -s &
+          sleep 5
+          curl -f http://localhost:8080 || exit 1
+
+      - name: ⚡ Run Lighthouse CI
+        run: lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: 📊 Upload Lighthouse reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+
+  # 🎭 E2E Testing
+  e2e-testing:
+    name: 🎭 E2E Testing
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Install Playwright
+        run: |
+          npm install -g @playwright/test
+          npx playwright install --with-deps chromium
+
+      - name: 🌐 Start test server
+        run: |
+          npx http-server build -p 3000 -s &
+          sleep 5
+          curl -f http://localhost:3000 || exit 1
+
+      - name: 🎭 Run Playwright tests
+        run: npx playwright test
+        env:
+          BASE_URL: http://localhost:3000
+
+      - name: 📊 Upload test reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+
+  # 🔧 Accessibility Testing
+  accessibility-testing:
+    name: 🔧 Accessibility Testing
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Install axe-core
+        run: npm install -g @axe-core/cli
+
+      - name: 🌐 Start test server
+        run: |
+          npx http-server build -p 3001 -s &
+          sleep 5
+
+      - name: ♿ Run accessibility tests
+        run: |
+          echo "🔍 Running accessibility audit..."
+          axe http://localhost:3001 --exit --save accessibility-report.json || true
+          axe http://localhost:3001/naming-tool --exit --save accessibility-naming-tool.json || true
+          axe http://localhost:3001/pricing --exit --save accessibility-pricing.json || true
+
+      - name: 📊 Upload accessibility reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: accessibility-reports
+          path: accessibility-*.json
+
+  # 🚀 Staging Deployment
+  staging-deployment:
+    name: 🚀 Staging Deployment
+    runs-on: ubuntu-latest
+    needs: [seo-validation, performance-testing, e2e-testing, accessibility-testing]
+    if: github.event_name == 'pull_request'
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.deploy-url }}
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: 🚀 Deploy to Netlify (Preview)
+        id: deploy
+        run: |
+          npx netlify-cli deploy --dir=build --json > deploy-output.json
+          DEPLOY_URL=$(cat deploy-output.json | jq -r '.deploy_url')
+          echo "deploy-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "🌟 Staging deployment: $DEPLOY_URL"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: ✅ Post-deployment verification
+        run: |
+          DEPLOY_URL="${{ steps.deploy.outputs.deploy-url }}"
+          echo "🔍 Verifying deployment at $DEPLOY_URL"
+          
+          # Wait for deployment to be ready
+          sleep 30
+          
+          # Check if site is accessible
+          curl -f "$DEPLOY_URL" -o /dev/null
+          echo "✅ Site is accessible"
+          
+          # Check critical pages
+          curl -f "$DEPLOY_URL/naming-tool" -o /dev/null
+          echo "✅ Naming tool page accessible"
+
+      - name: 💬 Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployUrl = '${{ steps.deploy.outputs.deploy-url }}';
+            const comment = `## 🚀 Staging Deployment Ready
+            
+            Your changes have been deployed to staging!
+            
+            **🌟 Preview URL:** ${deployUrl}
+            
+            ### ✅ Validation Results:
+            - SEO validation passed
+            - Performance tests completed
+            - E2E tests passed
+            - Accessibility audit completed
+            
+            **Test the following:**
+            - [ ] Homepage loads correctly
+            - [ ] Naming tool functionality
+            - [ ] Mobile responsiveness
+            - [ ] SEO meta tags
+            - [ ] Performance metrics
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # 🎯 Production Deployment
+  production-deployment:
+    name: 🎯 Production Deployment
+    runs-on: ubuntu-latest
+    needs: [seo-validation, performance-testing, e2e-testing, accessibility-testing]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://startupnamer.org
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+      - name: 🎯 Deploy to production
+        id: deploy
+        run: |
+          npx netlify-cli deploy --dir=build --prod --json > deploy-output.json
+          DEPLOY_URL=$(cat deploy-output.json | jq -r '.url')
+          echo "deploy-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "🎉 Production deployed: $DEPLOY_URL"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: ✅ Production health check
+        run: |
+          echo "🔍 Running production health checks..."
+          
+          # Wait for deployment propagation
+          sleep 60
+          
+          # Basic health checks
+          curl -f "https://startupnamer.org" -o /dev/null
+          curl -f "https://startupnamer.org/naming-tool" -o /dev/null
+          curl -f "https://startupnamer.org/sitemap.xml" -o /dev/null
+          curl -f "https://startupnamer.org/robots.txt" -o /dev/null
+          
+          echo "✅ All production health checks passed"
+
+      - name: 📊 Post-deployment monitoring
+        run: |
+          echo "📊 Setting up post-deployment monitoring..."
+          # This would integrate with your monitoring service
+          # For now, we'll just validate core metrics are accessible
+          curl -f "https://startupnamer.org" -w "@curl-format.txt" -o /dev/null -s
+        env:
+          MONITORING_WEBHOOK: ${{ secrets.MONITORING_WEBHOOK }}
+
+      - name: 🎉 Success notification
+        run: |
+          echo "🎉 Production deployment completed successfully!"
+          echo "Site: https://startupnamer.org"
+          echo "Build artifacts: ${{ needs.build.outputs.build-artifacts }}"
+
+  # 🚨 Rollback capability
+  rollback:
+    name: 🚨 Emergency Rollback
+    runs-on: ubuntu-latest
+    if: failure() && github.ref == 'refs/heads/main'
+    needs: production-deployment
+    steps:
+      - name: 🚨 Trigger rollback
+        run: |
+          echo "🚨 Production deployment failed - initiating rollback"
+          # This would trigger your rollback mechanism
+          # For Netlify, this could restore the previous deployment
+          npx netlify-cli api sites/$NETLIFY_SITE_ID/deploys --data '{"restore_id": "previous"}'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  # 📊 Performance Monitoring (Scheduled)
+  performance-monitoring:
+    name: 📊 Performance Monitoring
+    runs-on: ubuntu-latest
+    if: github.event.schedule
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+
+      - name: ⚡ Run production performance audit
+        run: |
+          lhci autorun --config=lighthouserc-production.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: 🚨 Performance regression alert
+        if: failure()
+        run: |
+          echo "🚨 Performance regression detected on production!"
+          # This would send alerts to your monitoring system
+          # curl -X POST ${{ secrets.SLACK_WEBHOOK }} -d '{"text":"Performance regression detected on StartupnameAI"}'

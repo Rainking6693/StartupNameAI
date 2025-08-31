@@ -11,6 +11,8 @@ const winston = require('winston');
 const nameRoutes = require('./routes/names');
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payments');
+const vitalsRoutes = require('./routes/vitals');
+const monitoringRoutes = require('./routes/monitoring');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -132,6 +134,8 @@ app.get('/api/health', (req, res) => {
 app.use('/api/names', aiLimiter, nameRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/vitals', vitalsRoutes);
+app.use('/api/monitoring', monitoringRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -144,7 +148,9 @@ app.get('/', (req, res) => {
       health: '/api/health',
       names: '/api/names/*',
       auth: '/api/auth/*',
-      payments: '/api/payments/*'
+      payments: '/api/payments/*',
+      vitals: '/api/vitals/*',
+      monitoring: '/api/monitoring/*'
     }
   });
 });

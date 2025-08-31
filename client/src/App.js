@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Helmet } from 'react-helmet-async';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { OrganizationSchema, WebsiteSchema, SoftwareApplicationSchema } from './components/JsonLd';
 import './App.css';
 
 // Lazy load components for better performance
@@ -221,7 +224,7 @@ const ComingSoonPage = ({ pageName = "This Feature" }) => (
   </>
 );
 
-// Enhanced App component with comprehensive routing
+// Enhanced App component with comprehensive routing and SEO
 function App() {
   return (
     <HelmetProvider>
@@ -249,77 +252,88 @@ function App() {
             }
           }}
         >
-          <div className="App">
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes>
-                {/* Core Pages */}
-                <Route 
-                  path="/" 
-                  element={
-                    <Suspense fallback={<LoadingFallback message="Loading homepage..." />}>
-                      <LandingPage />
-                    </Suspense>
-                  } 
-                />
-                <Route 
-                  path="/naming-tool" 
-                  element={
-                    <Suspense fallback={<LoadingFallback message="Loading naming tool..." />}>
-                      <NamingTool />
-                    </Suspense>
-                  } 
-                />
-                <Route 
-                  path="/results/:sessionId" 
-                  element={
-                    <Suspense fallback={<LoadingFallback message="Loading your results..." />}>
-                      <NameResults />
-                    </Suspense>
-                  } 
-                />
+          {/* Global SEO Schemas */}
+          <OrganizationSchema />
+          <WebsiteSchema />
+          <SoftwareApplicationSchema />
+          
+          <div className="App min-h-screen flex flex-col">
+            <Header />
+            
+            <main id="main-content" className="flex-grow" role="main">
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  {/* Core Pages */}
+                  <Route 
+                    path="/" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading homepage..." />}>
+                        <LandingPage />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="/naming-tool" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading naming tool..." />}>
+                        <NamingTool />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="/results/:sessionId" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading your results..." />}>
+                        <NameResults />
+                      </Suspense>
+                    } 
+                  />
 
-                {/* Legal Pages */}
-                <Route 
-                  path="/privacy-policy" 
-                  element={
-                    <Suspense fallback={<LoadingFallback message="Loading privacy policy..." />}>
-                      <PrivacyPolicy />
-                    </Suspense>
-                  } 
-                />
-                <Route 
-                  path="/terms-of-service" 
-                  element={
-                    <Suspense fallback={<LoadingFallback message="Loading terms of service..." />}>
-                      <TermsOfService />
-                    </Suspense>
-                  } 
-                />
+                  {/* Legal Pages */}
+                  <Route 
+                    path="/privacy-policy" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading privacy policy..." />}>
+                        <PrivacyPolicy />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="/terms-of-service" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading terms of service..." />}>
+                        <TermsOfService />
+                      </Suspense>
+                    } 
+                  />
 
-                {/* Payment and Commerce */}
-                <Route path="/payment/:packageId" element={<PaymentPage />} />
-                <Route path="/pricing" element={<ComingSoonPage pageName="Pricing" />} />
+                  {/* Payment and Commerce */}
+                  <Route path="/payment/:packageId" element={<PaymentPage />} />
+                  <Route path="/pricing" element={<ComingSoonPage pageName="Pricing" />} />
 
-                {/* Content and Info Pages */}
-                <Route path="/features" element={<ComingSoonPage pageName="Features" />} />
-                <Route path="/examples" element={<ComingSoonPage pageName="Examples" />} />
-                <Route path="/how-it-works" element={<ComingSoonPage pageName="How It Works" />} />
-                <Route path="/faq" element={<ComingSoonPage pageName="FAQ" />} />
-                <Route path="/blog" element={<ComingSoonPage pageName="Blog" />} />
-                <Route path="/contact" element={<ComingSoonPage pageName="Contact" />} />
+                  {/* Content and Info Pages */}
+                  <Route path="/features" element={<ComingSoonPage pageName="Features" />} />
+                  <Route path="/examples" element={<ComingSoonPage pageName="Examples" />} />
+                  <Route path="/how-it-works" element={<ComingSoonPage pageName="How It Works" />} />
+                  <Route path="/faq" element={<ComingSoonPage pageName="FAQ" />} />
+                  <Route path="/blog" element={<ComingSoonPage pageName="Blog" />} />
+                  <Route path="/contact" element={<ComingSoonPage pageName="Contact" />} />
 
-                {/* Industry-Specific Pages (SEO Content) */}
-                <Route path="/tech-startup-names" element={<ComingSoonPage pageName="Tech Startup Names" />} />
-                <Route path="/saas-startup-names" element={<ComingSoonPage pageName="SaaS Startup Names" />} />
-                <Route path="/fintech-startup-names" element={<ComingSoonPage pageName="Fintech Startup Names" />} />
-                <Route path="/healthcare-startup-names" element={<ComingSoonPage pageName="Healthcare Startup Names" />} />
-                <Route path="/ai-startup-names" element={<ComingSoonPage pageName="AI Startup Names" />} />
-                <Route path="/ecommerce-startup-names" element={<ComingSoonPage pageName="Ecommerce Startup Names" />} />
+                  {/* Industry-Specific Pages (SEO Content) */}
+                  <Route path="/tech-startup-names" element={<ComingSoonPage pageName="Tech Startup Names" />} />
+                  <Route path="/saas-startup-names" element={<ComingSoonPage pageName="SaaS Startup Names" />} />
+                  <Route path="/fintech-startup-names" element={<ComingSoonPage pageName="Fintech Startup Names" />} />
+                  <Route path="/healthcare-startup-names" element={<ComingSoonPage pageName="Healthcare Startup Names" />} />
+                  <Route path="/ai-startup-names" element={<ComingSoonPage pageName="AI Startup Names" />} />
+                  <Route path="/ecommerce-startup-names" element={<ComingSoonPage pageName="Ecommerce Startup Names" />} />
 
-                {/* Catch-all 404 */}
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </Suspense>
+                  {/* Catch-all 404 */}
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Suspense>
+            </main>
+            
+            <Footer />
           </div>
         </ErrorBoundary>
       </Router>

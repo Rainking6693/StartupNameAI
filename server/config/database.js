@@ -79,6 +79,46 @@ async function initializeDatabase() {
       )
     `);
 
+    // Create web_vitals table for performance monitoring
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS web_vitals (
+        id BIGSERIAL PRIMARY KEY,
+        url TEXT NOT NULL,
+        lcp DECIMAL(8,2), -- Largest Contentful Paint (ms)
+        inp DECIMAL(8,2), -- Interaction to Next Paint (ms)  
+        cls DECIMAL(8,4), -- Cumulative Layout Shift
+        fcp DECIMAL(8,2), -- First Contentful Paint (ms)
+        ttfb DECIMAL(8,2), -- Time to First Byte (ms)
+        user_agent TEXT,
+        connection_type VARCHAR(50),
+        connection_speed DECIMAL(8,2),
+        navigation_type VARCHAR(50),
+        session_id UUID,
+        user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        ip_address INET,
+        timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create performance_alerts table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS performance_alerts (
+        id BIGSERIAL PRIMARY KEY,
+        alert_type VARCHAR(50) NOT NULL,
+        url TEXT NOT NULL,
+        metric_name VARCHAR(20) NOT NULL,
+        threshold_value DECIMAL(8,2) NOT NULL,
+        actual_value DECIMAL(8,2) NOT NULL,
+        severity VARCHAR(20) DEFAULT 'medium',
+        status VARCHAR(20) DEFAULT 'open',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        resolved_at TIMESTAMP WITH TIME ZONE,
+        resolved_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        notes TEXT
+      )
+    `);
+
     // Create indexes for better performance
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
@@ -88,6 +128,11 @@ async function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_naming_sessions_created_at ON naming_sessions(created_at);
       CREATE INDEX IF NOT EXISTS idx_generated_names_session_id ON generated_names(session_id);
       CREATE INDEX IF NOT EXISTS idx_generated_names_brandability_score ON generated_names(brandability_score);
+      CREATE INDEX IF NOT EXISTS idx_web_vitals_url ON web_vitals(url);
+      CREATE INDEX IF NOT EXISTS idx_web_vitals_created_at ON web_vitals(created_at DESC);
+      CREATE INDEX IF NOT EXISTS idx_web_vitals_user_id ON web_vitals(user_id) WHERE user_id IS NOT NULL;
+      CREATE INDEX IF NOT EXISTS idx_performance_alerts_status ON performance_alerts(status);
+      CREATE INDEX IF NOT EXISTS idx_performance_alerts_created_at ON performance_alerts(created_at DESC);
     `);
 
     logger.info('Database initialized successfully');

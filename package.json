@@ -5,9 +5,51 @@
   "description": "StartupNamer.ai - The AI-powered startup naming authority",
   "scripts": {
     "dev": "echo 'Use npm run dev from client or server directories'",
-    "info": "echo 'Client: cd client && npm start | Server: cd server && npm run dev'"
+    "info": "echo 'Client: cd client && npm start | Server: cd server && npm run dev'",
+    "install:all": "npm ci && cd client && npm ci && cd ../server && npm ci",
+    "build": "cd client && npm run build:snap",
+    "test": "cd client && npm run test:ci",
+    "test:e2e": "cd client && npm run e2e",
+    "lint": "cd client && npm run lint && cd ../server && npm run lint",
+    "format": "cd client && npm run format && cd ../server && npm run format",
+    "validate": "cd client && npm run validate:html && npm run validate:seo",
+    "lighthouse": "cd client && npm run lighthouse:local",
+    "serve": "cd client && npm run serve",
+    "deploy:staging": "netlify deploy --dir=client/build",
+    "deploy:production": "netlify deploy --dir=client/build --prod",
+    "ci:quality": "npm run lint && npm run test",
+    "ci:build": "npm run build && npm run validate",
+    "ci:performance": "npm run lighthouse",
+    "ci:e2e": "npm run test:e2e",
+    "precommit": "npm run lint && npm run test"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.0"
+  },
+  "lint-staged": {
+    "client/src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "server/src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run ci:quality"
+    }
   }
 }
