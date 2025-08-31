@@ -72,7 +72,7 @@ jobs:
           cd ../server && npx prettier --check "src/**/*.{js,jsx,ts,tsx,json}"
 
       - name: 📊 Upload code quality reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: code-quality-reports
@@ -178,7 +178,7 @@ jobs:
           echo "artifacts=Total: $TOTAL_SIZE, JS: $JS_SIZE, CSS: $CSS_SIZE" >> $GITHUB_OUTPUT
 
       - name: 📦 Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-files
           path: client/build/
@@ -346,7 +346,7 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: 📊 Upload Lighthouse reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lighthouse-reports
@@ -389,7 +389,7 @@ jobs:
           BASE_URL: http://localhost:3000
 
       - name: 📊 Upload test reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
@@ -431,7 +431,7 @@ jobs:
           axe http://localhost:3001/pricing --exit --save accessibility-pricing.json || true
 
       - name: 📊 Upload accessibility reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: accessibility-reports
