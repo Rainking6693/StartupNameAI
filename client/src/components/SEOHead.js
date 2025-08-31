@@ -25,7 +25,7 @@ const SEOHead = ({
   // Use provided or default values
   const metaDescription = description || defaultDescription;
   const metaKeywords = keywords || defaultKeywords;
-  const canonical = canonicalUrl || `${siteUrl}${window.location.pathname}`;
+  const canonical = canonicalUrl || `${siteUrl}${typeof window !== 'undefined' ? window.location.pathname : '/'}`;
   const image = ogImage || defaultImage;
 
   // Robots directive

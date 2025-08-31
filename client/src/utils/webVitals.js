@@ -1,5 +1,5 @@
 // Enhanced Web Vitals collection with comprehensive analytics
-import { getCLS, getFCP, getFID, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFCP, onLCP, onTTFB, onINP } from 'web-vitals';
 
 // Configuration
 const VITALS_ENDPOINT = process.env.REACT_APP_API_URL 
@@ -91,11 +91,11 @@ function setupCoreWebVitals(options) {
   };
 
   // Collect Core Web Vitals
-  getCLS(onVitalReport, { reportAllChanges: true });
-  getFCP(onVitalReport);
-  getFID(onVitalReport);
-  getLCP(onVitalReport, { reportAllChanges: true });
-  getTTFB(onVitalReport);
+  onCLS(onVitalReport, { reportAllChanges: true });
+  onFCP(onVitalReport);
+  onINP(onVitalReport);
+  onLCP(onVitalReport, { reportAllChanges: true });
+  onTTFB(onVitalReport);
   
   // Collect additional Web Vitals for comprehensive analysis
   collectNavigationTiming();

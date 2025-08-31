@@ -10,8 +10,8 @@ export const trackCoreWebVitals = () => {
   if (typeof window === 'undefined' || !window.gtag) return;
 
   // Import web-vitals dynamically for better performance
-  import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-    getCLS((metric) => {
+  import('web-vitals').then(({ onCLS, onFCP, onLCP, onTTFB, onINP }) => {
+    onCLS((metric) => {
       window.gtag('event', 'web_vital', {
         event_category: 'Web Vitals',
         event_label: 'CLS',
@@ -21,17 +21,17 @@ export const trackCoreWebVitals = () => {
       });
     });
 
-    getFID((metric) => {
+    onINP((metric) => {
       window.gtag('event', 'web_vital', {
         event_category: 'Web Vitals', 
-        event_label: 'FID',
+        event_label: 'INP',
         value: Math.round(metric.value),
         custom_parameter_1: metric.rating,
         non_interaction: true
       });
     });
 
-    getFCP((metric) => {
+    onFCP((metric) => {
       window.gtag('event', 'web_vital', {
         event_category: 'Web Vitals',
         event_label: 'FCP', 
@@ -41,7 +41,7 @@ export const trackCoreWebVitals = () => {
       });
     });
 
-    getLCP((metric) => {
+    onLCP((metric) => {
       window.gtag('event', 'web_vital', {
         event_category: 'Web Vitals',
         event_label: 'LCP',
@@ -51,7 +51,7 @@ export const trackCoreWebVitals = () => {
       });
     });
 
-    getTTFB((metric) => {
+    onTTFB((metric) => {
       window.gtag('event', 'web_vital', {
         event_category: 'Web Vitals',
         event_label: 'TTFB',

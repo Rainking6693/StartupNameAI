@@ -5,19 +5,21 @@ import App from './App';
 import { initializePerformanceOptimizations } from './utils/seo';
 import { initWebVitals } from './utils/webVitals';
 
-// Initialize performance optimizations
-initializePerformanceOptimizations();
-
-// Initialize enhanced Web Vitals collection
-initWebVitals({
-  enableBatching: true,
-  apiUrl: process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api/vitals` : '/api/vitals'
-});
+// Initialize performance optimizations (skip during pre-rendering)
+if (typeof window !== 'undefined' && !window.__REACT_SNAP__) {
+  initializePerformanceOptimizations();
+  
+  // Initialize enhanced Web Vitals collection
+  initWebVitals({
+    enableBatching: true,
+    apiUrl: process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api/vitals` : '/api/vitals'
+  });
+}
 
 // Core Web Vitals and performance monitoring
-if (typeof window !== 'undefined') {
-  // Enhanced web vitals reporting with INP and additional metrics
-  import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB, onINP }) => {
+if (typeof window !== 'undefined' && !window.__REACT_SNAP__) {
+  // Enhanced web vitals reporting with INP and additional metrics  
+  import('web-vitals').then(({ onCLS, onFCP, onLCP, onTTFB, onINP }) => {
     function sendToGTM(metric) {
       if (window.gtag) {
         // Send to Google Analytics
@@ -54,13 +56,12 @@ if (typeof window !== 'undefined') {
     }
 
     // Core Web Vitals
-    getCLS(sendToGTM);
-    getFID(sendToGTM); // Will be deprecated in favor of INP
-    getFCP(sendToGTM);
-    getLCP(sendToGTM);
-    getTTFB(sendToGTM);
+    onCLS(sendToGTM);
+    onFCP(sendToGTM);
+    onLCP(sendToGTM);
+    onTTFB(sendToGTM);
 
-    // New INP metric (replacing FID)
+    // INP metric (replacing FID)
     if (onINP) {
       onINP(sendToGTM);
     }
@@ -219,11 +220,21 @@ const app = (
 );
 
 // Check if the page was pre-rendered by react-snap
-if (container.hasChildNodes()) {
-  // Hydrate the pre-rendered content
-  hydrateRoot(container, app);
+if (typeof window !== 'undefined') {
+  if (container.hasChildNodes() && !window.__REACT_SNAP__) {
+    // Hydrate the pre-rendered content
+    hydrateRoot(container, app);
+  } else if (!window.__REACT_SNAP__) {
+    // Render normally for client-side navigation
+    const root = createRoot(container);
+    root.render(app);
+  } else {
+    // During pre-rendering with react-snap
+    const root = createRoot(container);
+    root.render(app);
+  }
 } else {
-  // Render normally for client-side navigation
+  // Server-side rendering fallback
   const root = createRoot(container);
   root.render(app);
 }
