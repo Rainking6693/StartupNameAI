@@ -7,4 +7,4 @@
 [build.environment]
   NODE_VERSION = "20"
   # Make sure Netlify doesn't inject conflicting npm flags:
-  NPM_FLAGS = ""
+  NPM_FLAGS = "" 
