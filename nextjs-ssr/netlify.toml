@@ -1,0 +1,157 @@
+# Netlify configuration for Next.js SSR deployment
+[build]
+  # Build command for Next.js
+  command = "npm run build"
+  # Output directory
+  publish = ".next"
+  
+  # Environment variables
+  [build.environment]
+    NODE_VERSION = "20"
+    NPM_VERSION = "10"
+    NEXT_TELEMETRY_DISABLED = "1"
+
+# Function settings for Next.js serverless functions
+[functions]
+  # Directory where Netlify functions are stored
+  directory = ".netlify/functions"
+  # Node.js runtime version
+  node_bundler = "esbuild"
+
+# Redirects and rewrites for SPA routing
+[[redirects]]
+  # Redirect /sitemap.xml to API route
+  from = "/sitemap.xml"
+  to = "/api/sitemap"
+  status = 200
+
+[[redirects]]
+  # Redirect /robots.txt to API route
+  from = "/robots.txt"
+  to = "/api/robots"
+  status = 200
+
+[[redirects]]
+  # Handle old URLs
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  # Redirect name-generator to naming-tool
+  from = "/name-generator"
+  to = "/naming-tool"
+  status = 301
+
+[[redirects]]
+  # Catch-all for SPA routing (must be last)
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  # Apply to all paths
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    
+    # Performance headers
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+[[headers]]
+  # Static assets caching
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  # API routes caching
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, s-maxage=3600"
+
+[[headers]]
+  # Sitemap and robots.txt caching
+  for = "/*.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=utf-8"
+    Cache-Control = "public, max-age=86400, s-maxage=86400"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=86400, s-maxage=86400"
+
+# Edge Functions (for dynamic content at the edge)
+[[edge_functions]]
+  function = "geo-location"
+  path = "/api/geo"
+
+# Plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[plugins]]
+  package = "netlify-plugin-lighthouse"
+  
+  [plugins.inputs]
+    # Run Lighthouse on these URLs
+    urls = [
+      "https://startupnamer.org",
+      "https://startupnamer.org/naming-tool",
+      "https://startupnamer.org/tech-startup-names"
+    ]
+    # Lighthouse settings
+    output_path = "lighthouse-results"
+    
+# Build plugins for optimization
+[[plugins]]
+  package = "netlify-plugin-submit-sitemap"
+  
+  [plugins.inputs]
+    # Submit sitemap to search engines
+    baseUrl = "https://startupnamer.org"
+    sitemapPath = "/sitemap.xml"
+    ignorePeriod = 0
+    providers = [
+      "google",
+      "bing"
+    ]
+
+# Context-specific settings
+[context.production]
+  command = "npm run build && npm run export"
+  [context.production.environment]
+    NODE_ENV = "production"
+    NEXT_PUBLIC_SITE_URL = "https://startupnamer.org"
+
+[context.deploy-preview]
+  command = "npm run build"
+  [context.deploy-preview.environment]
+    NODE_ENV = "production"
+    NEXT_PUBLIC_SITE_URL = "$DEPLOY_PRIME_URL"
+
+[context.branch-deploy]
+  command = "npm run build"
+  [context.branch-deploy.environment]
+    NODE_ENV = "development"
+
+# Form handling (if needed for contact forms)
+[build.processing]
+  skip_processing = false
+[build.processing.css]
+  bundle = true
+  minify = true
+[build.processing.js]
+  bundle = true
+  minify = true
+[build.processing.html]
+  pretty_urls = true
