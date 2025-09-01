@@ -1,15 +1,17 @@
 [build]
   base = "client/"
   publish = "client/build/"
-  command = "npm install --no-audit --no-fund && CI=false GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true npx react-scripts build"
+  command = "npm ci --legacy-peer-deps --no-audit --no-fund && npm run build"
 
 [build.environment]
-  NODE_VERSION = "18"
-  NPM_VERSION = "9"
+  NODE_VERSION = "18.19.1"
+  NPM_VERSION = "10.2.4"
   CI = "false"
   GENERATE_SOURCEMAP = "false"
   DISABLE_ESLINT_PLUGIN = "true"
   SKIP_PREFLIGHT_CHECK = "true"
+  NODE_OPTIONS = "--max_old_space_size=4096"
+  NODE_ENV = "production"
 
 [[redirects]]
   from = "/*"

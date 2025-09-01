@@ -27,10 +27,6 @@
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
-  "workspaces": [
-    "client",
-    "server"
-  ],
   "devDependencies": {
     "concurrently": "^8.2.0",
     "husky": "^8.0.3",
