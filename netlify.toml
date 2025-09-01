@@ -1,12 +1,17 @@
 [build]
-  # Build inside the client app
-  base = "client"
-  # Use npm *install* (works fine with package-lock=false) and force-disable workspaces
-  command = "npm install --no-audit --no-fund --workspaces=false && npm run build:snap"
-  # If your build output is not 'build', change to '.next' (Next.js) or 'dist' (Vite)
-  publish = "build"
+  base = "client/"
+  publish = "client/build/"
+  command = "npm install --no-audit --no-fund && CI=false GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true npx react-scripts build"
 
 [build.environment]
-  NODE_VERSION = "20"
-  # Belt-and-suspenders: also tell Netlify to disable workspaces during install
-  NPM_FLAGS = "--workspaces=false"
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
+  CI = "false"
+  GENERATE_SOURCEMAP = "false"
+  DISABLE_ESLINT_PLUGIN = "true"
+  SKIP_PREFLIGHT_CHECK = "true"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
