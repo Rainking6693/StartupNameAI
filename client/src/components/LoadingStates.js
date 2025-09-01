@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Sparkles, Brain, Target, Star } from 'lucide-react';
+import { Zap, Star, Cpu, Target } from 'lucide-react';
 
 /**
  * Comprehensive Loading States & Skeleton Screens
@@ -129,12 +129,12 @@ export const NameGenerationLoader = ({
 }) => {
   const stages = {
     processing: {
-      icon: Brain,
+      icon: Cpu,
       text: 'Analyzing your requirements...',
       color: 'from-blue-500 to-cyan-500'
     },
     generating: {
-      icon: Sparkles,
+      icon: Star,
       text: 'Generating creative names...',
       color: 'from-purple-500 to-pink-500'
     },

@@ -12,8 +12,7 @@ import {
   Globe,
   Award,
   TrendingUp,
-  Brain,
-  Sparkles,
+  Cpu,
   Copy,
   RefreshCw,
   BarChart3
@@ -151,7 +150,7 @@ const NameResults = () => {
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6"
           >
-            <Brain className="w-8 h-8 text-white" />
+            <Cpu className="w-8 h-8 text-white" />
           </motion.div>
           <h2 className="text-2xl font-bold text-white mb-2">Loading Your Names</h2>
           <p className="text-white/80">Preparing your personalized startup names...</p>
@@ -178,7 +177,7 @@ const NameResults = () => {
             
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+                <Star className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-white">
                 Your Startup Names

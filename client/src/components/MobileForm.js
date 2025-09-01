@@ -7,9 +7,9 @@ import {
   Check,
   AlertCircle,
   Zap,
-  Brain,
+  Cpu,
   Target,
-  Sparkles,
+  Star,
   Building,
   Clock,
   Lightbulb
@@ -124,7 +124,7 @@ const MobileForm = ({
     { 
       id: 'creative', 
       name: 'Creative', 
-      icon: Sparkles, 
+      icon: Star, 
       desc: 'Unique, artistic, memorable',
       example: 'WhimsiCorp, DreamCraft'
     },
@@ -424,7 +424,7 @@ const MobileForm = ({
     <div className="space-y-6 fade-in">
       <div className="text-center mb-8">
         <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-          <Sparkles className="w-8 h-8 text-white" aria-hidden="true" />
+          <Star className="w-8 h-8 text-white" aria-hidden="true" />
         </div>
         <h2 className="text-2xl font-bold text-slate-800 mb-2">Choose your style</h2>
         <p className="text-slate-600">What naming style best fits your brand personality?</p>

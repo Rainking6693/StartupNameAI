@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Zap, Brain, Star, Grid, FileText, Phone, DollarSign, HelpCircle, ChevronDown } from 'lucide-react';
+import { Menu, X, Zap, Cpu, Star, Grid, FileText, Phone, DollarSign, HelpCircle, ChevronDown } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +85,7 @@ const Header = () => {
     { to: '/naming-tool', label: 'Name Generator', icon: Zap },
     { to: '/features', label: 'Features', icon: Star },
     { to: '/examples', label: 'Examples', icon: Grid },
-    { to: '/how-it-works', label: 'How It Works', icon: Brain },
+    { to: '/how-it-works', label: 'How It Works', icon: Cpu },
     { to: '/pricing', label: 'Pricing', icon: DollarSign },
   ];
 

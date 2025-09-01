@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Zap, 
-  Brain, 
+  Cpu, 
   Target, 
   CheckCircle, 
   ArrowRight, 
@@ -12,7 +12,6 @@ import {
   TrendingUp,
   Globe,
   Award,
-  Sparkles,
   Clock,
   DollarSign,
   AlertCircle,
@@ -563,7 +562,7 @@ const LandingPage = () => {
               <span className="font-semibold">{liveViewers} people viewing now</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-4 h-4" />
+              <Star className="w-4 h-4" />
               <span>{namesGenerated.toLocaleString()} startup names generated</span>
             </div>
           </div>
@@ -582,7 +581,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <Sparkles className="w-8 h-8 text-white" />
+            <Star className="w-8 h-8 text-white" />
             <span className="text-2xl font-bold text-white">StartupNamer.org</span>
             <span className="bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold ml-2">
               #1 AI NAMING
@@ -957,7 +956,7 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: Brain,
+                icon: Cpu,
                 title: "50,000+ Startup Analysis",
                 description: "Our AI studied every funded startup since 2010 to understand what makes names convert investors and customers",
                 benefit: "Get names that actually work in the real world",
@@ -1182,7 +1181,7 @@ const LandingPage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <Sparkles className="w-8 h-8 text-yellow-400" />
+              <Star className="w-8 h-8 text-yellow-400" />
               <span className="text-2xl font-bold text-white">StartupNamer.org</span>
               <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 AI-POWERED

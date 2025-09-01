@@ -176,7 +176,7 @@ Focus on names that will help this ${industry} startup stand out and attract ${s
       health: ['Health', 'Care', 'Med', 'Vital', 'Life', 'Pulse', 'Heal', 'Wellness', 'Pure', 'Fit'],
       fintech: ['Pay', 'Coin', 'Bank', 'Fund', 'Cash', 'Finance', 'Capital', 'Invest', 'Money', 'Vault'],
       ecommerce: ['Shop', 'Buy', 'Cart', 'Market', 'Store', 'Trade', 'Sale', 'Deal', 'Retail', 'Commerce'],
-      education: ['Learn', 'Edu', 'Study', 'Know', 'Skill', 'Mind', 'Brain', 'Academy', 'Scholar', 'Teach'],
+      education: ['Learn', 'Edu', 'Study', 'Know', 'Skill', 'Mind', 'Cpu', 'Academy', 'Scholar', 'Teach'],
       food: ['Taste', 'Fresh', 'Bite', 'Flavor', 'Cook', 'Chef', 'Kitchen', 'Recipe', 'Meal', 'Dish'],
       travel: ['Go', 'Trip', 'Journey', 'Explore', 'Adventure', 'Wander', 'Roam', 'Discover', 'Venture', 'Quest'],
       other: ['Pro', 'Max', 'Plus', 'Prime', 'Elite', 'Smart', 'Quick', 'Easy', 'Simple', 'Best']
