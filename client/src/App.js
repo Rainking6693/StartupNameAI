@@ -15,6 +15,12 @@ const NameResults = lazy(() => import('./components/NameResults'));
 const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./components/TermsOfService'));
 
+// Lazy load page components
+const HowItWorksPage = lazy(() => import('./pages/HowItWorksPage'));
+const PricingPage = lazy(() => import('./pages/PricingPage'));
+const FeaturesPage = lazy(() => import('./pages/FeaturesPage'));
+const ExamplesPage = lazy(() => import('./pages/ExamplesPage'));
+
 // Enhanced loading component with SEO optimization
 const LoadingFallback = ({ message = "Loading..." }) => (
   <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
@@ -309,12 +315,40 @@ function App() {
 
                   {/* Payment and Commerce */}
                   <Route path="/payment/:packageId" element={<PaymentPage />} />
-                  <Route path="/pricing" element={<ComingSoonPage pageName="Pricing" />} />
+                  <Route 
+                    path="/pricing" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading pricing..." />}>
+                        <PricingPage />
+                      </Suspense>
+                    } 
+                  />
 
                   {/* Content and Info Pages */}
-                  <Route path="/features" element={<ComingSoonPage pageName="Features" />} />
-                  <Route path="/examples" element={<ComingSoonPage pageName="Examples" />} />
-                  <Route path="/how-it-works" element={<ComingSoonPage pageName="How It Works" />} />
+                  <Route 
+                    path="/features" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading features..." />}>
+                        <FeaturesPage />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="/examples" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading examples..." />}>
+                        <ExamplesPage />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="/how-it-works" 
+                    element={
+                      <Suspense fallback={<LoadingFallback message="Loading how it works..." />}>
+                        <HowItWorksPage />
+                      </Suspense>
+                    } 
+                  />
                   <Route path="/faq" element={<ComingSoonPage pageName="FAQ" />} />
                   <Route path="/blog" element={<ComingSoonPage pageName="Blog" />} />
                   <Route path="/contact" element={<ComingSoonPage pageName="Contact" />} />
