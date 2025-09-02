@@ -75,29 +75,42 @@ router.post('/generate', nameGenerationLimiter, validateNameRequest, async (req,
       userAgent: req.get('User-Agent')
     });
 
-    // Create session record
-    const sessionId = await createNamingSession({
-      userId,
-      sessionToken: sessionToken || generateSessionToken(),
+    let sessionId = null;
+    let generatedNames;
+
+    // Try database operations, but continue without if database unavailable
+    try {
+      // Create session record
+      sessionId = await createNamingSession({
+        userId,
+        sessionToken: sessionToken || generateSessionToken(),
+        keywords,
+        industry,
+        style,
+        count
+      });
+    } catch (dbError) {
+      logger.warn('Database unavailable, proceeding without session storage:', dbError.message);
+      sessionId = `temp_${Date.now()}`; // Temporary session ID
+    }
+
+    // Generate names using AI (this works independently of database)
+    generatedNames = await nameGenerator.generateNames({
       keywords,
       industry,
       style,
       count
     });
 
-    // Generate names using AI
-    const generatedNames = await nameGenerator.generateNames({
-      keywords,
-      industry,
-      style,
-      count
-    });
-
-    // Save generated names to database
-    await saveGeneratedNames(sessionId, generatedNames);
-
-    // Update session as completed
-    await updateSessionStatus(sessionId, 'completed');
+    // Try to save to database, but don't fail if unavailable
+    try {
+      if (sessionId && typeof sessionId !== 'string') { // Only if we have a real session ID
+        await saveGeneratedNames(sessionId, generatedNames);
+        await updateSessionStatus(sessionId, 'completed');
+      }
+    } catch (dbError) {
+      logger.warn('Database save failed, continuing with in-memory response:', dbError.message);
+    }
 
     // Return response with session info
     res.status(200).json({

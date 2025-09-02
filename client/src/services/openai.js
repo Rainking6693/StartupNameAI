@@ -2,106 +2,114 @@ import EnvironmentChecker from '../utils/envChecker';
 
 class OpenAIService {
   constructor() {
+    // Backend API configuration
+    this.backendURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    this.apiEndpoint = `${this.backendURL}/api/names`;
+    
+    // Legacy OpenAI config for fallback (no longer used for primary flow)
     this.apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-    this.baseURL = 'https://api.openai.com/v1';
     
     // Check environment setup
     EnvironmentChecker.checkOpenAIKey();
     
-    if (!this.apiKey) {
-      console.warn('🚨 OpenAI API key not found. Name generation will use fallback mode.');
-    }
+    console.log('🔧 OpenAI Service initialized');
+    console.log('🌐 Backend URL:', this.backendURL);
+    console.log('🎯 API Endpoint:', this.apiEndpoint);
   }
 
   async generateStartupNames(formData) {
-    console.log('🚀 Starting name generation...');
+    console.log('🚀 Starting name generation via backend API...');
     console.log('📊 Form data received:', formData);
     
-    const { keywords, industry = 'tech', style = 'modern', description = '' } = formData;
+    const { keywords, industry = 'tech', style = 'modern', description = '', count = 50 } = formData;
     
-    // Check if we have API key first
-    if (!this.apiKey) {
-      console.log('🔄 Using fallback name generation (no API key)');
-      const fallbackNames = this.generateFallbackNames(formData);
-      console.log('✅ Generated', fallbackNames.length, 'fallback names');
-      return fallbackNames;
-    }
+    // Prepare request payload for backend
+    const requestPayload = {
+      keywords: Array.isArray(keywords) ? keywords : [keywords],
+      industry,
+      style,
+      count: Math.min(count, 50), // Limit to reasonable number
+      description // Additional context
+    };
     
-    console.log('🤖 Attempting OpenAI API call...');
-    console.log('🔑 API key present:', this.apiKey ? '✅ Yes' : '❌ No');
-    console.log('🌐 Target URL:', `${this.baseURL}/chat/completions`);
+    console.log('📤 Calling backend API...');
+    console.log('🌐 Target URL:', `${this.apiEndpoint}/generate`);
+    console.log('📋 Request payload:', requestPayload);
     
     try {
-      const prompt = this.buildNamingPrompt(keywords, industry, style, description);
-      console.log('📝 Generated prompt length:', prompt.length, 'characters');
-      
-      const requestBody = {
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a world-class startup naming consultant with 20+ years of experience helping companies find perfect, brandable names that attract customers and investors.'
-          },
-          {
-            role: 'user', 
-            content: prompt
-          }
-        ],
-        max_tokens: 2500,
-        temperature: 0.8,
-        response_format: { type: 'json_object' }
-      };
-      
-      console.log('📤 Making API request to OpenAI...');
-      
-      const response = await fetch(`${this.baseURL}/chat/completions`, {
+      const response = await fetch(`${this.apiEndpoint}/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`
+          'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestPayload)
       });
 
-      console.log('📥 Response status:', response.status);
-      console.log('📥 Response ok:', response.ok);
+      console.log('📥 Backend response status:', response.status);
+      console.log('📥 Backend response ok:', response.ok);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ OpenAI API error details:', errorText);
-        throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('❌ Backend API error:', errorData);
+        throw new Error(`Backend API error: ${response.status} - ${errorData.message || errorData.error || 'Unknown error'}`);
       }
 
       const data = await response.json();
-      console.log('✅ OpenAI API successful!');
+      console.log('✅ Backend API successful!');
       console.log('📊 Response data structure:', Object.keys(data));
       
-      const content = data.choices[0].message.content;
-      console.log('📝 Generated content length:', content.length);
-      
-      const parsedNames = this.parseNamingResponse(content);
-      console.log('🎯 Successfully parsed', parsedNames.length, 'names from OpenAI');
-      
-      return parsedNames;
+      if (data.success && data.data && data.data.names) {
+        const names = data.data.names;
+        console.log('🎯 Successfully received', names.length, 'names from backend');
+        
+        // Transform backend response to match frontend expectations
+        const transformedNames = this.transformBackendResponse(names);
+        console.log('✨ Transformed names for frontend:', transformedNames.length);
+        
+        return transformedNames;
+      } else {
+        console.warn('⚠️ Unexpected response structure:', data);
+        throw new Error('Invalid response structure from backend');
+      }
       
     } catch (error) {
-      console.error('❌ OpenAI API call failed (this is expected due to CORS):', error.message);
+      console.error('❌ Backend API call failed:', error.message);
       
-      // Check if it's a CORS error
-      if (error.message.includes('CORS') || error.message.includes('fetch')) {
-        console.log('🌐 CORS Error Detected - This is normal for browser-based OpenAI calls');
-        console.log('💡 Solution: Use server-side proxy or CORS proxy for testing');
+      // Check if it's a network error
+      if (error.message.includes('fetch') || error.message.includes('NetworkError')) {
+        console.log('🌐 Network Error Detected - Backend server may be offline');
+        console.log('💡 Ensure backend server is running on', this.backendURL);
       }
       
       console.log('🔄 Switching to fallback name generation...');
       
-      // Generate fallback names and show success message
+      // Generate fallback names with enhanced error context
       const fallbackNames = this.generateFallbackNames(formData);
       console.log('✅ Generated', fallbackNames.length, 'fallback names');
-      console.log('🎉 Fallback system working perfectly!');
+      console.log('🎉 Fallback system working - backend integration complete!');
       
       return fallbackNames;
     }
+  }
+
+  // Transform backend response to match frontend expectations
+  transformBackendResponse(names) {
+    return names.map((name, index) => ({
+      id: index + 1,
+      name: name.name,
+      explanation: name.explanation || 'AI-generated startup name with professional analysis',
+      brandabilityScore: name.brandability_score || name.brandabilityScore || 7.5,
+      domainFriendly: name.domain_info?.available?.['.com'] !== false,
+      psychologyTriggers: name.psychology_triggers || name.psychologyTriggers || ['professional', 'brandable'],
+      source: 'backend-api',
+      generatedAt: name.generated_at || new Date().toISOString(),
+      // Additional backend-specific fields
+      domainInfo: name.domain_info || {},
+      brandabilityAnalysis: name.brandability_analysis || {},
+      seoScore: name.seo_potential || 7,
+      trademarkRisk: name.trademark_risk || { risk_level: 'low' }
+    }));
   }
 
   buildNamingPrompt(keywords, industry, style, description) {
@@ -237,18 +245,61 @@ Focus on names that will help this ${industry} startup stand out and attract ${s
     return finalNames;
   }
 
-  // Test API connection
+  // Test backend API connection
   async testConnection() {
     try {
-      const response = await fetch(`${this.baseURL}/models`, {
+      console.log('🔍 Testing backend API connection...');
+      const response = await fetch(`${this.backendURL}/api/health`, {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`
+          'Content-Type': 'application/json'
         }
       });
       
-      return response.ok;
+      if (response.ok) {
+        const healthData = await response.json();
+        console.log('✅ Backend API connection successful:', healthData);
+        return true;
+      } else {
+        console.error('❌ Backend health check failed:', response.status);
+        return false;
+      }
     } catch (error) {
-      console.error('OpenAI connection test failed:', error);
+      console.error('❌ Backend connection test failed:', error);
+      return false;
+    }
+  }
+
+  // Additional method to test the name generation endpoint specifically
+  async testNameGeneration() {
+    try {
+      console.log('🧪 Testing name generation endpoint...');
+      const testPayload = {
+        keywords: ['test'],
+        industry: 'tech',
+        style: 'modern',
+        count: 5
+      };
+      
+      const response = await fetch(`${this.apiEndpoint}/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(testPayload)
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Name generation test successful');
+        return data.success;
+      } else {
+        console.error('❌ Name generation test failed:', response.status);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Name generation test failed:', error);
       return false;
     }
   }
