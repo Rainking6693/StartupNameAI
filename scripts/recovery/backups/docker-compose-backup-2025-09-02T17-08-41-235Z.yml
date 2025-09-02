@@ -1,0 +1,277 @@
+version: '3.8'
+
+# StartupNamer.org - Docker Environment for Complete Deployment Testing
+# This composition exactly mirrors Netlify's deployment environment
+
+services:
+  # Netlify Mirror Service - Exact environment replication
+  netlify-mirror:
+    image: node:18.19.1-bullseye
+    container_name: startupnamer-netlify-mirror
+    working_dir: /workspace
+    environment:
+      # Exact Netlify environment variables
+      - NODE_VERSION=18.19.1
+      - NPM_VERSION=10.2.4
+      - CI=false
+      - GENERATE_SOURCEMAP=false
+      - DISABLE_ESLINT_PLUGIN=true
+      - SKIP_PREFLIGHT_CHECK=true
+      - NODE_OPTIONS=--max_old_space_size=4096
+      - NODE_ENV=production
+      # Additional deployment variables
+      - NETLIFY_BUILD_BASE=client/
+      - NETLIFY_BUILD_PUBLISH=client/build/
+      - NETLIFY_BUILD_COMMAND=npm install --legacy-peer-deps --no-audit --no-fund && npm run build
+    volumes:
+      # Mount project directory
+      - .:/workspace:cached
+      # Separate volume mounts for better performance
+      - netlify_node_modules:/workspace/node_modules
+      - netlify_client_modules:/workspace/client/node_modules
+      - netlify_server_modules:/workspace/server/node_modules
+      # Cache directories
+      - netlify_npm_cache:/root/.npm
+      - netlify_cache:/workspace/.cache
+    ports:
+      - "3000:3000"    # React dev server
+      - "8080:8080"    # Netlify dev server
+      - "9000:9000"    # Netlify functions
+    command: >
+      bash -c "
+        echo '🌐 Starting Netlify Mirror Environment...' &&
+        npm install -g npm@10.2.4 &&
+        npm install -g netlify-cli@latest &&
+        echo '✅ Environment ready for testing' &&
+        tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD", "node", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - startupnamer-network
+
+  # React Development Service - Hot reloading development environment
+  react-dev:
+    image: node:18.19.1-bullseye
+    container_name: startupnamer-react-dev
+    working_dir: /workspace/client
+    depends_on:
+      - netlify-mirror
+    environment:
+      - NODE_VERSION=18.19.1
+      - NPM_VERSION=10.2.4
+      - CI=false
+      - GENERATE_SOURCEMAP=true
+      - DISABLE_ESLINT_PLUGIN=false
+      - SKIP_PREFLIGHT_CHECK=true
+      - NODE_OPTIONS=--max_old_space_size=4096 --openssl-legacy-provider
+      - NODE_ENV=development
+      - FAST_REFRESH=true
+      - WDS_SOCKET_HOST=localhost
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_NODE_ENV=development
+    volumes:
+      - .:/workspace:cached
+      - react_dev_client_modules:/workspace/client/node_modules
+      - react_dev_cache:/workspace/client/.cache
+      - ./test-results:/workspace/test-results
+    ports:
+      - "3001:3000"    # React development server
+      - "3002:3001"    # React testing server
+    command: >
+      bash -c "
+        echo '⚛️  Starting React Development Environment...' &&
+        npm install -g npm@10.2.4 &&
+        npm install --legacy-peer-deps --no-audit --no-fund &&
+        echo '🔥 React dev server ready - starting...' &&
+        npm start
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    restart: unless-stopped
+    networks:
+      - startupnamer-network
+
+  # Build Tester Service - Automated validation with React testing
+  build-tester:
+    image: node:18.19.1-bullseye
+    container_name: startupnamer-build-tester
+    working_dir: /workspace
+    depends_on:
+      - netlify-mirror
+    environment:
+      - NODE_VERSION=18.19.1
+      - NPM_VERSION=10.2.4
+      - CI=true
+      - GENERATE_SOURCEMAP=false
+      - DISABLE_ESLINT_PLUGIN=true
+      - SKIP_PREFLIGHT_CHECK=true
+      - NODE_OPTIONS=--max_old_space_size=4096 --openssl-legacy-provider
+      - NODE_ENV=production
+      - TESTING_MODE=true
+      - REACT_TESTING=true
+    volumes:
+      - .:/workspace:cached
+      - tester_node_modules:/workspace/node_modules
+      - tester_client_modules:/workspace/client/node_modules
+      - tester_server_modules:/workspace/server/node_modules
+      - tester_cache:/workspace/.cache
+      # Mount testing results
+      - ./test-results:/workspace/test-results
+    command: >
+      bash -c "
+        echo '🧪 Starting React Build Tester Service...' &&
+        npm install -g npm@10.2.4 &&
+        npm install -g lighthouse@latest html-validate@latest puppeteer@latest http-server@latest &&
+        apt-get update && apt-get install -y curl chromium &&
+        echo '⚛️  React testing environment ready' &&
+        tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD", "npm", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - startupnamer-network
+
+  # React Component Tester - Isolated component testing
+  react-component-tester:
+    image: node:18.19.1-bullseye
+    container_name: startupnamer-react-components
+    working_dir: /workspace
+    depends_on:
+      - react-dev
+    environment:
+      - NODE_VERSION=18.19.1
+      - NPM_VERSION=10.2.4
+      - CI=true
+      - NODE_OPTIONS=--max_old_space_size=4096 --openssl-legacy-provider
+      - NODE_ENV=test
+      - REACT_COMPONENT_TESTING=true
+    volumes:
+      - .:/workspace:cached
+      - component_tester_modules:/workspace/client/node_modules
+      - ./test-results:/workspace/test-results
+    command: >
+      bash -c "
+        echo '🧩 Starting React Component Tester...' &&
+        npm install -g npm@10.2.4 &&
+        cd client &&
+        npm install --legacy-peer-deps --no-audit --no-fund &&
+        echo '✅ Component tester ready for isolation testing' &&
+        tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD", "node", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - startupnamer-network
+
+  # Static File Server - Production simulation  
+  static-server:
+    image: nginx:alpine
+    container_name: startupnamer-static-server
+    depends_on:
+      - netlify-mirror
+    ports:
+      - "8090:80"
+    volumes:
+      - ./client/build:/usr/share/nginx/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    command: >
+      /bin/sh -c "
+        echo '🌐 Starting Static File Server...' &&
+        nginx -g 'daemon off;'
+      "
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - startupnamer-network
+
+  # Performance Monitor - Lighthouse testing
+  performance-monitor:
+    image: node:18.19.1-bullseye
+    container_name: startupnamer-performance-monitor
+    working_dir: /workspace
+    depends_on:
+      - static-server
+    environment:
+      - TARGET_URL=http://static-server
+      - LIGHTHOUSE_OUTPUT_DIR=/workspace/lighthouse-reports
+    volumes:
+      - .:/workspace:cached
+      - ./lighthouse-reports:/workspace/lighthouse-reports
+    command: >
+      bash -c "
+        echo '📊 Starting Performance Monitor...' &&
+        npm install -g lighthouse@latest &&
+        apt-get update && apt-get install -y wget &&
+        echo '✅ Performance monitor ready' &&
+        tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD", "lighthouse", "--version"]
+      interval: 60s
+      timeout: 20s
+      retries: 3
+      start_period: 90s
+    restart: unless-stopped
+    networks:
+      - startupnamer-network
+
+# Named volumes for better performance and persistence
+volumes:
+  netlify_node_modules:
+    name: startupnamer_netlify_node_modules
+  netlify_client_modules:
+    name: startupnamer_netlify_client_modules
+  netlify_server_modules:
+    name: startupnamer_netlify_server_modules
+  netlify_npm_cache:
+    name: startupnamer_netlify_npm_cache
+  netlify_cache:
+    name: startupnamer_netlify_cache
+  tester_node_modules:
+    name: startupnamer_tester_node_modules
+  tester_client_modules:
+    name: startupnamer_tester_client_modules
+  tester_server_modules:
+    name: startupnamer_tester_server_modules
+  tester_cache:
+    name: startupnamer_tester_cache
+  react_dev_client_modules:
+    name: startupnamer_react_dev_client_modules
+  react_dev_cache:
+    name: startupnamer_react_dev_cache
+  component_tester_modules:
+    name: startupnamer_component_tester_modules
+
+# Custom network for service communication
+networks:
+  startupnamer-network:
+    name: startupnamer-deployment-network
+    driver: bridge

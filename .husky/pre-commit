@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Clean up Windows system files that can cause Git issues
+echo "🧹 Cleaning up system files..."
+
+# Remove problematic Windows system files
+find . -name "nul" -type f -delete 2>/dev/null || true
+find . -name "aux" -type f -delete 2>/dev/null || true
+find . -name "con" -type f -delete 2>/dev/null || true
+find . -name "prn" -type f -delete 2>/dev/null || true
+
+# Remove temporary files
+find . -name "*.tmp" -type f -delete 2>/dev/null || true
+find . -name "*.temp" -type f -delete 2>/dev/null || true
+
+# Remove Windows thumbnail files
+find . -name "Thumbs.db" -type f -delete 2>/dev/null || true
+find . -name "ehthumbs.db" -type f -delete 2>/dev/null || true
+find . -name "Desktop.ini" -type f -delete 2>/dev/null || true
+
+echo "✅ System file cleanup completed"
+
+# Check for system-reserved filenames in staged files
+staged_files=$(git diff --cached --name-only)
+for file in $staged_files; do
+    basename_file=$(basename "$file")
+    if [[ "$basename_file" =~ ^(nul|aux|con|prn|com[0-9]|lpt[0-9])$ ]]; then
+        echo "❌ ERROR: File has system-reserved name: $basename_file"
+        echo "Please rename this file to something else."
+        exit 1
+    fi
+done
+
+echo "✅ Pre-commit checks passed"

@@ -5,7 +5,7 @@
   "description": "StartupNamer.ai - The AI-powered startup naming authority",
   "scripts": {
     "dev": "echo 'Use npm run dev from client or server directories'",
-    "info": "echo 'Client: cd client && npm start | Server: cd server && npm run dev'",
+    "info": "bash scripts/deployment-info.sh",
     "install:all": "npm ci && cd client && npm ci && cd ../server && npm ci",
     "build": "cd client && npm run build:snap",
     "test": "cd client && npm run test:ci",
@@ -26,7 +26,7 @@
     "test:netlify": "bash scripts/test-netlify-build.sh",
     "test:react": "bash scripts/test-react-build.sh",
     "test:react-components": "node scripts/test-react-components.js",
-    "test:react-routes": "node scripts/test-react-routes.js", 
+    "test:react-routes": "node scripts/test-react-routes.js",
     "test:css-tailwind": "node scripts/test-css-tailwind.js",
     "test:react-deployment": "bash scripts/test-react-deployment.sh",
     "cache:bust": "bash scripts/cache-bust-deploy.sh",
@@ -40,7 +40,6 @@
     "docker:clean": "docker-compose down --volumes --rmi all",
     "env:setup": "bash .devcontainer/setup.sh",
     "deployment:full-validation": "npm run test:react-deployment && npm run test:netlify && npm run deploy:test && npm run cache:bust",
-    "info": "bash scripts/deployment-info.sh",
     "help": "bash scripts/deployment-info.sh",
     "qa:master": "node scripts/master-integration.js run",
     "qa:master:quick": "node scripts/master-integration.js run quick",
@@ -115,7 +114,7 @@
     "pre-push": "npm run build:with-validation && npm run git:diff-staged"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=18.0.0.0.0",
     "npm": ">=8.0.0"
   },
   "devDependencies": {
