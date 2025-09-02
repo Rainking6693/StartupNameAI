@@ -236,7 +236,7 @@ const InteractiveDemoComponent = ({ isOpen, onClose, onGetStarted }) => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 2.5 }}
                     >
-                      ✓ Checking domain availability
+                      ✓ Analyzing brand potential
                     </motion.div>
                   </div>
                 </div>
@@ -266,8 +266,8 @@ const InteractiveDemoComponent = ({ isOpen, onClose, onGetStarted }) => {
                         <h5 className="font-bold text-gray-800 text-lg">{name}</h5>
                         <p className="text-gray-600 text-sm">{sampleData[industry]?.descriptions[index]}</p>
                         <div className="flex items-center space-x-4 mt-2 text-xs">
-                          <span className="text-green-600 font-semibold">✓ Domain Available</span>
-                          <span className="text-blue-600 font-semibold">✓ Trademark Clear</span>
+                          <span className="text-green-600 font-semibold">✓ High Brandability</span>
+                          <span className="text-blue-600 font-semibold">✓ AI Validated</span>
                           <div className="flex items-center space-x-1">
                             <Star className="w-3 h-3 text-yellow-400 fill-current" />
                             <span className="text-gray-600">9.{Math.floor(Math.random() * 10)}/10</span>
@@ -382,8 +382,8 @@ const LandingPage = () => {
         {/* Primary Meta Tags */}
         <title>StartupNamer.org - The Startup Naming Authority | AI-Powered Business Names</title>
         <meta name="title" content="StartupNamer.org - The Startup Naming Authority | AI-Powered Business Names" />
-        <meta name="description" content="Generate perfect startup names with advanced AI technology, domain checking, and brandability analysis. Trusted by 10,000+ entrepreneurs worldwide. Get your perfect name in 30 seconds." />
-        <meta name="keywords" content="startup names, AI naming tool, business name generator, brand names, startup naming authority, domain checker, brandability analysis, business naming, company names, entrepreneur tools, startup branding, creative names, memorable names, brandable names, naming consultant, business identity, startup tools" />
+        <meta name="description" content="Generate perfect startup names with advanced AI technology and brandability analysis. Creative naming inspiration trusted by 10,000+ entrepreneurs worldwide. Get your perfect name in 30 seconds." />
+        <meta name="keywords" content="startup names, AI naming tool, business name generator, brand names, startup naming authority, brandability analysis, business naming, company names, entrepreneur tools, startup branding, creative names, memorable names, brandable names, naming consultant, business identity, startup tools" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
@@ -393,7 +393,7 @@ const LandingPage = () => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="StartupNamer.org" />
         <meta property="og:title" content="StartupNamer.org - The Startup Naming Authority" />
-        <meta property="og:description" content="Generate perfect startup names with advanced AI technology. Professional domain checking, brandability analysis, and expert guidance trusted by 10,000+ entrepreneurs worldwide." />
+        <meta property="og:description" content="Generate perfect startup names with advanced AI technology. Professional brandability analysis and creative guidance trusted by 10,000+ entrepreneurs worldwide." />
         <meta property="og:url" content="https://startupnamer.org/" />
         <meta property="og:image" content="https://startupnamer.org/og-image.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -445,7 +445,7 @@ const LandingPage = () => {
             "@type": "WebApplication",
             "name": "StartupNamer.org",
             "alternateName": "Startup Naming Authority",
-            "description": "AI-powered startup naming platform with domain checking, brandability analysis, and expert guidance for entrepreneurs",
+            "description": "AI-powered startup naming platform with brandability analysis and creative guidance for entrepreneurs",
             "url": "https://startupnamer.org",
             "applicationCategory": "BusinessApplication",
             "operatingSystem": "Any",
@@ -453,7 +453,7 @@ const LandingPage = () => {
             "offers": {
               "@type": "Offer",
               "name": "Premium Startup Naming Package",
-              "description": "Advanced AI naming with domain checking and brandability analysis",
+              "description": "Advanced AI naming with brandability analysis and creative guidance",
               "price": "19",
               "priceCurrency": "USD",
               "availability": "https://schema.org/InStock",
@@ -519,10 +519,10 @@ const LandingPage = () => {
               },
               {
                 "@type": "Question",
-                "name": "Can I check domain availability?",
+                "name": "How can I verify domain availability?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes! StartupNamer.org includes real-time domain availability checking for .com, .net, .org, and other popular extensions, plus social media handle verification."
+                  "text": "StartupNamer.org provides domain strategy guidance to help you understand which extensions work best for your brand. We recommend independent verification of actual availability through domain registrars."
                 }
               },
               {
@@ -652,9 +652,14 @@ const LandingPage = () => {
               <p className="text-2xl md:text-3xl text-white font-bold mb-4">
                 Get The Perfect Name in 30 Seconds
               </p>
-              <p className="text-lg text-white/90">
-                AI-powered • Domain-checked • Trademark-screened • Used by 10,000+ funded startups
+              <p className="text-lg text-white/90 mb-4">
+                AI-powered • Brandability-focused • Creative-driven • Used by 10,000+ funded startups
               </p>
+              <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3 max-w-3xl mx-auto">
+                <p className="text-sm text-yellow-200">
+                  ⚠️ <strong>Important:</strong> Names generated are for creative inspiration only. Domain availability and trademark status must be independently verified through proper legal channels.
+                </p>
+              </div>
             </div>
 
             {/* Triple CTA Section */}
@@ -813,7 +818,7 @@ const LandingPage = () => {
                 {[
                   '25 AI-generated names',
                   'Industry-specific analysis',
-                  'Basic domain checking',
+                  'Domain strategy guidance',
                   'Brandability scores',
                   'Email support'
                 ].map((feature, index) => (
@@ -856,7 +861,7 @@ const LandingPage = () => {
               <div className="space-y-3 mb-6">
                 {[
                   '100+ premium name options',
-                  'Advanced trademark screening',
+                  'Enhanced brandability analysis',
                   'Logo design suggestions',
                   'Social media handle check',
                   'Priority support',
@@ -894,7 +899,7 @@ const LandingPage = () => {
               <div className="space-y-3 mb-6">
                 {[
                   'Unlimited name generation',
-                  'Full trademark research',
+                  'Comprehensive brand strategy',
                   'Brand strategy consultation',
                   'Custom logo designs',
                   '1-on-1 naming expert call',
@@ -924,7 +929,17 @@ const LandingPage = () => {
               <span>•</span>
               <span>Cancel anytime</span>
             </div>
-            <p>Join 10,000+ funded startups who chose the smart way to name their company</p>
+            <p className="mb-3">Join 10,000+ funded startups who chose the smart way to name their company</p>
+            <div className="bg-gray-900/50 border border-gray-600/30 rounded-lg p-4 max-w-4xl mx-auto text-left">
+              <p className="text-xs text-gray-300 mb-2">
+                <strong>Legal Disclaimer:</strong> StartupNamer.org provides AI-generated name suggestions for creative inspiration and brandability analysis. We do not perform actual trademark searches or domain availability verification. All names require independent verification through:
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1 ml-4">
+                <li>• Professional trademark attorneys for legal clearance</li>
+                <li>• Domain registrars for actual availability status</li>
+                <li>• Comprehensive business name searches in your jurisdiction</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -1037,7 +1052,7 @@ const LandingPage = () => {
                 name: "Lisa Park",
                 company: "MindBridge",
                 funding: "$8M Series A", 
-                quote: "Our original name had trademark issues. MindBridge was pre-screened and legally clean. Saved us months of legal headaches.",
+                quote: "Our original name felt generic and forgettable. MindBridge perfectly captured our vision and resonated with our target market instantly.",
                 avatar: "👩‍🔬"
               },
               {
@@ -1196,7 +1211,10 @@ const LandingPage = () => {
           </div>
           
           <div className="text-center text-white/40 text-sm mt-8">
-            © 2025 StartupNamer.org - Stop wasting time on names. Start building your empire.
+            <p className="mb-3">© 2025 StartupNamer.org - AI-powered creative naming inspiration for entrepreneurs.</p>
+            <p className="text-xs text-gray-500 max-w-4xl mx-auto">
+              Disclaimer: Names generated are creative suggestions only. Domain availability and trademark status require independent professional verification. StartupNamer.org does not provide legal advice or guarantee name availability.
+            </p>
           </div>
         </div>
       </footer>

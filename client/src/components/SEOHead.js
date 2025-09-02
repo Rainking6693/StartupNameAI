@@ -15,7 +15,7 @@ const SEOHead = ({
 }) => {
   const siteUrl = 'https://startupnamer.org';
   const defaultTitle = 'StartupNamer.org - AI-Powered Startup Name Generator';
-  const defaultDescription = 'Generate perfect startup names with AI. Get brandable, memorable names for your business in seconds. Free startup name generator with domain availability checks.';
+  const defaultDescription = 'Generate perfect startup names with AI. Get brandable, memorable names for your business in seconds. Creative startup name generator with brandability insights.';
   const defaultKeywords = 'startup names, business names, company names, AI name generator, startup name generator, brand names, business naming tool';
   const defaultImage = `${siteUrl}/og-image.jpg`;
 
@@ -97,7 +97,7 @@ const SEOHead = ({
 export const HomePageSEO = () => (
   <SEOHead
     title="AI-Powered Startup Name Generator - Free & Instant"
-    description="Generate perfect startup names with AI. Get brandable, memorable names for your business in seconds. Free startup name generator with domain availability checks and branding insights."
+    description="Generate perfect startup names with AI. Get brandable, memorable names for your business in seconds. Creative startup name generator with brandability analysis and branding insights."
     keywords="startup names, business names, AI name generator, startup name generator, brand names, business naming tool, company names, free name generator"
     ogType="website"
   />
@@ -106,7 +106,7 @@ export const HomePageSEO = () => (
 export const NamingToolSEO = () => (
   <SEOHead
     title="Startup Name Generator Tool - Create Unique Business Names"
-    description="Use our AI-powered naming tool to create unique, brandable startup names. Generate hundreds of creative business names instantly with domain availability checks."
+    description="Use our AI-powered naming tool to create unique, brandable startup names. Generate hundreds of creative business names instantly with brandability analysis."
     keywords="naming tool, startup name generator, business name creator, AI naming, brand name generator, company name ideas"
   />
 );
@@ -114,8 +114,8 @@ export const NamingToolSEO = () => (
 export const FeaturesPageSEO = () => (
   <SEOHead
     title="Features - Advanced AI Name Generation Technology"
-    description="Discover the powerful features of StartupNamer.org. AI-powered name generation, domain availability, trademark checking, and brand analysis tools."
-    keywords="name generator features, AI naming technology, domain checker, trademark search, brand analysis"
+    description="Discover the powerful features of StartupNamer.org. AI-powered name generation, brandability scoring, creative analysis, and branding strategy tools."
+    keywords="name generator features, AI naming technology, brandability analysis, creative naming, brand analysis"
   />
 );
 
