@@ -38,11 +38,12 @@
     "prettier": "3.0.0",
     "puppeteer": "21.5.2",
     "react-snap": "1.23.0",
-    "tailwindcss": "3.4.17"
+    "tailwindcss": "3.4.17",
+    "terser-webpack-plugin": "5.3.9"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "node build-nuclear.js",
+    "build": "node build-netlify.js",
     "build:original": "react-scripts build",
     "test": "react-scripts test",
     "test:ci": "react-scripts test --coverage --watchAll=false",
@@ -56,23 +57,15 @@
     "validate:seo": "node ../scripts/validate-seo.js build",
     "serve": "npx http-server build -p 3000 -s",
     "deploy:cache-bust": "node cache-bust-deployment.js",
-    "deploy:clean": "npm run deploy:cache-bust && npm run build"
+    "deploy:clean": "npm run deploy:cache-bust && npm run build",
+    "validate:deployment": "node validate-linux.js",
+    "build:validate": "npm run build && npm run validate:deployment"
   },
   "overrides": {
-    "ajv": "6.12.6",
-    "ajv-keywords": "3.5.2",
-    "ajv-errors": "1.0.1",
-    "@types/eslint": "8.44.0",
-    "typescript": "4.9.5",
-    "schema-utils": "1.0.0"
-  },
-  "resolutions": {
-    "ajv": "6.12.6",
-    "ajv-keywords": "3.5.2",
-    "ajv-errors": "1.0.1",
-    "@types/eslint": "8.44.0",
-    "typescript": "4.9.5",
-    "schema-utils": "1.0.0"
+    "terser-webpack-plugin": "5.3.9",
+    "schema-utils": "3.3.0",
+    "ajv": "8.12.0",
+    "ajv-keywords": "5.1.0"
   },
   "reactSnap": {
     "inlineCss": true,
