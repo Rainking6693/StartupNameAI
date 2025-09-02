@@ -1,19 +1,8 @@
 [build]
-  base = "client/"
-  publish = "client/build/"
-  command = "npm run postinstall:production && npm install --legacy-peer-deps --no-audit --no-fund && (npm run build:production || npm run build:fallback)"
-
-[build.environment]
-  NODE_VERSION = "16.20.2"
-  NPM_VERSION = "8.19.4"
-  CI = "false"
-  GENERATE_SOURCEMAP = "false"
-  DISABLE_ESLINT_PLUGIN = "true"
-  SKIP_PREFLIGHT_CHECK = "true"
-  NODE_OPTIONS = "--max_old_space_size=4096 --openssl-legacy-provider"
-  NODE_ENV = "production"
-  WEBPACK_MINIMIZE = "false"
-  TERSER_PLUGIN_ENABLED = "false"
+  base = "client"
+  command = "npm install --legacy-peer-deps --no-audit --no-fund && npm run build"
+  publish = "client/build"
+  environment = { NODE_VERSION = "16.18.1", NPM_VERSION = "8.19.4", NODE_OPTIONS = "" }
 
 [[redirects]]
   from = "/*"
