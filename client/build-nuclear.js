@@ -8,7 +8,32 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+
+// Cross-platform directory copying function
+function copyDirectory(src, dest) {
+  if (!fs.existsSync(src)) {
+    console.log(`⚠️ Source directory ${src} does not exist, skipping...`);
+    return;
+  }
+  
+  // Create destination directory if it doesn't exist
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest, { recursive: true });
+  }
+  
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+    
+    if (entry.isDirectory()) {
+      copyDirectory(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
 
 console.log('🚨 NUCLEAR BUILD OPTION STARTING...');
 console.log('📦 Building in development mode to bypass terser completely');
@@ -41,7 +66,7 @@ try {
   
   // Copy public files
   console.log('📁 Copying public files...');
-  execSync('xcopy /E /I /Y public build', { stdio: 'inherit' });
+  copyDirectory('public', 'build');
   
   // Get all source files recursively
   function getAllFiles(dir, fileList = []) {
