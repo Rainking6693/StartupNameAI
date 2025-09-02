@@ -1,0 +1,139 @@
+{
+  "dependency_cleanup": {
+    "name": "Dependency Cleanup Strategy",
+    "description": "Remove conflicting dependencies and clean build artifacts",
+    "success_rate": 0.89,
+    "average_duration_ms": 300000,
+    "steps": [
+      "backup_package_json",
+      "remove_node_modules",
+      "clean_package_lock",
+      "remove_conflicting_deps", 
+      "reinstall_dependencies",
+      "validate_build"
+    ],
+    "rollback_steps": [
+      "restore_package_json",
+      "reinstall_from_backup"
+    ]
+  },
+  "build_optimization": {
+    "name": "Build Process Optimization",
+    "description": "Optimize build configuration for better performance and reliability",
+    "success_rate": 0.82,
+    "average_duration_ms": 450000,
+    "steps": [
+      "enable_build_cache",
+      "optimize_webpack_config",
+      "implement_code_splitting",
+      "remove_unused_imports",
+      "update_build_scripts"
+    ],
+    "rollback_steps": [
+      "restore_original_config",
+      "clear_cache"
+    ]
+  },
+  "environment_alignment": {
+    "name": "Environment Configuration Alignment",
+    "description": "Synchronize environment configurations across deployment targets",
+    "success_rate": 0.91,
+    "average_duration_ms": 600000,
+    "steps": [
+      "audit_environment_configs",
+      "standardize_node_version",
+      "update_dockerfile",
+      "sync_environment_variables",
+      "validate_platform_compatibility"
+    ],
+    "rollback_steps": [
+      "restore_environment_configs",
+      "rollback_dockerfile"
+    ]
+  },
+  "performance_audit": {
+    "name": "Performance Issue Identification and Resolution",
+    "description": "Comprehensive performance audit and optimization",
+    "success_rate": 0.76,
+    "average_duration_ms": 1200000,
+    "steps": [
+      "generate_bundle_analysis",
+      "identify_performance_regressions",
+      "optimize_assets",
+      "implement_lazy_loading",
+      "update_caching_strategy"
+    ],
+    "rollback_steps": [
+      "restore_previous_optimizations",
+      "revert_asset_changes"
+    ]
+  },
+  "test_stabilization": {
+    "name": "Test Suite Stabilization",
+    "description": "Identify and fix flaky tests for consistent results",
+    "success_rate": 0.68,
+    "average_duration_ms": 1800000,
+    "steps": [
+      "identify_flaky_tests",
+      "add_proper_waits",
+      "implement_test_isolation",
+      "mock_external_dependencies",
+      "add_retry_mechanisms"
+    ],
+    "rollback_steps": [
+      "restore_original_tests",
+      "remove_retry_mechanisms"
+    ]
+  },
+  "seo_audit_fix": {
+    "name": "SEO Validation and Repair",
+    "description": "Fix SEO-related issues and ensure compliance",
+    "success_rate": 0.94,
+    "average_duration_ms": 600000,
+    "steps": [
+      "validate_meta_tags",
+      "fix_open_graph_markup",
+      "repair_schema_markup",
+      "update_canonical_urls",
+      "add_missing_seo_tags"
+    ],
+    "rollback_steps": [
+      "restore_original_meta_tags",
+      "revert_seo_changes"
+    ]
+  },
+  "accessibility_remediation": {
+    "name": "Accessibility Issue Remediation", 
+    "description": "Fix accessibility violations to ensure WCAG compliance",
+    "success_rate": 0.87,
+    "average_duration_ms": 900000,
+    "steps": [
+      "audit_accessibility_violations",
+      "add_missing_alt_attributes",
+      "improve_color_contrast",
+      "implement_aria_labels",
+      "fix_keyboard_navigation"
+    ],
+    "rollback_steps": [
+      "restore_original_markup",
+      "revert_accessibility_changes"
+    ]
+  },
+  "config_reconciliation": {
+    "name": "Configuration Conflict Resolution",
+    "description": "Resolve configuration conflicts across multiple config files",
+    "success_rate": 0.85,
+    "average_duration_ms": 480000,
+    "steps": [
+      "audit_all_configs",
+      "identify_conflicts",
+      "standardize_settings",
+      "update_path_mappings",
+      "remove_duplicate_configs"
+    ],
+    "rollback_steps": [
+      "restore_original_configs",
+      "revert_standardization"
+    ]
+  }
+}

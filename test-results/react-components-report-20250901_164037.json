@@ -1,0 +1,400 @@
+{
+  "timestamp": "2025-09-01T22:40:37.118Z",
+  "testId": "20250901_164037",
+  "components": {
+    "App": {
+      "name": "App",
+      "tests": {
+        "exists": {
+          "success": false,
+          "error": "Component file not found: C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\StartupNameAI\\client\\src\\components\\App.js"
+        }
+      }
+    },
+    "Header": {
+      "name": "Header",
+      "tests": {
+        "exists": {
+          "success": true,
+          "result": {
+            "path": "C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\StartupNameAI\\client\\src\\components\\Header.js",
+            "size": 13246,
+            "hasReactImport": true,
+            "hasExport": true,
+            "hasJSX": true
+          }
+        },
+        "imports": {
+          "success": true,
+          "result": {
+            "react": true,
+            "reactDom": false,
+            "external": [],
+            "internal": []
+          }
+        },
+        "props": {
+          "success": true,
+          "result": {
+            "hasProps": true,
+            "hasPropTypes": false,
+            "hasDefaultProps": false,
+            "destructured": false
+          }
+        },
+        "hooks": {
+          "success": true,
+          "result": {
+            "useState": true,
+            "useEffect": true,
+            "useContext": false,
+            "useCallback": false,
+            "useMemo": false,
+            "useRef": true,
+            "customHooks": [
+              "useLocation"
+            ]
+          }
+        },
+        "styling": {
+          "success": true,
+          "result": {
+            "hasCSSClasses": true,
+            "hasTailwind": [
+              "className=\"sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 btn btn-primary text-"
+            ],
+            "hasInlineStyles": true,
+            "hasStyledComponents": false,
+            "hasCSSModules": false
+          }
+        },
+        "accessibility": {
+          "success": true,
+          "result": {
+            "hasAriaLabels": true,
+            "hasAriaDescribedBy": false,
+            "hasRole": true,
+            "hasAltText": false,
+            "hasTabIndex": false,
+            "hasKeyboardHandlers": true,
+            "hasFocusManagement": true
+          }
+        }
+      }
+    },
+    "Footer": {
+      "name": "Footer",
+      "tests": {
+        "exists": {
+          "success": true,
+          "result": {
+            "path": "C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\StartupNameAI\\client\\src\\components\\Footer.js",
+            "size": 10282,
+            "hasReactImport": true,
+            "hasExport": true,
+            "hasJSX": true
+          }
+        },
+        "imports": {
+          "success": true,
+          "result": {
+            "react": true,
+            "reactDom": false,
+            "external": [],
+            "internal": []
+          }
+        },
+        "props": {
+          "success": true,
+          "result": {
+            "hasProps": true,
+            "hasPropTypes": false,
+            "hasDefaultProps": false,
+            "destructured": false
+          }
+        },
+        "hooks": {
+          "success": true,
+          "result": {
+            "useState": false,
+            "useEffect": false,
+            "useContext": false,
+            "useCallback": false,
+            "useMemo": false,
+            "useRef": false,
+            "customHooks": []
+          }
+        },
+        "styling": {
+          "success": true,
+          "result": {
+            "hasCSSClasses": true,
+            "hasTailwind": [
+              "className=\"bg-slate-900 text-white relative overflow-hidden"
+            ],
+            "hasInlineStyles": false,
+            "hasStyledComponents": false,
+            "hasCSSModules": false
+          }
+        },
+        "accessibility": {
+          "success": true,
+          "result": {
+            "hasAriaLabels": true,
+            "hasAriaDescribedBy": false,
+            "hasRole": true,
+            "hasAltText": false,
+            "hasTabIndex": false,
+            "hasKeyboardHandlers": true,
+            "hasFocusManagement": false
+          }
+        }
+      }
+    },
+    "LandingPage": {
+      "name": "LandingPage",
+      "tests": {
+        "exists": {
+          "success": true,
+          "result": {
+            "path": "C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\StartupNameAI\\client\\src\\components\\LandingPage.js",
+            "size": 54362,
+            "hasReactImport": true,
+            "hasExport": true,
+            "hasJSX": true
+          }
+        },
+        "imports": {
+          "success": true,
+          "result": {
+            "react": true,
+            "reactDom": false,
+            "external": [
+              "import { motion, AnimatePresence } from 'framer-motion';",
+              "import {"
+            ],
+            "internal": []
+          }
+        },
+        "props": {
+          "success": true,
+          "result": {
+            "hasProps": true,
+            "hasPropTypes": false,
+            "hasDefaultProps": false,
+            "destructured": false
+          }
+        },
+        "hooks": {
+          "success": true,
+          "result": {
+            "useState": true,
+            "useEffect": true,
+            "useContext": false,
+            "useCallback": false,
+            "useMemo": false,
+            "useRef": false,
+            "customHooks": [
+              "useNavigate"
+            ]
+          }
+        },
+        "styling": {
+          "success": true,
+          "result": {
+            "hasCSSClasses": true,
+            "hasTailwind": [
+              "className=\"fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-"
+            ],
+            "hasInlineStyles": false,
+            "hasStyledComponents": false,
+            "hasCSSModules": false
+          }
+        },
+        "accessibility": {
+          "success": true,
+          "result": {
+            "hasAriaLabels": false,
+            "hasAriaDescribedBy": false,
+            "hasRole": false,
+            "hasAltText": false,
+            "hasTabIndex": false,
+            "hasKeyboardHandlers": false,
+            "hasFocusManagement": false
+          }
+        }
+      }
+    },
+    "NamingTool": {
+      "name": "NamingTool",
+      "tests": {
+        "exists": {
+          "success": true,
+          "result": {
+            "path": "C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\StartupNameAI\\client\\src\\components\\NamingTool.js",
+            "size": 22712,
+            "hasReactImport": true,
+            "hasExport": true,
+            "hasJSX": true
+          }
+        },
+        "imports": {
+          "success": true,
+          "result": {
+            "react": true,
+            "reactDom": false,
+            "external": [
+              "import { motion, AnimatePresence } from 'framer-motion';",
+              "import {"
+            ],
+            "internal": [
+              "import openaiService from '../services/openai';",
+              "import '../utils/apiTester'; // Auto-runs in debug mode"
+            ]
+          }
+        },
+        "props": {
+          "success": true,
+          "result": {
+            "hasProps": true,
+            "hasPropTypes": false,
+            "hasDefaultProps": false,
+            "destructured": false
+          }
+        },
+        "hooks": {
+          "success": true,
+          "result": {
+            "useState": true,
+            "useEffect": false,
+            "useContext": false,
+            "useCallback": false,
+            "useMemo": false,
+            "useRef": false,
+            "customHooks": [
+              "useNavigate"
+            ]
+          }
+        },
+        "styling": {
+          "success": true,
+          "result": {
+            "hasCSSClasses": true,
+            "hasTailwind": [
+              "className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex"
+            ],
+            "hasInlineStyles": false,
+            "hasStyledComponents": false,
+            "hasCSSModules": true
+          }
+        },
+        "accessibility": {
+          "success": true,
+          "result": {
+            "hasAriaLabels": false,
+            "hasAriaDescribedBy": false,
+            "hasRole": false,
+            "hasAltText": false,
+            "hasTabIndex": false,
+            "hasKeyboardHandlers": true,
+            "hasFocusManagement": false
+          }
+        }
+      }
+    },
+    "NameResults": {
+      "name": "NameResults",
+      "tests": {
+        "exists": {
+          "success": true,
+          "result": {
+            "path": "C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\StartupNameAI\\client\\src\\components\\NameResults.js",
+            "size": 14239,
+            "hasReactImport": true,
+            "hasExport": true,
+            "hasJSX": true
+          }
+        },
+        "imports": {
+          "success": true,
+          "result": {
+            "react": true,
+            "reactDom": false,
+            "external": [
+              "import { motion } from 'framer-motion';",
+              "import {"
+            ],
+            "internal": [
+              "import NameAnalysisModal from './NameAnalysisModal';"
+            ]
+          }
+        },
+        "props": {
+          "success": true,
+          "result": {
+            "hasProps": true,
+            "hasPropTypes": false,
+            "hasDefaultProps": false,
+            "destructured": true
+          }
+        },
+        "hooks": {
+          "success": true,
+          "result": {
+            "useState": true,
+            "useEffect": true,
+            "useContext": false,
+            "useCallback": false,
+            "useMemo": false,
+            "useRef": false,
+            "customHooks": [
+              "useNavigate",
+              "useParams"
+            ]
+          }
+        },
+        "styling": {
+          "success": true,
+          "result": {
+            "hasCSSClasses": true,
+            "hasTailwind": [
+              "className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex"
+            ],
+            "hasInlineStyles": false,
+            "hasStyledComponents": false,
+            "hasCSSModules": false
+          }
+        },
+        "accessibility": {
+          "success": true,
+          "result": {
+            "hasAriaLabels": false,
+            "hasAriaDescribedBy": false,
+            "hasRole": false,
+            "hasAltText": false,
+            "hasTabIndex": false,
+            "hasKeyboardHandlers": false,
+            "hasFocusManagement": false
+          }
+        }
+      }
+    },
+    "LoadingStates": {
+      "name": "LoadingStates",
+      "tests": {
+        "exists": {
+          "success": false,
+          "error": "Component missing proper export"
+        }
+      }
+    }
+  },
+  "summary": {
+    "total": 7,
+    "passed": 5,
+    "failed": 2,
+    "warnings": [],
+    "successRate": 71.42857142857143,
+    "completedAt": "2025-09-01T22:40:37.142Z"
+  }
+}

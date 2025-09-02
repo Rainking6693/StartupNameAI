@@ -1,0 +1,290 @@
+[
+  {
+    "id": "netlify_multer_dependency_error",
+    "pattern": "Cannot find module.*multer|multer.*not found|Module not found.*multer",
+    "category": "deployment",
+    "severity": "high",
+    "confidence": 0.95,
+    "description": "Netlify deployment fails due to multer dependency issues",
+    "rootCauses": [
+      "Server-side dependencies in client-side builds",
+      "Incorrect package.json configuration",
+      "Build process including server modules",
+      "Workspaces configuration conflicts"
+    ],
+    "solutions": [
+      {
+        "strategy": "dependency_cleanup",
+        "confidence": 0.9,
+        "estimatedTime": "5-10 minutes",
+        "steps": [
+          "Remove multer from client-side dependencies",
+          "Update package.json to exclude server dependencies",
+          "Remove workspaces configuration if present",
+          "Clear node_modules and reinstall dependencies",
+          "Update build scripts to exclude server modules"
+        ]
+      },
+      {
+        "strategy": "build_separation",
+        "confidence": 0.85,
+        "estimatedTime": "15-20 minutes", 
+        "steps": [
+          "Separate client and server build processes",
+          "Create distinct package.json files",
+          "Configure Netlify to build only client code",
+          "Update deployment configuration"
+        ]
+      }
+    ],
+    "autoRecoverable": true,
+    "recoveryScript": "recovery/netlify-multer-recovery.js",
+    "context": {
+      "platform": ["netlify"],
+      "buildType": ["client", "frontend"]
+    }
+  },
+  {
+    "id": "react_compilation_timeout",
+    "pattern": "Compilation timed out|Build process exceeded time limit|React build timeout",
+    "category": "build",
+    "severity": "high", 
+    "confidence": 0.9,
+    "description": "React compilation process times out during build",
+    "rootCauses": [
+      "Large bundle size causing slow compilation",
+      "Infinite loops in component dependencies",
+      "Memory exhaustion during build",
+      "Network timeouts for external resources"
+    ],
+    "solutions": [
+      {
+        "strategy": "build_optimization",
+        "confidence": 0.88,
+        "estimatedTime": "10-15 minutes",
+        "steps": [
+          "Enable build caching mechanisms",
+          "Split large components into smaller chunks",
+          "Remove unused imports and dependencies",
+          "Optimize webpack configuration for faster builds",
+          "Implement incremental compilation"
+        ]
+      },
+      {
+        "strategy": "memory_optimization",
+        "confidence": 0.82,
+        "estimatedTime": "5-10 minutes",
+        "steps": [
+          "Increase Node.js memory allocation",
+          "Clear build cache before compilation",
+          "Use production build optimizations",
+          "Optimize asset loading strategies"
+        ]
+      }
+    ],
+    "autoRecoverable": true,
+    "recoveryScript": "recovery/react-timeout-recovery.js"
+  },
+  {
+    "id": "typescript_config_conflict",
+    "pattern": "TypeScript.*configuration.*conflict|tsconfig.*error|Type checking failed",
+    "category": "build",
+    "severity": "medium",
+    "confidence": 0.85,
+    "description": "TypeScript configuration conflicts causing build failures",
+    "rootCauses": [
+      "Multiple tsconfig.json files with conflicting settings",
+      "Incompatible compiler options",
+      "Version mismatches between TypeScript versions",
+      "Path mapping configuration issues"
+    ],
+    "solutions": [
+      {
+        "strategy": "config_reconciliation",
+        "confidence": 0.9,
+        "estimatedTime": "10-15 minutes",
+        "steps": [
+          "Audit all tsconfig.json files in the project",
+          "Resolve conflicting compiler options",
+          "Standardize TypeScript version across all configs",
+          "Update path mappings to be consistent",
+          "Remove duplicate or obsolete configurations"
+        ]
+      }
+    ],
+    "autoRecoverable": true,
+    "recoveryScript": "recovery/typescript-config-recovery.js"
+  },
+  {
+    "id": "lighthouse_performance_regression",
+    "pattern": "Performance score.*decreased|Core Web Vitals.*regression|LCP.*threshold.*exceeded",
+    "category": "performance",
+    "severity": "medium",
+    "confidence": 0.8,
+    "description": "Lighthouse performance metrics show regression from baseline",
+    "rootCauses": [
+      "Bundle size increases",
+      "New render-blocking resources",
+      "Image optimization regression",
+      "Third-party script additions",
+      "CSS optimization issues"
+    ],
+    "solutions": [
+      {
+        "strategy": "performance_audit",
+        "confidence": 0.85,
+        "estimatedTime": "20-30 minutes",
+        "steps": [
+          "Compare current bundle size to baseline",
+          "Identify new assets or dependencies",
+          "Audit image optimization settings",
+          "Review third-party script loading",
+          "Analyze CSS critical path",
+          "Implement lazy loading where applicable"
+        ]
+      },
+      {
+        "strategy": "optimization_rollback",
+        "confidence": 0.75,
+        "estimatedTime": "5-10 minutes",
+        "steps": [
+          "Identify recent changes affecting performance",
+          "Rollback problematic optimizations",
+          "Re-apply optimizations incrementally",
+          "Monitor performance metrics continuously"
+        ]
+      }
+    ],
+    "autoRecoverable": false,
+    "requiresManualReview": true
+  },
+  {
+    "id": "docker_environment_mismatch",
+    "pattern": "Docker.*environment.*mismatch|Container.*runtime.*error|Platform.*compatibility",
+    "category": "infrastructure",
+    "severity": "high",
+    "confidence": 0.87,
+    "description": "Docker environment configuration mismatch causing deployment failures",
+    "rootCauses": [
+      "Platform architecture differences (ARM vs x86)",
+      "Node.js version mismatches",
+      "Environment variable configuration errors",
+      "Port binding conflicts"
+    ],
+    "solutions": [
+      {
+        "strategy": "environment_alignment",
+        "confidence": 0.9,
+        "estimatedTime": "15-20 minutes",
+        "steps": [
+          "Verify platform architecture compatibility",
+          "Standardize Node.js version across environments",
+          "Update Dockerfile with correct base images",
+          "Configure environment variables properly",
+          "Resolve port binding conflicts"
+        ]
+      }
+    ],
+    "autoRecoverable": true,
+    "recoveryScript": "recovery/docker-environment-recovery.js"
+  },
+  {
+    "id": "seo_meta_validation_failure",
+    "pattern": "SEO.*validation.*failed|Meta.*tags.*missing|Open Graph.*error|Schema.*markup.*invalid",
+    "category": "seo",
+    "severity": "medium",
+    "confidence": 0.9,
+    "description": "SEO validation fails due to missing or invalid meta tags and schema markup",
+    "rootCauses": [
+      "Missing essential meta tags",
+      "Invalid Open Graph markup", 
+      "Broken schema.org structured data",
+      "Incorrect canonical URL configuration",
+      "Missing Twitter Card markup"
+    ],
+    "solutions": [
+      {
+        "strategy": "seo_audit_fix",
+        "confidence": 0.95,
+        "estimatedTime": "10-15 minutes",
+        "steps": [
+          "Validate all essential meta tags are present",
+          "Check Open Graph markup syntax",
+          "Verify schema.org structured data",
+          "Ensure canonical URLs are correctly set",
+          "Add missing Twitter Card meta tags",
+          "Run SEO validation tests"
+        ]
+      }
+    ],
+    "autoRecoverable": true,
+    "recoveryScript": "recovery/seo-validation-recovery.js"
+  },
+  {
+    "id": "test_suite_flaky_failure",
+    "pattern": "Test.*intermittent.*failure|Flaky.*test.*detected|Test.*randomly.*fails",
+    "category": "testing",
+    "severity": "medium",
+    "confidence": 0.75,
+    "description": "Test suite contains flaky tests causing inconsistent results",
+    "rootCauses": [
+      "Race conditions in asynchronous tests",
+      "Time-dependent test assertions",
+      "External dependency fluctuations",
+      "Shared state between tests",
+      "Network timing issues"
+    ],
+    "solutions": [
+      {
+        "strategy": "test_stabilization",
+        "confidence": 0.8,
+        "estimatedTime": "25-40 minutes",
+        "steps": [
+          "Identify flaky test patterns",
+          "Add proper async/await handling",
+          "Implement test isolation",
+          "Add retry mechanisms for network-dependent tests",
+          "Mock external dependencies consistently",
+          "Add deterministic wait conditions"
+        ]
+      }
+    ],
+    "autoRecoverable": false,
+    "requiresManualReview": true,
+    "context": {
+      "testType": ["e2e", "integration", "unit"]
+    }
+  },
+  {
+    "id": "accessibility_validation_failure", 
+    "pattern": "Accessibility.*violation|axe-core.*error|WCAG.*compliance.*failed",
+    "category": "accessibility",
+    "severity": "medium",
+    "confidence": 0.88,
+    "description": "Accessibility validation fails due to WCAG compliance violations",
+    "rootCauses": [
+      "Missing alt attributes on images",
+      "Insufficient color contrast ratios",
+      "Missing ARIA labels and roles",
+      "Keyboard navigation issues",
+      "Focus management problems"
+    ],
+    "solutions": [
+      {
+        "strategy": "accessibility_remediation",
+        "confidence": 0.92,
+        "estimatedTime": "20-30 minutes",
+        "steps": [
+          "Add missing alt attributes to all images",
+          "Improve color contrast to meet WCAG AA standards",
+          "Add appropriate ARIA labels and roles",
+          "Ensure keyboard navigation works properly",
+          "Implement proper focus management",
+          "Run axe-core validation tests"
+        ]
+      }
+    ],
+    "autoRecoverable": true,
+    "recoveryScript": "recovery/accessibility-recovery.js"
+  }
+]

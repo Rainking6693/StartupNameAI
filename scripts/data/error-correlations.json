@@ -1,0 +1,32 @@
+{
+  "build-deployment": {
+    "count": 0,
+    "patterns": ["netlify_build_timeout", "react_build_failure", "netlify_multer_dependency_error"],
+    "commonTriggers": ["dependency_changes", "build_config_updates", "environment_changes"],
+    "resolution_success_rate": 0.85
+  },
+  "performance-seo": {
+    "count": 0,
+    "patterns": ["lighthouse_performance_degradation", "seo_meta_validation_failure"],
+    "commonTriggers": ["content_updates", "asset_changes", "third_party_scripts"],
+    "resolution_success_rate": 0.78
+  },
+  "infrastructure-build": {
+    "count": 0,
+    "patterns": ["docker_container_failure", "docker_environment_mismatch", "react_compilation_timeout"],
+    "commonTriggers": ["environment_updates", "dockerfile_changes", "resource_constraints"],
+    "resolution_success_rate": 0.82
+  },
+  "testing-quality": {
+    "count": 0,
+    "patterns": ["test_suite_flaky_failure", "accessibility_validation_failure", "typescript_config_conflict"],
+    "commonTriggers": ["code_changes", "dependency_updates", "configuration_changes"],
+    "resolution_success_rate": 0.71
+  },
+  "deployment-validation": {
+    "count": 0,
+    "patterns": ["netlify_build_timeout", "seo_meta_validation_failure", "lighthouse_performance_regression"],
+    "commonTriggers": ["deployment_pipeline_changes", "validation_rule_updates", "content_modifications"],
+    "resolution_success_rate": 0.79
+  }
+}

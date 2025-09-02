@@ -1,0 +1,90 @@
+{
+  "name": "StartupNamer.org - Netlify Mirror Environment",
+  "image": "node:18.19.1-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint",
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-playwright.playwright",
+        "ms-vscode.test-adapter-converter",
+        "hbenl.vscode-test-explorer",
+        "rangav.vscode-thunder-client",
+        "ms-vscode.remote-containers",
+        "github.vscode-pull-request-github",
+        "ms-vscode.vscode-github-pullrequest"
+      ],
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        },
+        "typescript.preferences.includePackageJsonAutoImports": "on",
+        "npm.packageManager": "npm",
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000
+      }
+    }
+  },
+  "forwardPorts": [3000, 3001, 8080, 9000],
+  "portsAttributes": {
+    "3000": {
+      "label": "React Dev Server",
+      "protocol": "http"
+    },
+    "3001": {
+      "label": "Express API Server", 
+      "protocol": "http"
+    },
+    "8080": {
+      "label": "Netlify Dev Server",
+      "protocol": "http"
+    },
+    "9000": {
+      "label": "Netlify Functions",
+      "protocol": "http"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "remoteUser": "node",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder}/.devcontainer,target=/workspace/.devcontainer,type=bind,consistency=cached",
+    "source=startupnamer-node-modules,target=/workspace/node_modules,type=volume",
+    "source=startupnamer-client-modules,target=/workspace/client/node_modules,type=volume",
+    "source=startupnamer-server-modules,target=/workspace/server/node_modules,type=volume"
+  ],
+  "containerEnv": {
+    "NODE_VERSION": "18.19.1",
+    "NPM_VERSION": "10.2.4",
+    "CI": "false",
+    "GENERATE_SOURCEMAP": "false",
+    "DISABLE_ESLINT_PLUGIN": "true",
+    "SKIP_PREFLIGHT_CHECK": "true",
+    "NODE_OPTIONS": "--max_old_space_size=4096",
+    "NODE_ENV": "development",
+    "NETLIFY_CLI_VERSION": "latest"
+  },
+  "runArgs": [
+    "--init",
+    "--privileged"
+  ]
+}
