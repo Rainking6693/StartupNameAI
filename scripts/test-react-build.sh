@@ -61,7 +61,7 @@ export CI="false"
 export GENERATE_SOURCEMAP="false"
 export DISABLE_ESLINT_PLUGIN="true"
 export SKIP_PREFLIGHT_CHECK="true"
-export NODE_OPTIONS="--max_old_space_size=4096 --openssl-legacy-provider"
+export NODE_OPTIONS="--max_old_space_size=4096"
 export NODE_ENV="production"
 export REACT_APP_NODE_ENV="production"
 
