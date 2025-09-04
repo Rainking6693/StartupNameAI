@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import openaiService from '../services/openai';
-import '../utils/apiTester'; // Auto-runs in debug mode
+// import '../utils/apiTester'; // Auto-runs in debug mode - commented out for production
 
 const NamingTool = () => {
   const navigate = useNavigate();
@@ -91,6 +91,11 @@ const NamingTool = () => {
     try {
       console.log('📊 Form data to process:', formData);
       
+      // Validate form data
+      if (!formData.industry || !formData.style || formData.keywords.length === 0) {
+        throw new Error('Please complete all required fields');
+      }
+      
       // Generate names using fallback (skip OpenAI for now)
       console.log('🔄 Generating fallback names...');
       const generatedNames = openaiService.generateFallbackNames(formData);
@@ -110,21 +115,26 @@ const NamingTool = () => {
       
       console.log('💾 Saving session data:', sessionId, sessionData);
       
-      // Store in localStorage
+      // Store in localStorage with error handling
       try {
         localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));
         console.log('✅ Session data saved to localStorage');
+        
+        // Verify the data was saved
+        const savedData = localStorage.getItem(`naming_session_${sessionId}`);
+        if (!savedData) {
+          throw new Error('Failed to save session data');
+        }
+        
       } catch (storageError) {
         console.error('❌ Failed to save to localStorage:', storageError);
+        // Continue anyway - results page can handle missing data
       }
 
       console.log('🧭 Attempting navigation to:', `/results/${sessionId}`);
       
-      // Try navigation with explicit delay
-      setTimeout(() => {
-        console.log('🧭 Navigating now...');
-        navigate(`/results/${sessionId}`);
-      }, 100);
+      // Navigate immediately - no need for delay
+      navigate(`/results/${sessionId}`, { replace: true });
 
     } catch (error) {
       console.error('❌ Name generation failed:', error);

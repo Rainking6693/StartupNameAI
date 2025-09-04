@@ -776,7 +776,7 @@ const LandingPage = () => {
       </section>
 
       {/* PRICING PREVIEW SECTION */}
-      <section className="px-6 py-16 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 backdrop-blur-sm">
+      <section id="pricing" className="px-6 py-16 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <motion.div
             className="text-center mb-12"
@@ -1016,7 +1016,7 @@ const LandingPage = () => {
       </section>
 
       {/* SOCIAL PROOF SECTION */}
-      <section className="px-6 py-20 bg-white/5 backdrop-blur-sm">
+      <section id="examples" className="px-6 py-20 bg-white/5 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <motion.div
             className="text-center mb-16"

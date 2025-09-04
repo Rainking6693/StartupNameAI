@@ -26,7 +26,8 @@
     "git:unstage": "git restore --staged .",
     "git:discard": "git restore .",
     "git:amend": "git commit --amend --no-edit",
-    "git:amend-message": "git commit --amend"
+    "git:amend-message": "git commit --amend",
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">=18.0.0.0.0",
@@ -36,9 +37,12 @@
     "@craco/craco": "^7.1.0",
     "chokidar": "^3.5.3",
     "concurrently": "^8.2.0",
+    "dotenv-cli": "^10.0.0",
+    "eslint": "^8.57.1",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.0",
-    "node-fetch": "^3.3.2"
+    "lint-staged": "^15.5.2",
+    "node-fetch": "^3.3.2",
+    "prettier": "^3.6.2"
   },
   "lint-staged": {
     "client/src/**/*.{js,jsx,ts,tsx}": [
@@ -49,11 +53,5 @@
       "eslint --fix",
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run ci:quality"
-    }
   }
 }

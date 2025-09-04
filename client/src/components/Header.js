@@ -89,6 +89,31 @@ const Header = () => {
     { to: '/pricing', label: 'Pricing', icon: DollarSign },
   ];
 
+  // Handle smooth scrolling for anchor links
+  const handleNavClick = (to) => {
+    if (to.startsWith('#')) {
+      const element = document.querySelector(to);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (to.startsWith('/') && location.pathname === '/') {
+      // If we're on homepage and clicking a section link, scroll to it
+      const sectionMap = {
+        '/features': '#features',
+        '/pricing': '#pricing',
+        '/examples': '#examples'
+      };
+      const sectionId = sectionMap[to];
+      if (sectionId) {
+        const element = document.querySelector(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      }
+    }
+  };
+
   const secondaryNavLinks = [
     { to: '/blog', label: 'Blog', icon: FileText },
     { to: '/faq', label: 'FAQ', icon: HelpCircle },
@@ -154,25 +179,48 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
-            {mainNavLinks.map(({ to, label, icon: Icon }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`group relative flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                  location.pathname === to
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : !isScrolled && location.pathname === '/'
-                    ? 'text-white hover:text-blue-200 hover:bg-white/10'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{label}</span>
-                {location.pathname !== to && (
-                  <div className="absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></div>
-                )}
-              </Link>
-            ))}
+            {mainNavLinks.map(({ to, label, icon: Icon }) => {
+              const isActive = location.pathname === to;
+              const isHomepageSection = location.pathname === '/' && ['/features', '/pricing', '/examples'].includes(to);
+              
+              if (isHomepageSection) {
+                return (
+                  <button
+                    key={to}
+                    onClick={() => handleNavClick(to)}
+                    className={`group relative flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      !isScrolled && location.pathname === '/'
+                        ? 'text-white hover:text-blue-200 hover:bg-white/10'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{label}</span>
+                    <div className="absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></div>
+                  </button>
+                );
+              }
+              
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`group relative flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : !isScrolled && location.pathname === '/'
+                      ? 'text-white hover:text-blue-200 hover:bg-white/10'
+                      : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{label}</span>
+                  {!isActive && (
+                    <div className="absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></div>
+                  )}
+                </Link>
+              );
+            })}
             
             {/* CTA Button */}
             <Link
@@ -247,19 +295,40 @@ const Header = () => {
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
             Main Navigation
           </h3>
-          {mainNavLinks.map(({ to, label, icon: Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`mobile-menu-link ${
-                location.pathname === to ? 'active' : ''
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Icon className="w-5 h-5" aria-hidden="true" />
-              <span>{label}</span>
-            </Link>
-          ))}
+          {mainNavLinks.map(({ to, label, icon: Icon }) => {
+            const isActive = location.pathname === to;
+            const isHomepageSection = location.pathname === '/' && ['/features', '/pricing', '/examples'].includes(to);
+            
+            if (isHomepageSection) {
+              return (
+                <button
+                  key={to}
+                  onClick={() => {
+                    handleNavClick(to);
+                    setIsMenuOpen(false);
+                  }}
+                  className="mobile-menu-link"
+                >
+                  <Icon className="w-5 h-5" aria-hidden="true" />
+                  <span>{label}</span>
+                </button>
+              );
+            }
+            
+            return (
+              <Link
+                key={to}
+                to={to}
+                className={`mobile-menu-link ${
+                  isActive ? 'active' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Icon className="w-5 h-5" aria-hidden="true" />
+                <span>{label}</span>
+              </Link>
+            );
+          })
         </div>
 
         {/* Secondary Navigation */}
