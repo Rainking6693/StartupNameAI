@@ -347,7 +347,8 @@ const NameResults = () => {
         nameData={analysisModal.nameData}
         onUpgrade={() => {
           console.log('Upgrade to premium analysis clicked');
-          // Handle upgrade flow
+          // Navigate to pricing page with analysis context
+          navigate('/pricing?source=analysis&feature=premium-analysis');
         }}
       />
     </div>

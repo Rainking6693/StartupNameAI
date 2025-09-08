@@ -29,6 +29,7 @@ const AiStartupNames = lazy(() => import('./pages/AiStartupNames'));
 const UltimateStartupNamingGuide = lazy(() => import('./pages/UltimateStartupNamingGuide'));
 const SuccessfulTechStartupNames = lazy(() => import('./pages/SuccessfulTechStartupNames'));
 const AiVsHumanNaming = lazy(() => import('./pages/AiVsHumanNaming'));
+const ResultsPage = lazy(() => import('./components/ResultsPage'));
 
 // Enhanced loading component with SEO optimization
 const LoadingFallback = ({ message = "Loading..." }) => (
@@ -283,9 +284,9 @@ function App() {
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/naming-tool" element={<NamingTool />} />
-                  <Route path="/results/:sessionId" element={<NameResults />} />
+                  <Route path="/results/:sessionId" element={<ResultsPage />} />
                   <Route path="/features" element={<LandingPage />} />
-                  <Route path="/pricing" element={<LandingPage />} />
+                  <Route path="/pricing" element={<PricingPage />} />
                   <Route path="/examples" element={<LandingPage />} />
                   <Route path="/how-it-works" element={<LandingPage />} />
                   <Route path="/faq" element={<LandingPage />} />

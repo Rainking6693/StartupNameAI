@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { 
   Check, 
   X, 
@@ -20,6 +20,18 @@ import {
 
 const PricingPage = () => {
   const [isAnnual, setIsAnnual] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [showAnalysisPromo, setShowAnalysisPromo] = useState(false);
+  
+  useEffect(() => {
+    // Check if user came from analysis page
+    const source = searchParams.get('source');
+    const feature = searchParams.get('feature');
+    
+    if (source === 'analysis' && feature === 'premium-analysis') {
+      setShowAnalysisPromo(true);
+    }
+  }, [searchParams]);
 
   const plans = [
     {
@@ -167,6 +179,19 @@ const PricingPage = () => {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        {/* Analysis Promo Banner */}
+        {showAnalysisPromo && (
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
+            <div className="container text-center">
+              <div className="flex items-center justify-center space-x-2">
+                <Brain className="w-5 h-5" />
+                <span className="font-semibold">Unlock Advanced AI Analysis!</span>
+                <span className="text-blue-200">Get detailed brandability insights, competitor analysis, and trademark screening.</span>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {/* Hero Section */}
         <section className="relative py-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-pink-600/5"></div>
