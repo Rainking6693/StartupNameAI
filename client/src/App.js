@@ -1,11 +1,12 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { ErrorBoundary } from 'react-error-boundary';
-import { Helmet } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { OrganizationSchema, WebsiteSchema, SoftwareApplicationSchema } from './components/JsonLd';
+import LoadingSpinner from './components/LoadingSpinner';
+import ErrorBoundary from './components/ErrorBoundary';
+import analyticsService from './services/analytics';
 import './App.css';
 
 // Lazy load components for better performance
@@ -20,6 +21,14 @@ const HowItWorksPage = lazy(() => import('./pages/HowItWorksPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const FeaturesPage = lazy(() => import('./pages/FeaturesPage'));
 const ExamplesPage = lazy(() => import('./pages/ExamplesPage'));
+const TechStartupNames = lazy(() => import('./pages/TechStartupNames'));
+const SaasStartupNames = lazy(() => import('./pages/SaasStartupNames'));
+const FintechStartupNames = lazy(() => import('./pages/FintechStartupNames'));
+const HealthcareStartupNames = lazy(() => import('./pages/HealthcareStartupNames'));
+const AiStartupNames = lazy(() => import('./pages/AiStartupNames'));
+const UltimateStartupNamingGuide = lazy(() => import('./pages/UltimateStartupNamingGuide'));
+const SuccessfulTechStartupNames = lazy(() => import('./pages/SuccessfulTechStartupNames'));
+const AiVsHumanNaming = lazy(() => import('./pages/AiVsHumanNaming'));
 
 // Enhanced loading component with SEO optimization
 const LoadingFallback = ({ message = "Loading..." }) => (
@@ -36,56 +45,77 @@ const LoadingFallback = ({ message = "Loading..." }) => (
   </div>
 );
 
-// Enhanced error fallback component
+// Analytics tracking component
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Track page views on route changes
+    const pagePath = location.pathname + location.search;
+    const pageTitle = document.title;
+    
+    analyticsService.trackPageView(pagePath, pageTitle);
+    
+    // Track user journey
+    analyticsService.trackUserJourney('page_view', {
+      page_path: pagePath,
+      page_title: pageTitle
+    });
+  }, [location]);
+
+  return null;
+};
+
+// Error fallback component
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
-  React.useEffect(() => {
-    // Track errors for monitoring
-    if (window.gtag) {
-      window.gtag('event', 'error_boundary', {
-        event_category: 'Error',
-        event_label: error?.message || 'Unknown Error',
-        value: 1,
-        custom_parameter_1: error?.stack?.slice(0, 100) || 'No stack trace',
-        non_interaction: true
-      });
-    }
+  // Track error in analytics
+  useEffect(() => {
+    analyticsService.trackError(
+      error.message,
+      error.stack,
+      'react_error_boundary'
+    );
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 flex items-center justify-center">
-      <Helmet>
-        <title>Error - StartupNamer.org</title>
-        <meta name="robots" content="noindex" />
-      </Helmet>
-      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-lg w-full mx-4 text-center">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-          </svg>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Oops! Something went wrong</h1>
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+        <div className="text-red-500 text-6xl mb-4">⚠️</div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Oops! Something went wrong</h2>
         <p className="text-gray-600 mb-6">
-          We encountered an unexpected error while loading the page. Our team has been notified.
+          We're sorry, but something unexpected happened. Please try refreshing the page.
         </p>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <button
-            onClick={resetErrorBoundary}
-            className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300"
+            onClick={() => {
+              analyticsService.trackEvent('error_recovery_attempt', {
+                event_category: 'error',
+                event_label: 'try_again_clicked'
+              });
+              resetErrorBoundary();
+            }}
+            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Try Again
           </button>
-          <a
-            href="/"
-            className="block w-full bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-xl hover:bg-gray-200 transition-colors"
+          <button
+            onClick={() => {
+              analyticsService.trackEvent('error_recovery_attempt', {
+                event_category: 'error',
+                event_label: 'go_home_clicked'
+              });
+              window.location.href = '/';
+            }}
+            className="w-full bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
           >
-            Return Home
-          </a>
+            Go Home
+          </button>
         </div>
         {process.env.NODE_ENV === 'development' && (
           <details className="mt-6 text-left">
-            <summary className="cursor-pointer text-sm text-gray-500 mb-2">Error Details (Dev Only)</summary>
-            <pre className="text-xs text-gray-600 bg-gray-100 p-3 rounded overflow-auto max-h-32">
-              {error?.stack}
+            <summary className="cursor-pointer text-sm text-gray-500">Error Details (Dev Mode)</summary>
+            <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded overflow-auto">
+              {error.message}
             </pre>
           </details>
         )}
@@ -232,142 +262,67 @@ const ComingSoonPage = ({ pageName = "This Feature" }) => (
 
 // Enhanced App component with comprehensive routing and SEO
 function App() {
+  // Initialize analytics on app start
+  useEffect(() => {
+    analyticsService.initialize();
+    analyticsService.trackEvent('app_initialized', {
+      event_category: 'system',
+      event_label: 'app_start'
+    });
+  }, []);
+
   return (
     <HelmetProvider>
       <Router>
-        <ErrorBoundary 
-          FallbackComponent={ErrorFallback}
-          onError={(error, errorInfo) => {
-            console.error('Application Error:', error, errorInfo);
-            // Send to monitoring service if available
-            if (window.gtag) {
-              window.gtag('event', 'app_error', {
-                event_category: 'Error',
-                event_label: error.message,
-                value: 1,
-                non_interaction: true
-              });
-            }
-          }}
-          onReset={() => {
-            // Clear any error state, refresh if needed
-            if (window.location.pathname === '/') {
-              window.location.reload();
-            } else {
-              window.location.href = '/';
-            }
-          }}
-        >
-          {/* Global SEO Schemas */}
-          <OrganizationSchema />
-          <WebsiteSchema />
-          <SoftwareApplicationSchema />
-          
-          <div className="App min-h-screen flex flex-col">
+        <AnalyticsTracker />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <div className="app-container">
             <Header />
-            
-            <main id="main-content" className="flex-grow" role="main">
-              <Suspense fallback={<LoadingFallback />}>
+            <main className="app-main" id="main-content">
+              <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
-                  {/* Core Pages */}
-                  <Route 
-                    path="/" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading homepage..." />}>
-                        <LandingPage />
-                      </Suspense>
-                    } 
-                  />
-                  <Route 
-                    path="/naming-tool" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading naming tool..." />}>
-                        <NamingTool />
-                      </Suspense>
-                    } 
-                  />
-                  <Route 
-                    path="/results/:sessionId" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading your results..." />}>
-                        <NameResults />
-                      </Suspense>
-                    } 
-                  />
-
-                  {/* Legal Pages */}
-                  <Route 
-                    path="/privacy-policy" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading privacy policy..." />}>
-                        <PrivacyPolicy />
-                      </Suspense>
-                    } 
-                  />
-                  <Route 
-                    path="/terms-of-service" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading terms of service..." />}>
-                        <TermsOfService />
-                      </Suspense>
-                    } 
-                  />
-
-                  {/* Payment and Commerce */}
-                  <Route path="/payment/:packageId" element={<PaymentPage />} />
-                  <Route 
-                    path="/pricing" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading pricing..." />}>
-                        <PricingPage />
-                      </Suspense>
-                    } 
-                  />
-
-                  {/* Content and Info Pages */}
-                  <Route 
-                    path="/features" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading features..." />}>
-                        <FeaturesPage />
-                      </Suspense>
-                    } 
-                  />
-                  <Route 
-                    path="/examples" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading examples..." />}>
-                        <ExamplesPage />
-                      </Suspense>
-                    } 
-                  />
-                  <Route 
-                    path="/how-it-works" 
-                    element={
-                      <Suspense fallback={<LoadingFallback message="Loading how it works..." />}>
-                        <HowItWorksPage />
-                      </Suspense>
-                    } 
-                  />
-                  <Route path="/faq" element={<ComingSoonPage pageName="FAQ" />} />
-                  <Route path="/blog" element={<ComingSoonPage pageName="Blog" />} />
-                  <Route path="/contact" element={<ComingSoonPage pageName="Contact" />} />
-
-                  {/* Industry-Specific Pages (SEO Content) */}
-                  <Route path="/tech-startup-names" element={<ComingSoonPage pageName="Tech Startup Names" />} />
-                  <Route path="/saas-startup-names" element={<ComingSoonPage pageName="SaaS Startup Names" />} />
-                  <Route path="/fintech-startup-names" element={<ComingSoonPage pageName="Fintech Startup Names" />} />
-                  <Route path="/healthcare-startup-names" element={<ComingSoonPage pageName="Healthcare Startup Names" />} />
-                  <Route path="/ai-startup-names" element={<ComingSoonPage pageName="AI Startup Names" />} />
-                  <Route path="/ecommerce-startup-names" element={<ComingSoonPage pageName="Ecommerce Startup Names" />} />
-
-                  {/* Catch-all 404 */}
-                  <Route path="*" element={<NotFoundPage />} />
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/naming-tool" element={<NamingTool />} />
+                  <Route path="/results/:sessionId" element={<NameResults />} />
+                  <Route path="/features" element={<LandingPage />} />
+                  <Route path="/pricing" element={<LandingPage />} />
+                  <Route path="/examples" element={<LandingPage />} />
+                  <Route path="/how-it-works" element={<LandingPage />} />
+                  <Route path="/faq" element={<LandingPage />} />
+                  <Route path="/contact" element={<LandingPage />} />
+                  <Route path="/blog" element={<LandingPage />} />
+                  <Route path="/ultimate-startup-naming-guide" element={<UltimateStartupNamingGuide />} />
+                  <Route path="/successful-tech-startup-names" element={<SuccessfulTechStartupNames />} />
+                  <Route path="/ai-vs-human-naming" element={<AiVsHumanNaming />} />
+                  <Route path="/privacy-policy" element={<LandingPage />} />
+                  <Route path="/terms-of-service" element={<LandingPage />} />
+                  {/* Industry-specific pages */}
+                  <Route path="/tech-startup-names" element={<TechStartupNames />} />
+                  <Route path="/saas-startup-names" element={<SaasStartupNames />} />
+                  <Route path="/fintech-startup-names" element={<FintechStartupNames />} />
+                  <Route path="/healthcare-startup-names" element={<HealthcareStartupNames />} />
+                  <Route path="/ai-startup-names" element={<AiStartupNames />} />
+                  <Route path="/ecommerce-startup-names" element={<LandingPage />} />
                 </Routes>
               </Suspense>
             </main>
-            
             <Footer />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: '#363636',
+                  color: '#fff',
+                },
+                success: {
+                  duration: 3000,
+                  theme: {
+                    primary: '#4aed88',
+                  },
+                },
+              }}
+            />
           </div>
         </ErrorBoundary>
       </Router>
