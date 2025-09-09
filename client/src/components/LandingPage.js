@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import SEOHelmet from './SEOHelmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Zap, 
@@ -378,6 +379,7 @@ const LandingPage = () => {
 
   return (
     <>
+      <SEOHelmet page="homepage" />
       <Helmet>
         {/* Primary Meta Tags - ATLAS SEO OPTIMIZED */}
         <title>AI Startup Name Generator - Create Brandable Business Names in Seconds | StartupNamer.org</title>
@@ -1318,6 +1320,8 @@ const LandingPage = () => {
             </div>
             
             <div className="flex items-center space-x-6 text-white/60">
+              <a href="/startup-naming-guide" className="hover:text-yellow-400 transition-colors">Naming Guide</a>
+              <a href="/tech-startup-names" className="hover:text-yellow-400 transition-colors">Tech Names</a>
               <button className="hover:text-yellow-400 transition-colors">Privacy Policy</button>
               <button className="hover:text-yellow-400 transition-colors">Terms of Service</button>
               <button className="hover:text-yellow-400 transition-colors">Support</button>

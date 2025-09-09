@@ -10,26 +10,13 @@ import analyticsService from './services/analytics';
 import './App.css';
 
 // Lazy load components for better performance
-const LandingPage = lazy(() => import('./components/LandingPage'));
-const NamingTool = lazy(() => import('./components/NamingTool'));
-const NameResults = lazy(() => import('./components/NameResults'));
-const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
-const TermsOfService = lazy(() => import('./components/TermsOfService'));
-
-// Lazy load page components
-const HowItWorksPage = lazy(() => import('./pages/HowItWorksPage'));
-const PricingPage = lazy(() => import('./pages/PricingPage'));
-const FeaturesPage = lazy(() => import('./pages/FeaturesPage'));
-const ExamplesPage = lazy(() => import('./pages/ExamplesPage'));
-const TechStartupNames = lazy(() => import('./pages/TechStartupNames'));
-const SaasStartupNames = lazy(() => import('./pages/SaasStartupNames'));
-const FintechStartupNames = lazy(() => import('./pages/FintechStartupNames'));
-const HealthcareStartupNames = lazy(() => import('./pages/HealthcareStartupNames'));
-const AiStartupNames = lazy(() => import('./pages/AiStartupNames'));
-const UltimateStartupNamingGuide = lazy(() => import('./pages/UltimateStartupNamingGuide'));
-const SuccessfulTechStartupNames = lazy(() => import('./pages/SuccessfulTechStartupNames'));
-const AiVsHumanNaming = lazy(() => import('./pages/AiVsHumanNaming'));
-const ResultsPage = lazy(() => import('./components/ResultsPage'));
+import LandingPage from './pages/LandingPage';
+import NamingTool from './components/NamingTool';
+import PricingPage from './pages/PricingPage';
+import ResultsPage from './components/ResultsPage';
+import StartupNamingGuide from './pages/StartupNamingGuide';
+import TechStartupNames from './pages/TechStartupNames';
+import SEOHelmet from './components/SEOHelmet';
 
 // Enhanced loading component with SEO optimization
 const LoadingFallback = ({ message = "Loading..." }) => (
@@ -291,6 +278,8 @@ function App() {
                   <Route path="/how-it-works" element={<LandingPage />} />
                   <Route path="/faq" element={<LandingPage />} />
                   <Route path="/contact" element={<LandingPage />} />
+                  <Route path="/startup-naming-guide" element={<StartupNamingGuide />} />
+                  <Route path="/tech-startup-names" element={<TechStartupNames />} />
                   <Route path="/blog" element={<LandingPage />} />
                   <Route path="/ultimate-startup-naming-guide" element={<UltimateStartupNamingGuide />} />
                   <Route path="/successful-tech-startup-names" element={<SuccessfulTechStartupNames />} />
