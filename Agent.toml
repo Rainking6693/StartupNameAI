@@ -1,28 +1,28 @@
-# Version of the agent configuration standard
+cd "C:\Users\Ben\OneDrive\Documents\GitHub\StartupNameAI"
+
+# Remove the broken file
+rm agent.toml
+
+# Create a properly formatted agent.toml
+cat > agent.toml << 'EOF'
 version = "1.0"
+model = "claude-4-sonnet"
 
-# Default model for all agents
-model = "claude-3-5-sonnet-20241022"
-
-# Global instructions for Startupnamer.org project context
 instructions = """
-You are working on startupnamer.org interface
+You are working on StartupNamer.org, an AI-powered startup naming platform.
 
 Key Context:
-- Project location: C:\Users\Ben\OneDrive\Documents\startupnameai
-- Pricing: 
--Starter- $39
--Professional- $79
--Enterprise- $159
+- Project location: C:\Users\Ben\OneDrive\Documents\GitHub\StartupNameAI
+- Technology: React, Node.js, OpenAI, Stripe, Netlify
+- Domain: startupnamer.org (The Startup Naming Authority)
+- Value proposition: AI-powered startup name generation with domain checking
 
-
-Always consider the positioning and value delivery in your responses.
+Always consider the professional positioning and AI-powered value delivery in your responses.
 """
 
-# Import all agent configurations
 imports = [
-    "agents/emily.toml",
-    "agents/morgan.toml",
+  "agents/emily.toml",
+    "agents/morgan.toml", 
     "agents/casey.toml",
     "agents/jules.toml",
     "agents/riley.toml",
@@ -31,6 +31,9 @@ imports = [
     "agents/quinn.toml",
     "agents/taylor.toml",
     "agents/atlas.toml",
-    "agents/blake.toml",
+    "agents/blake.toml", 
     "agents/hudson.toml",
-    "agents/cora.toml"
+    "agents/cora.toml",
+    "agents/debugger.toml"
+]
+EOF
