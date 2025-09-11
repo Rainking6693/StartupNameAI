@@ -1,22 +1,21 @@
-import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import LoadingSpinner from './components/LoadingSpinner';
-import ErrorBoundary from './components/ErrorBoundary';
-import analyticsService from './services/analytics';
+import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
 import './App.css';
+import ErrorBoundary from './components/ErrorBoundary';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import { LoadingSpinner } from './components/LoadingStates';
+import analyticsService from './services/analytics';
 
 // Lazy load components for better performance
-import LandingPage from './pages/LandingPage';
+import LandingPage from './components/LandingPage';
 import NamingTool from './components/NamingTool';
-import PricingPage from './pages/PricingPage';
 import ResultsPage from './components/ResultsPage';
+import PricingPage from './pages/PricingPage';
 import StartupNamingGuide from './pages/StartupNamingGuide';
 import TechStartupNames from './pages/TechStartupNames';
-import SEOHelmet from './components/SEOHelmet';
 
 // Enhanced loading component with SEO optimization
 const LoadingFallback = ({ message = "Loading..." }) => (
@@ -41,9 +40,9 @@ const AnalyticsTracker = () => {
     // Track page views on route changes
     const pagePath = location.pathname + location.search;
     const pageTitle = document.title;
-    
+
     analyticsService.trackPageView(pagePath, pageTitle);
-    
+
     // Track user journey
     analyticsService.trackUserJourney('page_view', {
       page_path: pagePath,
@@ -190,7 +189,7 @@ const NotFoundPage = () => (
             Go to Naming Tool
           </a>
         </div>
-        
+
         <div className="mt-8 pt-6 border-t border-white/20">
           <p className="text-white/60 text-sm mb-3">Popular pages:</p>
           <div className="flex flex-wrap gap-2 justify-center">
