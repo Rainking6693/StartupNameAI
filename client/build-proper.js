@@ -162,7 +162,7 @@ async function createManualReactBuild() {
         <main>
             <section class="hero">
                 <div class="container">
-                    <h1>AI-Powered Startup Name Generator</h1>
+                    <h1>🚀 AI-Powered Startup Name Generator</h1>
                     <p>Generate perfect startup names with artificial intelligence. Get creative, brandable names that resonate with your audience.</p>
                 </div>
             </section>
