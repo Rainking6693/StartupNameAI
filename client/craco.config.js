@@ -9,7 +9,7 @@ module.exports = {
         webpackConfig.optimization.minimizer = webpackConfig.optimization.minimizer.filter(
           plugin => plugin.constructor.name !== 'TerserPlugin'
         );
-        
+
         // Add alternative minification
         const TerserPlugin = require('terser-webpack-plugin');
         webpackConfig.optimization.minimizer.push(
@@ -39,7 +39,7 @@ module.exports = {
           })
         );
       }
-      
+
       return webpackConfig;
     },
   },

@@ -23,7 +23,7 @@ process.env.SKIP_PREFLIGHT_CHECK = 'true';
 async function tryReactScriptsBuild() {
   try {
     console.log('📦 Attempting react-scripts build...');
-    
+
     // Try to run react-scripts build with environment variables
     execSync('npx react-scripts build', {
       stdio: 'inherit',
@@ -34,7 +34,7 @@ async function tryReactScriptsBuild() {
         SKIP_PREFLIGHT_CHECK: 'true'
       }
     });
-    
+
     console.log('✅ React build successful!');
     return true;
   } catch (error) {
@@ -45,17 +45,17 @@ async function tryReactScriptsBuild() {
 
 async function createManualReactBuild() {
   console.log('🔧 Creating manual React build...');
-  
+
   const buildDir = path.join(process.cwd(), 'build');
   const srcDir = path.join(process.cwd(), 'src');
   const publicDir = path.join(process.cwd(), 'public');
-  
+
   // Clean build directory
   if (fs.existsSync(buildDir)) {
     fs.rmSync(buildDir, { recursive: true, force: true });
   }
   fs.mkdirSync(buildDir, { recursive: true });
-  
+
   // Copy public files
   if (fs.existsSync(publicDir)) {
     const copyRecursive = (src, dest) => {
@@ -70,12 +70,12 @@ async function createManualReactBuild() {
         fs.copyFileSync(src, dest);
       }
     };
-    
+
     fs.readdirSync(publicDir).forEach(file => {
       copyRecursive(path.join(publicDir, file), path.join(buildDir, file));
     });
   }
-  
+
   // Create proper React HTML with all the components
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -333,18 +333,18 @@ async function createManualReactBuild() {
     </script>
 </body>
 </html>`;
-  
+
   fs.writeFileSync(path.join(buildDir, 'index.html'), html);
-  
+
   // Create static directory structure
   fs.mkdirSync(path.join(buildDir, 'static'), { recursive: true });
   fs.mkdirSync(path.join(buildDir, 'static', 'css'), { recursive: true });
   fs.mkdirSync(path.join(buildDir, 'static', 'js'), { recursive: true });
-  
+
   // Create Netlify configuration files
   const redirectsContent = `/*    /index.html   200`;
   fs.writeFileSync(path.join(buildDir, '_redirects'), redirectsContent);
-  
+
   const headersContent = `/*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
@@ -356,24 +356,24 @@ async function createManualReactBuild() {
 
 /*.html
   Cache-Control: public, max-age=0, must-revalidate`;
-  
+
   fs.writeFileSync(path.join(buildDir, '_headers'), headersContent);
-  
+
   console.log('✅ Manual React build completed');
 }
 
 async function main() {
   try {
     const startTime = Date.now();
-    
+
     // Try react-scripts build first
     const reactBuildSuccess = await tryReactScriptsBuild();
-    
+
     if (!reactBuildSuccess) {
       // Fall back to manual build
       await createManualReactBuild();
     }
-    
+
     const buildTime = Math.round((Date.now() - startTime) / 1000);
     console.log(`\\n🎉 BUILD COMPLETE in ${buildTime}s`);
     console.log('✅ Full React application built');
@@ -381,7 +381,7 @@ async function main() {
     console.log('✅ Interactive functionality');
     console.log('✅ Netlify deployment ready');
     console.log('🚀 Deploy with: netlify deploy --dir=build --prod');
-    
+
   } catch (error) {
     console.error('💥 BUILD FAILED:', error.message);
     console.error(error.stack);
