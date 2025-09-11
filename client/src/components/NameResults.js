@@ -16,6 +16,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiService from '../services/api';
+import premiumService from '../services/premiumService';
 import NameAnalysisModal from './NameAnalysisModal';
 import UserInfoModal from './UserInfoModal';
 
@@ -41,23 +42,34 @@ const NameResults = () => {
         setSessionData(parsed);
         setResults(parsed.results || []);
         console.log('✅ Loaded session data:', parsed);
+
+        // Track usage for premium service
+        if (parsed.results && parsed.results.length > 0) {
+          premiumService.incrementUsage(parsed.results.length);
+        }
       } catch (error) {
         console.error('Failed to parse session data:', error);
         // Generate some demo results if session data is missing
-        setResults(generateDemoResults());
+        const demoResults = generateDemoResults();
+        setResults(demoResults);
         setSessionData({
           formData: { industry: 'health', style: 'modern', keywords: ['wellness'] },
           timestamp: new Date().toISOString()
         });
+        // Track usage for demo results
+        premiumService.incrementUsage(demoResults.length);
       }
     } else {
       // Generate demo results if no session found
       console.log('No session data found, generating demo results');
-      setResults(generateDemoResults());
+      const demoResults = generateDemoResults();
+      setResults(demoResults);
       setSessionData({
         formData: { industry: 'health', style: 'modern', keywords: ['wellness'] },
         timestamp: new Date().toISOString()
       });
+      // Track usage for demo results
+      premiumService.incrementUsage(demoResults.length);
     }
 
     setLoading(false);
@@ -359,8 +371,8 @@ const NameResults = () => {
                     <button
                       onClick={() => toggleFavorite(name.id)}
                       className={`p-3 rounded-xl transition-all duration-300 ${favorites.includes(name.id)
-                          ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
-                          : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-red-300'
+                        ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
+                        : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-red-300'
                         }`}
                     >
                       <Heart className={`w-5 h-5 ${favorites.includes(name.id) ? 'fill-current' : ''}`} />

@@ -1,0 +1,197 @@
+{
+  "passed": 10,
+  "failed": 17,
+  "skipped": 0,
+  "total": 27,
+  "details": [
+    {
+      "timestamp": "2025-09-11T18:37:13.923Z",
+      "category": "File Check",
+      "status": "PASS",
+      "message": "client/src/services/premiumService.js exists",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.924Z",
+      "category": "File Check",
+      "status": "PASS",
+      "message": "client/src/services/paymentService.js exists",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.924Z",
+      "category": "File Check",
+      "status": "PASS",
+      "message": "client/src/components/NameAnalysisModal.js exists",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.924Z",
+      "category": "File Check",
+      "status": "PASS",
+      "message": "client/src/components/UpgradePromptModal.js exists",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.925Z",
+      "category": "File Check",
+      "status": "PASS",
+      "message": "client/src/pages/PricingPage.js exists",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.925Z",
+      "category": "File Check",
+      "status": "PASS",
+      "message": "client/src/tests/Phase2ComprehensiveTests.js exists",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.926Z",
+      "category": "Code Quality",
+      "status": "FAIL",
+      "message": "client/src/services/premiumService.js has issues: 9 console.log statements found",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.926Z",
+      "category": "Code Quality",
+      "status": "FAIL",
+      "message": "client/src/services/paymentService.js has issues: 27 console.log statements found",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.927Z",
+      "category": "Code Quality",
+      "status": "FAIL",
+      "message": "client/src/components/NameAnalysisModal.js has issues: 3 console.log statements found, Async functions should have proper error handling",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.928Z",
+      "category": "Code Quality",
+      "status": "PASS",
+      "message": "client/src/components/UpgradePromptModal.js passed quality checks",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.928Z",
+      "category": "Code Quality",
+      "status": "FAIL",
+      "message": "client/src/pages/PricingPage.js has issues: 3 console.log statements found",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:13.929Z",
+      "category": "Code Quality",
+      "status": "FAIL",
+      "message": "client/src/tests/Phase2ComprehensiveTests.js has issues: 1 console.log statements found, Async functions should have proper error handling",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:15.813Z",
+      "category": "Linting",
+      "status": "FAIL",
+      "message": "client/src/services/premiumService.js failed linting",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:17.207Z",
+      "category": "Linting",
+      "status": "FAIL",
+      "message": "client/src/services/paymentService.js failed linting",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:18.837Z",
+      "category": "Linting",
+      "status": "FAIL",
+      "message": "client/src/components/NameAnalysisModal.js failed linting",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:20.213Z",
+      "category": "Linting",
+      "status": "FAIL",
+      "message": "client/src/components/UpgradePromptModal.js failed linting",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:21.472Z",
+      "category": "Linting",
+      "status": "FAIL",
+      "message": "client/src/pages/PricingPage.js failed linting",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.786Z",
+      "category": "Linting",
+      "status": "FAIL",
+      "message": "client/src/tests/Phase2ComprehensiveTests.js failed linting",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.792Z",
+      "category": "Integration",
+      "status": "FAIL",
+      "message": "Integration tests failed",
+      "details": "localStorage is not defined"
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.794Z",
+      "category": "Performance",
+      "status": "PASS",
+      "message": "Component rendering time: 1ms",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.795Z",
+      "category": "Performance",
+      "status": "FAIL",
+      "message": "Performance tests failed",
+      "details": "localStorage is not defined"
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.796Z",
+      "category": "Security",
+      "status": "PASS",
+      "message": "No live API keys found",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.796Z",
+      "category": "Security",
+      "status": "PASS",
+      "message": "Proper error handling implemented",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.796Z",
+      "category": "Security",
+      "status": "FAIL",
+      "message": "Missing input validation",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.797Z",
+      "category": "Accessibility",
+      "status": "FAIL",
+      "message": "Missing ARIA labels",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.797Z",
+      "category": "Accessibility",
+      "status": "FAIL",
+      "message": "Missing button types",
+      "details": null
+    },
+    {
+      "timestamp": "2025-09-11T18:37:22.798Z",
+      "category": "Accessibility",
+      "status": "FAIL",
+      "message": "Missing keyboard navigation",
+      "details": null
+    }
+  ]
+}

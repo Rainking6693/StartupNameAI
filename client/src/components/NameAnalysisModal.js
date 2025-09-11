@@ -1,39 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  X, 
-  TrendingUp, 
-  Globe, 
-  Shield, 
-  Mic,
-  Eye,
-  Users,
-  Search,
-  Award,
+import { AnimatePresence, motion } from 'framer-motion';
+import {
   AlertTriangle,
-  CheckCircle,
-  Star,
-  Zap,
-  Crown,
-  Copy,
-  Download,
-  Heart,
-  Clock,
-  Target,
-  Lightbulb,
+  Award,
   Briefcase,
-  MessageSquare,
-  Volume2,
+  CheckCircle,
   ChevronRight,
+  Clock,
+  Copy,
+  Crown,
+  Download,
+  Eye,
+  Globe,
+  Hash,
+  Heart,
   Info,
-  Hash
+  Lightbulb,
+  Lock,
+  MessageSquare,
+  Mic,
+  Search,
+  Shield,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+  Volume2,
+  X,
+  Zap
 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import premiumService from '../services/premiumService';
+import UpgradePromptModal from './UpgradePromptModal';
 
 const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isLoading, setIsLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
   const [copiedText, setCopiedText] = useState('');
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+  const [upgradePromptData, setUpgradePromptData] = useState(null);
 
   useEffect(() => {
     if (isOpen && nameData) {
@@ -45,11 +50,52 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
     }
   }, [isOpen, nameData]);
 
+  // Premium feature gating functions
+  const handlePremiumFeature = (feature, context = 'analysis') => {
+    if (premiumService.canAccessFeature(feature)) {
+      return true; // Allow access
+    }
+
+    // Show upgrade prompt
+    setUpgradePromptData({
+      feature,
+      context,
+      currentAction: null
+    });
+    setShowUpgradePrompt(true);
+
+    return false; // Deny access
+  };
+
+  const handleExportPDF = () => {
+    if (handlePremiumFeature('exportPdf', 'export')) {
+      // Allow PDF export
+      console.log('📄 Exporting PDF analysis...');
+      // Implement PDF export logic here
+    }
+  };
+
+  const handlePremiumAnalysis = () => {
+    if (handlePremiumFeature('premiumAnalysis', 'analysis')) {
+      // Allow premium analysis
+      console.log('🔍 Generating premium analysis...');
+      // Implement premium analysis logic here
+    }
+  };
+
+  const handleTrademarkCheck = () => {
+    if (handlePremiumFeature('trademarkCheck', 'trademark')) {
+      // Allow trademark check
+      console.log('🛡️ Running trademark check...');
+      // Implement trademark check logic here
+    }
+  };
+
   // Advanced analysis generation with realistic business intelligence
   const generateAdvancedAnalysis = async (name) => {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     return {
       overview: {
         overallScore: 8.7,
@@ -217,11 +263,10 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
-              className={`w-6 h-6 ${
-                i < Math.floor(analysisData.overview.overallScore / 2)
+              className={`w-6 h-6 ${i < Math.floor(analysisData.overview.overallScore / 2)
                   ? 'text-yellow-400 fill-current'
                   : 'text-gray-300'
-              }`}
+                }`}
             />
           ))}
         </div>
@@ -356,7 +401,7 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
             </span>
           )}
         </div>
-        
+
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
           <div className="flex items-center space-x-3">
             <Globe className="w-5 h-5 text-blue-600" />
@@ -372,7 +417,7 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
             </button>
           </div>
         </div>
-        
+
         <p className="text-sm text-gray-600 mt-2">{analysisData.domainAnalysis.primary.recommendation}</p>
       </div>
 
@@ -446,14 +491,13 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
                   <div className="text-xs text-gray-500">{competitor.funding}</div>
                 </div>
               </div>
-              
+
               {/* Similarity Bar */}
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className={`h-full rounded-full ${
-                    competitor.similarity > 70 ? 'bg-red-400' : 
-                    competitor.similarity > 50 ? 'bg-yellow-400' : 'bg-green-400'
-                  }`}
+                  className={`h-full rounded-full ${competitor.similarity > 70 ? 'bg-red-400' :
+                      competitor.similarity > 50 ? 'bg-yellow-400' : 'bg-green-400'
+                    }`}
                   style={{ width: `${competitor.similarity}%` }}
                 />
               </div>
@@ -493,11 +537,10 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
     <div className="space-y-6">
       {/* Risk Assessment */}
       <div className="text-center">
-        <div className={`inline-flex items-center px-4 py-2 rounded-full text-lg font-semibold ${
-          analysisData.trademarkRisk.overallRisk === 'LOW' ? 'bg-green-100 text-green-800' :
-          analysisData.trademarkRisk.overallRisk === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
-          'bg-red-100 text-red-800'
-        }`}>
+        <div className={`inline-flex items-center px-4 py-2 rounded-full text-lg font-semibold ${analysisData.trademarkRisk.overallRisk === 'LOW' ? 'bg-green-100 text-green-800' :
+            analysisData.trademarkRisk.overallRisk === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+          }`}>
           <Shield className="w-5 h-5 mr-2" />
           {analysisData.trademarkRisk.overallRisk} RISK
         </div>
@@ -537,11 +580,10 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
               <div key={index} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-medium text-gray-900">{mark.mark}</h4>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    mark.risk === 'Low conflict' ? 'bg-green-100 text-green-800' :
-                    mark.risk === 'Monitor' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${mark.risk === 'Low conflict' ? 'bg-green-100 text-green-800' :
+                      mark.risk === 'Monitor' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                    }`}>
                     {mark.risk}
                   </span>
                 </div>
@@ -600,7 +642,7 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
           <Search className="w-5 h-5 mr-2" />
           SEO Analysis
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <MetricCard
             icon={TrendingUp}
@@ -643,7 +685,7 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
           <MessageSquare className="w-5 h-5 mr-2" />
           Social Media Availability
         </h3>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
           {Object.entries(analysisData.marketingAnalysis.socialMedia.handleAvailability).map(([platform, available]) => (
             <div key={platform} className="flex items-center space-x-2 p-2 border rounded">
@@ -706,11 +748,10 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
           <div className="text-2xl font-bold text-gray-900">{analysisData.phoneticAnalysis.phoneticSpelling}</div>
         </div>
         <div className="text-lg text-gray-600 mb-2">Phonetic Spelling</div>
-        <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-          analysisData.phoneticAnalysis.pronunciationDifficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-          analysisData.phoneticAnalysis.pronunciationDifficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-          'bg-red-100 text-red-800'
-        }`}>
+        <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${analysisData.phoneticAnalysis.pronunciationDifficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+            analysisData.phoneticAnalysis.pronunciationDifficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+          }`}>
           {analysisData.phoneticAnalysis.pronunciationDifficulty} to pronounce
         </div>
       </div>
@@ -746,18 +787,18 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
           <Mic className="w-5 h-5 mr-2" />
           Voice & Recognition Analysis
         </h3>
-        
+
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <span className="text-gray-700">Voice Search Compatibility</span>
             <ScoreBar score={analysisData.phoneticAnalysis.voiceSearchScore} max={10} label="" color="purple" />
           </div>
-          
+
           <div className="flex justify-between items-center">
             <span className="text-gray-700">International Pronunciation</span>
             <span className="font-medium text-gray-900">{analysisData.phoneticAnalysis.internationalAppeal}</span>
           </div>
-          
+
           <div className="flex justify-between items-center">
             <span className="text-gray-700">Syllable Count</span>
             <span className="font-medium text-gray-900">{analysisData.phoneticAnalysis.syllables} syllables</span>
@@ -787,7 +828,7 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
           <Mic className="w-4 h-4 mr-2" />
           Voice Technology Compatibility
         </h4>
-        
+
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-3 bg-green-50 rounded-lg">
             <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-1" />
@@ -882,11 +923,10 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
-                      activeTab === tab.id
+                    className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id
                         ? 'border-blue-500 text-blue-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{tab.label}</span>
@@ -918,22 +958,35 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
               </div>
               <div className="flex items-center space-x-3">
                 <button
-                  onClick={() => {}}
-                  className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  onClick={handleExportPDF}
+                  className={`flex items-center space-x-2 px-4 py-2 transition-colors ${premiumService.canAccessFeature('exportPdf')
+                      ? 'text-gray-600 hover:text-gray-800'
+                      : 'text-gray-400 cursor-not-allowed'
+                    }`}
+                  disabled={!premiumService.canAccessFeature('exportPdf')}
                 >
-                  <Download className="w-4 h-4" />
+                  {premiumService.canAccessFeature('exportPdf') ? (
+                    <Download className="w-4 h-4" />
+                  ) : (
+                    <Lock className="w-4 h-4" />
+                  )}
                   <span>Export PDF</span>
+                  {!premiumService.canAccessFeature('exportPdf') && (
+                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full ml-1">
+                      Pro
+                    </span>
+                  )}
                 </button>
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Heart className="w-4 h-4" />
                   <span>Save Analysis</span>
                 </button>
                 <button
-                  onClick={onUpgrade}
-                  className="flex items-center space-x-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+                  onClick={() => handlePremiumFeature('premiumAnalysis', 'analysis')}
+                  className="flex items-center space-x-2 px-6 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all"
                 >
                   <Crown className="w-4 h-4" />
                   <span>Upgrade for More</span>
@@ -943,6 +996,15 @@ const NameAnalysisModal = ({ isOpen, onClose, nameData, onUpgrade }) => {
           </div>
         </motion.div>
       </div>
+
+      {/* Upgrade Prompt Modal */}
+      <UpgradePromptModal
+        isOpen={showUpgradePrompt}
+        onClose={() => setShowUpgradePrompt(false)}
+        feature={upgradePromptData?.feature}
+        context={upgradePromptData?.context}
+        currentAction={upgradePromptData?.currentAction}
+      />
     </AnimatePresence>
   );
 };
