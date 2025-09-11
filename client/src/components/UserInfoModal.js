@@ -1,1 +1,202 @@
-import React, { useState } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { Shield, Loader, X } from 'lucide-react';\n\nconst UserInfoModal = ({ isOpen, onClose, onSubmit, domain }) => {\n  const [formData, setFormData] = useState({\n    email: '',\n    name: '',\n    phone: '',\n    company: ''\n  });\n  const [errors, setErrors] = useState({});\n  const [isSubmitting, setIsSubmitting] = useState(false);\n  \n  const validateForm = () => {\n    const newErrors = {};\n    \n    if (!formData.email) {\n      newErrors.email = 'Email is required';\n    } else if (!/\\S+@\\S+\\.\\S+/.test(formData.email)) {\n      newErrors.email = 'Please enter a valid email';\n    }\n    \n    if (!formData.name) {\n      newErrors.name = 'Name is required';\n    }\n    \n    setErrors(newErrors);\n    return Object.keys(newErrors).length === 0;\n  };\n  \n  const handleSubmit = async (e) => {\n    e.preventDefault();\n    \n    if (!validateForm()) return;\n    \n    setIsSubmitting(true);\n    try {\n      await onSubmit(formData);\n    } catch (error) {\n      console.error('Form submission failed:', error);\n    } finally {\n      setIsSubmitting(false);\n    }\n  };\n  \n  const handleClose = () => {\n    setFormData({ email: '', name: '', phone: '', company: '' });\n    setErrors({});\n    onClose();\n  };\n  \n  if (!isOpen) return null;\n  \n  return (\n    <AnimatePresence>\n      <motion.div\n        initial={{ opacity: 0 }}\n        animate={{ opacity: 1 }}\n        exit={{ opacity: 0 }}\n        className=\"fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-6 z-50\"\n        onClick={handleClose}\n      >\n        <motion.div\n          initial={{ scale: 0.9, opacity: 0 }}\n          animate={{ scale: 1, opacity: 1 }}\n          exit={{ scale: 0.9, opacity: 0 }}\n          className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-md w-full border border-white/20\"\n          onClick={(e) => e.stopPropagation()}\n        >\n          <div className=\"flex items-center justify-between mb-6\">\n            <div className=\"text-center flex-1\">\n              <Shield className=\"w-12 h-12 text-green-400 mx-auto mb-4\" />\n              <h3 className=\"text-2xl font-bold text-white mb-2\">Reserve {domain?.domain}</h3>\n              <p className=\"text-white/80\">Please provide your information to complete the reservation</p>\n            </div>\n            <button\n              onClick={handleClose}\n              className=\"text-white/60 hover:text-white transition-colors ml-4\"\n            >\n              <X className=\"w-6 h-6\" />\n            </button>\n          </div>\n          \n          <form onSubmit={handleSubmit} className=\"space-y-4\">\n            <div>\n              <label className=\"block text-white font-medium mb-2\">Email Address *</label>\n              <input\n                type=\"email\"\n                value={formData.email}\n                onChange={(e) => setFormData({...formData, email: e.target.value})}\n                className=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder-white/50\"\n                placeholder=\"your@email.com\"\n                required\n              />\n              {errors.email && <p className=\"text-red-400 text-sm mt-1\">{errors.email}</p>}\n            </div>\n            \n            <div>\n              <label className=\"block text-white font-medium mb-2\">Full Name *</label>\n              <input\n                type=\"text\"\n                value={formData.name}\n                onChange={(e) => setFormData({...formData, name: e.target.value})}\n                className=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder-white/50\"\n                placeholder=\"John Doe\"\n                required\n              />\n              {errors.name && <p className=\"text-red-400 text-sm mt-1\">{errors.name}</p>}\n            </div>\n            \n            <div>\n              <label className=\"block text-white font-medium mb-2\">Phone Number</label>\n              <input\n                type=\"tel\"\n                value={formData.phone}\n                onChange={(e) => setFormData({...formData, phone: e.target.value})}\n                className=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder-white/50\"\n                placeholder=\"+1 (555) 123-4567\"\n              />\n            </div>\n            \n            <div>\n              <label className=\"block text-white font-medium mb-2\">Company Name</label>\n              <input\n                type=\"text\"\n                value={formData.company}\n                onChange={(e) => setFormData({...formData, company: e.target.value})}\n                className=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder-white/50\"\n                placeholder=\"Your Startup Name\"\n              />\n            </div>\n            \n            <div className=\"bg-blue-500/20 rounded-xl p-4 border border-blue-500/30\">\n              <div className=\"text-blue-200 text-sm\">\n                <strong>Domain:</strong> {domain?.domain}<br/>\n                <strong>Price:</strong> ${domain?.price}/year<br/>\n                <strong>Registrar:</strong> {domain?.registrar}\n              </div>\n            </div>\n            \n            <div className=\"flex space-x-3 mt-6\">\n              <button\n                type=\"button\"\n                onClick={handleClose}\n                className=\"flex-1 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300\"\n              >\n                Cancel\n              </button>\n              <button\n                type=\"submit\"\n                disabled={isSubmitting}\n                className=\"flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 disabled:opacity-50\"\n              >\n                {isSubmitting ? (\n                  <>\n                    <Loader className=\"w-4 h-4 animate-spin mr-2 inline\" />\n                    Reserving...\n                  </>\n                ) : (\n                  'Reserve Domain'\n                )}\n              </button>\n            </div>\n          </form>\n        </motion.div>\n      </motion.div>\n    </AnimatePresence>\n  );\n};\n\nexport default UserInfoModal;"
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useState } from 'react';
+
+const UserInfoModal = ({ isOpen, onClose, nameData, onSubmit, loading }) => {
+  const [userInfo, setUserInfo] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  });
+  const [selectedDomain, setSelectedDomain] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (field, value) => {
+    setUserInfo(prev => ({
+      ...prev,
+      [field]: value
+    }));
+
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!userInfo.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!userInfo.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!userInfo.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(userInfo.email)) newErrors.email = 'Please enter a valid email';
+    if (!selectedDomain) newErrors.domain = 'Please select a domain';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    onSubmit(userInfo, selectedDomain);
+  };
+
+  if (!isOpen || !nameData) return null;
+
+  return (
+    <AnimatePresence>
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Reserve Domain</h2>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="bg-blue-50 rounded-xl p-4 mb-6">
+              <h3 className="text-xl font-bold text-gray-900">{nameData.name}</h3>
+              <p className="text-gray-600">Brandability Score: {nameData.brandabilityScore}/10</p>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Available Domains</h3>
+              <div className="space-y-3">
+                {nameData.availableDomains?.map((domain, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${selectedDomain?.domain === domain.domain
+                        ? 'border-green-500 bg-green-50'
+                        : 'border-gray-200 hover:border-green-300'
+                      }`}
+                    onClick={() => setSelectedDomain(domain)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold text-gray-900">{domain.domain}</div>
+                        <div className="text-sm text-gray-600">{domain.extension}</div>
+                      </div>
+                      <div className="font-bold text-green-600">
+                        ${domain.price}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {errors.domain && (
+                <div className="text-red-600 text-sm mt-2">{errors.domain}</div>
+              )}
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+
+              <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={userInfo.firstName}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 ${errors.firstName ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                    placeholder="Enter your first name"
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-600 text-sm mt-1">{errors.firstName}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={userInfo.lastName}
+                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 ${errors.lastName ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                    placeholder="Enter your last name"
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-600 text-sm mt-1">{errors.lastName}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    value={userInfo.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 ${errors.email ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                    placeholder="your@email.com"
+                  />
+                  {errors.email && (
+                    <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number (Optional)
+                  </label>
+                  <input
+                    type="tel"
+                    value={userInfo.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                    placeholder="+1 (555) 123-4567"
+                  />
+                </div>
+              </div>
+
+              <div className="flex space-x-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading || !selectedDomain}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Reserving...' : 'Reserve Domain'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </motion.div>
+      </div>
+    </AnimatePresence>
+  );
+};
+
+export default UserInfoModal;

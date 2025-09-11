@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
-import NameAnalysisModal from './NameAnalysisModal';
-import { 
-  ArrowLeft, 
-  Download, 
-  Heart,
-  Share2,
+import {
+  ArrowLeft,
+  BarChart3,
   CheckCircle,
-  Star,
-  Globe,
-  Award,
-  TrendingUp,
-  Cpu,
   Copy,
+  Cpu,
+  Download,
+  Globe,
+  Heart,
+  Loader2,
   RefreshCw,
-  BarChart3
+  Share2,
+  Star
 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import apiService from '../services/api';
+import NameAnalysisModal from './NameAnalysisModal';
+import UserInfoModal from './UserInfoModal';
 
 const NameResults = () => {
   const navigate = useNavigate();
@@ -26,11 +27,14 @@ const NameResults = () => {
   const [favorites, setFavorites] = useState([]);
   const [sessionData, setSessionData] = useState(null);
   const [analysisModal, setAnalysisModal] = useState({ isOpen: false, nameData: null });
+  const [userInfoModal, setUserInfoModal] = useState({ isOpen: false, nameData: null });
+  const [domainChecking, setDomainChecking] = useState(false);
+  const [reservationLoading, setReservationLoading] = useState(false);
 
   useEffect(() => {
     // Load session data from localStorage
     const storedData = localStorage.getItem(`naming_session_${sessionId}`);
-    
+
     if (storedData) {
       try {
         const parsed = JSON.parse(storedData);
@@ -41,7 +45,7 @@ const NameResults = () => {
         console.error('Failed to parse session data:', error);
         // Generate some demo results if session data is missing
         setResults(generateDemoResults());
-        setSessionData({ 
+        setSessionData({
           formData: { industry: 'health', style: 'modern', keywords: ['wellness'] },
           timestamp: new Date().toISOString()
         });
@@ -50,12 +54,12 @@ const NameResults = () => {
       // Generate demo results if no session found
       console.log('No session data found, generating demo results');
       setResults(generateDemoResults());
-      setSessionData({ 
+      setSessionData({
         formData: { industry: 'health', style: 'modern', keywords: ['wellness'] },
         timestamp: new Date().toISOString()
       });
     }
-    
+
     setLoading(false);
   }, [sessionId]);
 
@@ -110,8 +114,8 @@ const NameResults = () => {
   };
 
   const toggleFavorite = (nameId) => {
-    setFavorites(prev => 
-      prev.includes(nameId) 
+    setFavorites(prev =>
+      prev.includes(nameId)
         ? prev.filter(id => id !== nameId)
         : [...prev, nameId]
     );
@@ -125,6 +129,78 @@ const NameResults = () => {
   const handleAnalyze = (nameData) => {
     console.log('Opening deep analysis for:', nameData.name);
     setAnalysisModal({ isOpen: true, nameData });
+  };
+
+  const handleReserveDomain = async (nameData) => {
+    console.log('🔒 Initiating domain reservation for:', nameData.name);
+
+    try {
+      setDomainChecking(true);
+
+      // Check domain availability first
+      const domainCheck = await apiService.checkDomainAvailability(nameData.name);
+
+      if (domainCheck.success && domainCheck.domains.length > 0) {
+        const availableDomains = domainCheck.domains.filter(d => d.available);
+
+        if (availableDomains.length > 0) {
+          // Show user info modal for reservation
+          setUserInfoModal({
+            isOpen: true,
+            nameData: {
+              ...nameData,
+              availableDomains: availableDomains,
+              domainCheck: domainCheck
+            }
+          });
+        } else {
+          // No domains available, show suggestions
+          alert(`Sorry, ${nameData.name}.com is not available. We'll show you some alternatives!`);
+          // Could implement alternative domain suggestions here
+        }
+      } else {
+        throw new Error('Failed to check domain availability');
+      }
+    } catch (error) {
+      console.error('❌ Domain reservation failed:', error);
+      alert('Failed to check domain availability. Please try again.');
+    } finally {
+      setDomainChecking(false);
+    }
+  };
+
+  const handleUserInfoSubmit = async (userInfo, selectedDomain) => {
+    console.log('📝 Submitting user info for domain reservation:', { userInfo, selectedDomain });
+
+    try {
+      setReservationLoading(true);
+
+      const reservation = await apiService.reserveDomain(selectedDomain, userInfo);
+
+      if (reservation.success) {
+        console.log('✅ Domain reserved successfully:', reservation);
+
+        // Close modal
+        setUserInfoModal({ isOpen: false, nameData: null });
+
+        // Show success message
+        alert(`Domain ${selectedDomain.domain} reserved successfully! Check your email for payment instructions.`);
+
+        // Track the reservation event
+        apiService.trackEvent('domain_reserved', {
+          domain: selectedDomain.domain,
+          price: selectedDomain.price,
+          reservationId: reservation.reservationId
+        });
+      } else {
+        throw new Error(reservation.error || 'Reservation failed');
+      }
+    } catch (error) {
+      console.error('❌ Domain reservation failed:', error);
+      alert(`Reservation failed: ${error.message}. Please try again.`);
+    } finally {
+      setReservationLoading(false);
+    }
   };
 
   const getScoreColor = (score) => {
@@ -165,16 +241,16 @@ const NameResults = () => {
       <div className="px-6 py-6 bg-black/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <button 
+            <button
               onClick={() => navigate('/')}
               className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back to Home</span>
             </button>
-            
+
             <div className="hidden md:block text-white/40">|</div>
-            
+
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                 <Star className="w-5 h-5 text-white" />
@@ -215,7 +291,7 @@ const NameResults = () => {
                   Generated {results.length} {sessionData.formData?.style} names using your keywords
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-white mb-2">{results.length}</div>
@@ -258,9 +334,9 @@ const NameResults = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     <p className="text-white/80 text-lg mb-4">{name.explanation}</p>
-                    
+
                     {name.psychologyTriggers && (
                       <div className="flex flex-wrap gap-2 mb-4">
                         {name.psychologyTriggers.map((trigger, i) => (
@@ -279,14 +355,13 @@ const NameResults = () => {
                       </div>
                       <div className="text-white/60 text-sm">Brandability</div>
                     </div>
-                    
+
                     <button
                       onClick={() => toggleFavorite(name.id)}
-                      className={`p-3 rounded-xl transition-all duration-300 ${
-                        favorites.includes(name.id)
+                      className={`p-3 rounded-xl transition-all duration-300 ${favorites.includes(name.id)
                           ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
                           : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-red-300'
-                      }`}
+                        }`}
                     >
                       <Heart className={`w-5 h-5 ${favorites.includes(name.id) ? 'fill-current' : ''}`} />
                     </button>
@@ -296,14 +371,14 @@ const NameResults = () => {
                 {/* Actions */}
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-3">
-                    <button 
+                    <button
                       onClick={() => copyToClipboard(name.name)}
                       className="flex items-center space-x-2 px-4 py-2 bg-white/10 text-white/80 rounded-xl hover:bg-white/20 transition-colors"
                     >
                       <Copy className="w-4 h-4" />
                       <span>Copy</span>
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleAnalyze(name)}
                       className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg"
                     >
@@ -312,8 +387,24 @@ const NameResults = () => {
                     </button>
                   </div>
 
-                  <div className="text-white/50 text-sm">
-                    Generated by {name.source === 'openai' ? 'AI' : 'Smart Algorithm'}
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => handleReserveDomain(name)}
+                      disabled={domainChecking || reservationLoading}
+                      className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {domainChecking || reservationLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span>{domainChecking ? 'Checking...' : 'Reserving...'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-5 h-5" />
+                          <span>Reserve Domain</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </motion.div>
@@ -350,6 +441,14 @@ const NameResults = () => {
           // Navigate to pricing page with analysis context
           navigate('/pricing?source=analysis&feature=premium-analysis');
         }}
+      />
+
+      <UserInfoModal
+        isOpen={userInfoModal.isOpen}
+        onClose={() => setUserInfoModal({ isOpen: false, nameData: null })}
+        nameData={userInfoModal.nameData}
+        onSubmit={handleUserInfoSubmit}
+        loading={reservationLoading}
       />
     </div>
   );

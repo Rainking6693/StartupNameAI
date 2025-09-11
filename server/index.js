@@ -11,6 +11,7 @@ const winston = require('winston');
 const nameRoutes = require('./routes/names');
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payments');
+const domainRoutes = require('./routes/domains');
 const vitalsRoutes = require('./routes/vitals');
 const monitoringRoutes = require('./routes/monitoring');
 
@@ -56,10 +57,10 @@ app.use(helmet({
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000').split(',');
-    
+
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -134,6 +135,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/names', aiLimiter, nameRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/domains', domainRoutes);
 app.use('/api/vitals', vitalsRoutes);
 app.use('/api/monitoring', monitoringRoutes);
 
@@ -147,6 +149,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/api/health',
       names: '/api/names/*',
+      domains: '/api/domains/*',
       auth: '/api/auth/*',
       payments: '/api/payments/*',
       vitals: '/api/vitals/*',
@@ -158,7 +161,7 @@ app.get('/', (req, res) => {
 // 404 handler
 app.use((req, res) => {
   logger.warn(`404 - ${req.method} ${req.originalUrl}`);
-  
+
   res.status(404).json({
     error: 'Endpoint not found',
     message: `The endpoint ${req.method} ${req.originalUrl} does not exist`,
@@ -167,6 +170,9 @@ app.use((req, res) => {
       'POST /api/names/generate',
       'POST /api/names/analyze',
       'GET /api/names/history',
+      'POST /api/domains/check',
+      'POST /api/domains/reserve',
+      'GET /api/domains/status/:id',
       'POST /api/auth/register',
       'POST /api/auth/login',
       'POST /api/payments/create-intent'
@@ -184,7 +190,7 @@ app.use((error, req, res, next) => {
     ip: req.ip,
     userAgent: req.get('User-Agent')
   });
-  
+
   // Don't expose internal errors in production
   if (process.env.NODE_ENV === 'production') {
     res.status(500).json({
@@ -238,9 +244,9 @@ const server = app.listen(PORT, () => {
 📊 Logging: Winston configured
 🔧 Health check: /api/health
 
-${process.env.NODE_ENV === 'development' ? 
-  `🔗 Local URL: http://localhost:${PORT}` : 
-  '🔗 Production server running'}
+${process.env.NODE_ENV === 'development' ?
+      `🔗 Local URL: http://localhost:${PORT}` :
+      '🔗 Production server running'}
   `);
 });
 
