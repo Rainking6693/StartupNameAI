@@ -341,13 +341,16 @@ class PaymentService {
     console.log('✅ Payment successful:', sessionId);
 
     // Update user premium status
-    this.updateUserPremiumStatus();
+    this.updateUserPremiumStatus('pro');
 
     // Track conversion
     this.trackConversion(sessionId);
 
     // Show success message
     this.showPaymentSuccessMessage();
+
+    // Trigger page refresh to update premium status
+    window.location.reload();
   }
 
   // Payment Cancellation Handler
@@ -362,10 +365,11 @@ class PaymentService {
   }
 
   // Helper Methods
-  updateUserPremiumStatus() {
+  updateUserPremiumStatus(tier = 'pro') {
     // Update local storage or user state
-    localStorage.setItem('startupnamer_user_tier', 'pro');
-    console.log('👤 User premium status updated');
+    localStorage.setItem('startupnamer_user_tier', tier);
+    localStorage.setItem('startupnamer_premium_activated', new Date().toISOString());
+    console.log('👤 User premium status updated to:', tier);
   }
 
   trackConversion(sessionId) {
