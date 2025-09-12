@@ -12,7 +12,7 @@ import analyticsService from './services/analytics';
 // Lazy load components for better performance
 import LandingPage from './components/LandingPage';
 import NamingTool from './components/NamingTool';
-import ResultsPageImproved from './components/ResultsPageImproved';
+import ResultsPagePhase4 from './components/ResultsPagePhase4';
 import PricingPage from './pages/PricingPage';
 import StartupNamingGuide from './pages/StartupNamingGuide';
 import TechStartupNames from './pages/TechStartupNames';
@@ -270,7 +270,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/naming-tool" element={<NamingTool />} />
-                  <Route path="/results/:sessionId" element={<ResultsPageImproved />} />
+                  <Route path="/results/:sessionId" element={<ResultsPagePhase4 />} />
                   <Route path="/features" element={<LandingPage />} />
                   <Route path="/pricing" element={<PricingPage />} />
                   <Route path="/examples" element={<LandingPage />} />

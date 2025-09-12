@@ -7,12 +7,13 @@ const compression = require('compression');
 const morgan = require('morgan');
 const winston = require('winston');
 
-// Route imports
-const nameRoutes = require('./routes/names');
-const authRoutes = require('./routes/auth');
-const paymentRoutes = require('./routes/payments');
-const domainRoutes = require('./routes/domains');
+// Import routes
+const namesRoutes = require('./routes/names');
+const paymentsRoutes = require('./routes/payments');
+const paymentsPhase4Routes = require('./routes/paymentsPhase4');
+const domainsRoutes = require('./routes/domains');
 const vitalsRoutes = require('./routes/vitals');
+const authRoutes = require('./routes/auth');
 const monitoringRoutes = require('./routes/monitoring');
 
 const app = express();
@@ -131,12 +132,13 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
-app.use('/api/names', aiLimiter, nameRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/domains', domainRoutes);
+// Routes
+app.use('/api/names', namesRoutes);
+app.use('/api/payments', paymentsRoutes);
+app.use('/api/payments/phase4', paymentsPhase4Routes);
+app.use('/api/domains', domainsRoutes);
 app.use('/api/vitals', vitalsRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/monitoring', monitoringRoutes);
 
 // Root endpoint
