@@ -1,1 +1,217 @@
-import React, { useState } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { \n  ArrowRight, \n  ArrowLeft, \n  Star, \n  Cpu,\n  Target,\n  Zap,\n  CheckCircle,\n  Lightbulb,\n  Building,\n  Palette,\n  Hash,\n  Clock,\n  AlertCircle\n} from 'lucide-react';\nimport { useNavigate } from 'react-router-dom';\nimport AINameGenerator from '../utils/aiNamingEngine';\nimport DomainService from '../utils/domainService';\n\nconst NamingTool = () => {\n  const navigate = useNavigate();\n  const [currentStep, setCurrentStep] = useState(1);\n  const [isLoading, setIsLoading] = useState(false);\n  const [error, setError] = useState('');\n  const [formData, setFormData] = useState({\n    keywords: [],\n    industry: '',\n    style: '',\n    description: ''\n  });\n\n  const totalSteps = 4;\n\n  // Industry options\n  const industries = [\n    { id: 'tech', name: 'Technology', icon: '💻', desc: 'SaaS, apps, software platforms' },\n    { id: 'healthcare', name: 'Healthcare', icon: '🏥', desc: 'Medical, wellness, fitness' },\n    { id: 'fintech', name: 'FinTech', icon: '💳', desc: 'Banking, payments, crypto' },\n    { id: 'ecommerce', name: 'E-commerce', icon: '🛒', desc: 'Online retail, marketplaces' },\n    { id: 'education', name: 'Education', icon: '🎓', desc: 'EdTech, learning, training' },\n    { id: 'food', name: 'Food & Beverage', icon: '🍽️', desc: 'Restaurants, delivery, food tech' },\n    { id: 'travel', name: 'Travel', icon: '✈️', desc: 'Tourism, booking, hospitality' },\n    { id: 'ai', name: 'Artificial Intelligence', icon: '🤖', desc: 'AI, machine learning, automation' }\n  ];\n\n  // Style preferences\n  const styles = [\n    { id: 'modern', name: 'Modern', icon: '⚡', desc: 'Clean, tech-forward, innovative' },\n    { id: 'classic', name: 'Classic', icon: '🏛️', desc: 'Timeless, established, trustworthy' },\n    { id: 'creative', name: 'Creative', icon: '🎨', desc: 'Unique, artistic, memorable' },\n    { id: 'professional', name: 'Professional', icon: '💼', desc: 'Corporate, enterprise-ready' }\n  ];\n\n  const handleNext = () => {\n    if (currentStep < totalSteps) {\n      setCurrentStep(currentStep + 1);\n    } else {\n      handleGenerate();\n    }\n  };\n\n  const handleBack = () => {\n    if (currentStep > 1) {\n      setCurrentStep(currentStep - 1);\n    }\n  };\n\n  const handleKeywordAdd = (keyword) => {\n    if (keyword.trim() && formData.keywords.length < 5 && !formData.keywords.includes(keyword.trim())) {\n      setFormData({\n        ...formData,\n        keywords: [...formData.keywords, keyword.trim()]\n      });\n    }\n  };\n\n  const handleKeywordRemove = (keyword) => {\n    setFormData({\n      ...formData,\n      keywords: formData.keywords.filter(k => k !== keyword)\n    });\n  };\n\n  const handleGenerate = async () => {\n    console.log('🚀 GENERATE CLICKED - Starting AI naming process...');\n    setIsLoading(true);\n    setError('');\n    \n    try {\n      console.log('📊 Form data to process:', formData);\n      \n      // Validate form data\n      if (!formData.industry || !formData.style || formData.keywords.length === 0) {\n        throw new Error('Please complete all required fields');\n      }\n      \n      // Initialize AI naming engine\n      const aiGenerator = new AINameGenerator();\n      \n      // Prepare input for AI engine\n      const aiInput = {\n        industry: formData.industry,\n        keywords: formData.keywords,\n        style: formData.style,\n        targetAudience: formData.industry === 'tech' || formData.industry === 'fintech' ? 'b2b' : 'b2c',\n        brandPersonality: formData.style === 'modern' ? 'innovation' : \n                         formData.style === 'creative' ? 'growth' : \n                         formData.style === 'professional' ? 'power' : 'connection'\n      };\n      \n      console.log('🤖 Generating AI-powered names with input:', aiInput);\n      \n      // Generate names using sophisticated AI algorithms\n      const generatedNames = aiGenerator.generateNames(aiInput);\n      console.log('✅ AI generated names:', generatedNames);\n      \n      if (!generatedNames || generatedNames.length === 0) {\n        throw new Error('AI failed to generate names. Please try different keywords.');\n      }\n\n      // Create session data\n      const sessionId = Date.now().toString();\n      const sessionData = {\n        formData,\n        results: generatedNames,\n        timestamp: new Date().toISOString(),\n        aiGenerated: true\n      };\n      \n      console.log('💾 Saving AI session data:', sessionId, sessionData);\n      \n      // Store in localStorage with error handling\n      try {\n        localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));\n        console.log('✅ AI session data saved to localStorage');\n        \n        // Verify the data was saved\n        const savedData = localStorage.getItem(`naming_session_${sessionId}`);\n        if (!savedData) {\n          throw new Error('Failed to save session data');\n        }\n        \n      } catch (storageError) {\n        console.error('❌ Failed to save to localStorage:', storageError);\n        // Continue anyway - results page can handle missing data\n      }\n\n      console.log('🧭 Attempting navigation to:', `/results/${sessionId}`);\n      \n      // Navigate immediately - no need for delay\n      navigate(`/results/${sessionId}`, { replace: true });\n\n    } catch (error) {\n      console.error('❌ AI name generation failed:', error);\n      setError(error.message || 'Failed to generate names. Please try again.');\n      setIsLoading(false);\n    }\n  };\n\n  const canProceed = () => {\n    switch (currentStep) {\n      case 1: return formData.industry !== '';\n      case 2: return formData.style !== '';\n      case 3: return formData.keywords.length > 0;\n      case 4: return true;\n      default: return false;\n    }\n  };\n\n  if (isLoading) {\n    return (\n      <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center\">\n        <div className=\"text-center\">\n          <motion.div\n            animate={{ rotate: 360 }}\n            transition={{ duration: 2, repeat: Infinity, ease: \"linear\" }}\n            className=\"w-16 h-16 bg-gradient-to-r from-white to-purple-200 rounded-full flex items-center justify-center mx-auto mb-6\"\n          >\n            <Cpu className=\"w-8 h-8 text-purple-900\" />\n          </motion.div>\n          <h2 className=\"text-2xl font-bold text-white mb-2\">AI is Creating Your Names</h2>\n          <p className=\"text-white/80\">Advanced algorithms analyzing your requirements...</p>\n          \n          <div className=\"mt-8 space-y-2 max-w-md mx-auto\">\n            {[\n              'Processing your keywords with AI...',\n              'Analyzing industry naming patterns...',\n              'Generating brandable combinations...',\n              'Calculating brandability scores...',\n              'Finalizing intelligent recommendations!'\n            ].map((step, index) => (\n              <motion.div\n                key={index}\n                initial={{ opacity: 0, x: -20 }}\n                animate={{ opacity: 1, x: 0 }}\n                transition={{ delay: index * 0.8 }}\n                className=\"text-left text-white/70 flex items-center space-x-2\"\n              >\n                <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                <span>{step}</span>\n              </motion.div>\n            ))}\n          </div>\n        </div>\n      </div>\n    );\n  }\n\n  return (\n    <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800\">\n      {/* Header */}\n      <div className=\"px-6 py-6\">\n        <div className=\"max-w-4xl mx-auto flex items-center justify-between\">\n          <div className=\"flex items-center space-x-3\">\n            <div className=\"w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center\">\n              <Star className=\"w-6 h-6 text-white\" />\n            </div>\n            <span className=\"text-2xl font-bold text-white\">\n              StartupNamer.org\n            </span>\n          </div>\n          \n          <button \n            onClick={() => navigate('/')}\n            className=\"text-white/80 hover:text-white transition-colors\"\n          >\n            ← Back to Home\n          </button>\n        </div>\n      </div>\n\n      {/* Progress Bar */}\n      <div className=\"px-6 mb-8\">\n        <div className=\"max-w-4xl mx-auto\">\n          <div className=\"flex items-center justify-between mb-2\">\n            <span className=\"text-sm font-medium text-white/80\">Step {currentStep} of {totalSteps}</span>\n            <span className=\"text-sm font-medium text-white/80\">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>\n          </div>\n          <div className=\"w-full bg-white/20 rounded-full h-2\">\n            <motion.div\n              className=\"bg-gradient-to-r from-white to-purple-200 h-2 rounded-full\"\n              initial={{ width: 0 }}\n              animate={{ width: `${(currentStep / totalSteps) * 100}%` }}\n              transition={{ duration: 0.5 }}\n            />\n          </div>\n        </div>\n      </div>\n\n      {/* Error Display */}\n      {error && (\n        <div className=\"px-6 mb-8\">\n          <div className=\"max-w-4xl mx-auto\">\n            <div className=\"bg-red-500/20 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3\">\n              <AlertCircle className=\"w-5 h-5 text-red-400\" />\n              <span className=\"text-red-200\">{error}</span>\n              <button \n                onClick={() => setError('')}\n                className=\"ml-auto text-red-400 hover:text-red-200\"\n              >\n                ×\n              </button>\n            </div>\n          </div>\n        </div>\n      )}\n\n      {/* Main Content */}\n      <div className=\"px-6 pb-20\">\n        <div className=\"max-w-4xl mx-auto\">\n          <AnimatePresence mode=\"wait\">\n            {/* Step 1: Industry Selection */}\n            {currentStep === 1 && (\n              <motion.div\n                key=\"step1\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Building className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">What's your industry?</h2>\n                  <p className=\"text-xl text-white/80\">This helps our AI understand your market and naming conventions</p>\n                </div>\n\n                <div className=\"grid md:grid-cols-2 gap-6\">\n                  {industries.map((industry) => (\n                    <motion.div\n                      key={industry.id}\n                      whileHover={{ y: -4 }}\n                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-all duration-300 border-2 ${\n                        formData.industry === industry.id \n                          ? 'border-white shadow-lg bg-white/20' \n                          : 'border-transparent hover:bg-white/15'\n                      }`}\n                      onClick={() => setFormData({...formData, industry: industry.id})}\n                    >\n                      <div className=\"flex items-start space-x-4\">\n                        <div className=\"text-3xl\">{industry.icon}</div>\n                        <div>\n                          <h3 className=\"text-lg font-bold text-white mb-1\">{industry.name}</h3>\n                          <p className=\"text-white/70 text-sm\">{industry.desc}</p>\n                        </div>\n                      </div>\n                    </motion.div>\n                  ))}\n                </div>\n              </motion.div>\n            )}\n\n            {/* Step 2: Style Selection */}\n            {currentStep === 2 && (\n              <motion.div\n                key=\"step2\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Palette className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">What's your style?</h2>\n                  <p className=\"text-xl text-white/80\">Choose the personality that best fits your brand vision</p>\n                </div>\n\n                <div className=\"grid md:grid-cols-2 gap-6\">\n                  {styles.map((style) => (\n                    <motion.div\n                      key={style.id}\n                      whileHover={{ y: -4 }}\n                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-8 cursor-pointer transition-all duration-300 border-2 ${\n                        formData.style === style.id \n                          ? 'border-white shadow-lg bg-white/20' \n                          : 'border-transparent hover:bg-white/15'\n                      }`}\n                      onClick={() => setFormData({...formData, style: style.id})}\n                    >\n                      <div className=\"text-center\">\n                        <div className=\"text-4xl mb-4\">{style.icon}</div>\n                        <h3 className=\"text-xl font-bold text-white mb-2\">{style.name}</h3>\n                        <p className=\"text-white/70\">{style.desc}</p>\n                      </div>\n                    </motion.div>\n                  ))}\n                </div>\n              </motion.div>\n            )}\n\n            {/* Step 3: Keywords Input */}\n            {currentStep === 3 && (\n              <motion.div\n                key=\"step3\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Hash className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">Add your keywords</h2>\n                  <p className=\"text-xl text-white/80\">What words describe your startup? (1-5 keywords)</p>\n                </div>\n\n                <div className=\"max-w-2xl mx-auto\">\n                  <div className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8\">\n                    <KeywordInput \n                      keywords={formData.keywords}\n                      onAdd={handleKeywordAdd}\n                      onRemove={handleKeywordRemove}\n                    />\n                    \n                    <div className=\"mt-8\">\n                      <label className=\"block text-white font-medium mb-3\">\n                        Brief description (optional)\n                      </label>\n                      <textarea\n                        value={formData.description}\n                        onChange={(e) => setFormData({...formData, description: e.target.value})}\n                        placeholder=\"Tell us more about your startup idea...\"\n                        className=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent resize-none text-white placeholder-white/50\"\n                        rows={3}\n                      />\n                    </div>\n                  </div>\n                </div>\n              </motion.div>\n            )}\n\n            {/* Step 4: Review */}\n            {currentStep === 4 && (\n              <motion.div\n                key=\"step4\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <CheckCircle className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">Ready to Generate!</h2>\n                  <p className=\"text-xl text-white/80\">AI will create perfect startup names based on your preferences</p>\n                </div>\n\n                <div className=\"max-w-2xl mx-auto\">\n                  <div className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8\">\n                    <h3 className=\"text-xl font-bold text-white mb-6\">Your Requirements:</h3>\n                    \n                    <div className=\"space-y-4\">\n                      <div className=\"flex justify-between items-center p-4 bg-white/10 rounded-xl\">\n                        <span className=\"text-white/80\">Industry:</span>\n                        <span className=\"font-semibold text-white capitalize\">{formData.industry}</span>\n                      </div>\n                      \n                      <div className=\"flex justify-between items-center p-4 bg-white/10 rounded-xl\">\n                        <span className=\"text-white/80\">Style:</span>\n                        <span className=\"font-semibold text-white capitalize\">{formData.style}</span>\n                      </div>\n                      \n                      <div className=\"flex justify-between items-start p-4 bg-white/10 rounded-xl\">\n                        <span className=\"text-white/80\">Keywords:</span>\n                        <div className=\"flex flex-wrap gap-2\">\n                          {formData.keywords.map(keyword => (\n                            <span key={keyword} className=\"bg-white/20 text-white px-2 py-1 rounded-full text-sm font-medium\">\n                              {keyword}\n                            </span>\n                          ))}\n                        </div>\n                      </div>\n                    </div>\n\n                    <div className=\"mt-8 p-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30\">\n                      <h4 className=\"font-bold text-white mb-2\">What you'll get:</h4>\n                      <ul className=\"space-y-2 text-white/80\">\n                        <li className=\"flex items-center space-x-2\">\n                          <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                          <span>50 AI-generated names tailored to your industry</span>\n                        </li>\n                        <li className=\"flex items-center space-x-2\">\n                          <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                          <span>Advanced brandability scores and analysis</span>\n                        </li>\n                        <li className=\"flex items-center space-x-2\">\n                          <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                          <span>Intelligent naming reasoning and insights</span>\n                        </li>\n                        <li className=\"flex items-center space-x-2\">\n                          <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                          <span>Domain availability checking</span>\n                        </li>\n                      </ul>\n                    </div>\n                  </div>\n                </div>\n              </motion.div>\n            )}\n          </AnimatePresence>\n\n          {/* Navigation */}\n          <div className=\"flex items-center justify-between mt-12\">\n            <button\n              onClick={handleBack}\n              disabled={currentStep === 1}\n              className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${\n                currentStep === 1 \n                  ? 'text-white/40 cursor-not-allowed' \n                  : 'text-white hover:bg-white/10'\n              }`}\n            >\n              <ArrowLeft className=\"w-5 h-5\" />\n              <span>Previous</span>\n            </button>\n\n            <div className=\"flex space-x-2\">\n              {Array.from({ length: totalSteps }, (_, index) => (\n                <div\n                  key={index}\n                  className={`w-2 h-2 rounded-full transition-all duration-300 ${\n                    index + 1 <= currentStep \n                      ? 'bg-white' \n                      : 'bg-white/30'\n                  }`}\n                />\n              ))}\n            </div>\n\n            <button\n              onClick={handleNext}\n              disabled={!canProceed()}\n              className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${\n                canProceed()\n                  ? 'bg-gradient-to-r from-white to-purple-200 text-purple-900 hover:from-purple-100 hover:to-purple-300 shadow-lg hover:shadow-xl'\n                  : 'bg-white/20 text-white/40 cursor-not-allowed'\n              }`}\n            >\n              <span>{currentStep === totalSteps ? 'Generate AI Names' : 'Next'}</span>\n              {currentStep === totalSteps ? <Zap className=\"w-5 h-5\" /> : <ArrowRight className=\"w-5 h-5\" />}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// Keyword Input Component\nconst KeywordInput = ({ keywords, onAdd, onRemove }) => {\n  const [inputValue, setInputValue] = useState('');\n\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    if (inputValue.trim()) {\n      onAdd(inputValue);\n      setInputValue('');\n    }\n  };\n\n  const handleKeyPress = (e) => {\n    if (e.key === 'Enter') {\n      e.preventDefault();\n      handleSubmit(e);\n    }\n  };\n\n  return (\n    <div>\n      <form onSubmit={handleSubmit} className=\"mb-6\">\n        <div className=\"flex space-x-3\">\n          <input\n            type=\"text\"\n            value={inputValue}\n            onChange={(e) => setInputValue(e.target.value)}\n            onKeyPress={handleKeyPress}\n            placeholder=\"Enter a keyword...\"\n            className=\"flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder-white/50\"\n            maxLength={20}\n          />\n          <button\n            type=\"submit\"\n            disabled={!inputValue.trim() || keywords.length >= 5}\n            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${\n              inputValue.trim() && keywords.length < 5\n                ? 'bg-white text-purple-900 hover:bg-purple-100'\n                : 'bg-white/20 text-white/40 cursor-not-allowed'\n            }`}\n          >\n            Add\n          </button>\n        </div>\n      </form>\n\n      <div className=\"flex flex-wrap gap-3\">\n        {keywords.map((keyword, index) => (\n          <motion.div\n            key={index}\n            initial={{ opacity: 0, scale: 0.8 }}\n            animate={{ opacity: 1, scale: 1 }}\n            exit={{ opacity: 0, scale: 0.8 }}\n            className=\"flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-full\"\n          >\n            <span className=\"text-white font-medium\">{keyword}</span>\n            <button\n              onClick={() => onRemove(keyword)}\n              className=\"text-white/70 hover:text-white transition-colors\"\n            >\n              ×\n            </button>\n          </motion.div>\n        ))}\n      </div>\n\n      <p className=\"text-white/60 text-sm mt-3\">\n        {keywords.length}/5 keywords added\n      </p>\n    </div>\n  );\n};\n\nexport default NamingTool;"
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ArrowRight, 
+  ArrowLeft, 
+  Star, 
+  Cpu,
+  Target,
+  Zap,
+  CheckCircle,
+  Lightbulb,
+  Building,
+  Palette,
+  Hash,
+  Clock,
+  AlertCircle
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import AINameGenerator from '../utils/aiNamingEngine';
+import DomainService from '../utils/domainService';
+
+const NamingTool = () => {
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    keywords: [],
+    industry: '',
+    style: '',
+    description: ''
+  });
+
+  const totalSteps = 4;
+
+  // Industry options
+  const industries = [
+    { id: 'tech', name: 'Technology', icon: '💻', desc: 'SaaS, apps, software platforms' },
+    { id: 'healthcare', name: 'Healthcare', icon: '🏥', desc: 'Medical, wellness, fitness' },
+    { id: 'fintech', name: 'FinTech', icon: '💳', desc: 'Banking, payments, crypto' },
+    { id: 'ecommerce', name: 'E-commerce', icon: '🛒', desc: 'Online retail, marketplaces' },
+    { id: 'education', name: 'Education', icon: '🎓', desc: 'EdTech, learning, training' },
+    { id: 'food', name: 'Food & Beverage', icon: '🍽️', desc: 'Restaurants, delivery, food tech' },
+    { id: 'travel', name: 'Travel', icon: '✈️', desc: 'Tourism, booking, hospitality' },
+    { id: 'ai', name: 'Artificial Intelligence', icon: '🤖', desc: 'AI, machine learning, automation' }
+  ];
+
+  // Style preferences
+  const styles = [
+    { id: 'modern', name: 'Modern', icon: '⚡', desc: 'Clean, tech-forward, innovative' },
+    { id: 'classic', name: 'Classic', icon: '🏛️', desc: 'Timeless, established, trustworthy' },
+    { id: 'creative', name: 'Creative', icon: '🎨', desc: 'Unique, artistic, memorable' },
+    { id: 'professional', name: 'Professional', icon: '💼', desc: 'Corporate, enterprise-ready' }
+  ];
+
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      handleGenerate();
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleKeywordAdd = (keyword) => {
+    if (keyword.trim() && formData.keywords.length < 5 && !formData.keywords.includes(keyword.trim())) {
+      setFormData({
+        ...formData,
+        keywords: [...formData.keywords, keyword.trim()]
+      });
+    }
+  };
+
+  const handleKeywordRemove = (keyword) => {
+    setFormData({
+      ...formData,
+      keywords: formData.keywords.filter(k => k !== keyword)
+    });
+  };
+
+  const handleGenerate = async () => {
+    console.log('🚀 GENERATE CLICKED - Starting AI naming process...');
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      console.log('📊 Form data to process:', formData);
+      
+      // Validate form data
+      if (!formData.industry || !formData.style || formData.keywords.length === 0) {
+        throw new Error('Please complete all required fields');
+      }
+      
+      // Initialize AI naming engine
+      const aiGenerator = new AINameGenerator();
+      
+      // Prepare input for AI engine
+      const aiInput = {
+        industry: formData.industry,
+        keywords: formData.keywords,
+        style: formData.style,
+        targetAudience: formData.industry === 'tech' || formData.industry === 'fintech' ? 'b2b' : 'b2c',
+        brandPersonality: formData.style === 'modern' ? 'innovation' : 
+                         formData.style === 'creative' ? 'growth' : 
+                         formData.style === 'professional' ? 'power' : 'connection'
+      };
+      
+      console.log('🤖 Generating AI-powered names with input:', aiInput);
+      
+      // Generate names using sophisticated AI algorithms
+      const generatedNames = aiGenerator.generateNames(aiInput);
+      console.log('✅ AI generated names:', generatedNames);
+      
+      if (!generatedNames || generatedNames.length === 0) {
+        throw new Error('AI failed to generate names. Please try different keywords.');
+      }
+
+      // Create session data
+      const sessionId = Date.now().toString();
+      const sessionData = {
+        formData,
+        results: generatedNames,
+        timestamp: new Date().toISOString(),
+        aiGenerated: true
+      };
+      
+      console.log('💾 Saving AI session data:', sessionId, sessionData);
+      
+      // Store in localStorage with error handling
+      try {
+        localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));
+        console.log('✅ AI session data saved to localStorage');
+        
+        // Verify the data was saved
+        const savedData = localStorage.getItem(`naming_session_${sessionId}`);
+        if (!savedData) {
+          throw new Error('Failed to save session data');
+        }
+        
+      } catch (storageError) {
+        console.error('❌ Failed to save to localStorage:', storageError);
+        // Continue anyway - results page can handle missing data
+      }
+
+      console.log('🧭 Attempting navigation to:', `/results/${sessionId}`);
+      
+      // Navigate immediately - no need for delay
+      navigate(`/results/${sessionId}`, { replace: true });
+
+    } catch (error) {
+      console.error('❌ AI name generation failed:', error);
+      setError(error.message || 'Failed to generate names. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  const canProceed = () => {
+    switch (currentStep) {
+      case 1: return formData.industry !== '';
+      case 2: return formData.style !== '';
+      case 3: return formData.keywords.length > 0;
+      case 4: return true;
+      default: return false;
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
+        <div className="text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 bg-gradient-to-r from-white to-purple-200 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <Cpu className="w-8 h-8 text-purple-900" />
+          </motion.div>
+          <h2 className="text-2xl font-bold text-white mb-2">AI is Creating Your Names</h2>
+          <p className="text-white/80">Advanced algorithms analyzing your requirements...</p>
+          
+          <div className="mt-8 space-y-2 max-w-md mx-auto">
+            {[
+              'Processing your keywords with AI...',
+              'Analyzing industry naming patterns...',
+              'Generating brandable combinations...',
+              'Calculating brandability scores...',
+              'Finalizing intelligent recommendations!'
+            ].map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.8 }}
+                className="text-left text-white/70 flex items-center space-x-2"
+              >
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>{step}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      {/* Header */}
+      <div className="px-6 py-6">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">

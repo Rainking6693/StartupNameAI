@@ -328,11 +328,11 @@ const Header = () => {
                 <span>{label}</span>
               </Link>
             );
-          })
+          })}
         </div>
 
-        {/* Secondary Navigation */}
-        <div className="space-y-sm mb-6">
+         {/* Secondary Navigation */}
+         <div className="space-y-sm mb-6">
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
             Resources
           </h3>
