@@ -1,3 +1,6 @@
+// Initialize telemetry first
+require('./config/telemetry').initTelemetry();
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -6,9 +9,22 @@ const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 const morgan = require('morgan');
 const winston = require('winston');
+const { telemetryHelpers } = require('./config/telemetry');
+// Import services
+const vectorDB = require('./config/vectorDatabase');
+const cacheService = require('./services/cacheService');
+const databaseOptimizationService = require('./services/databaseOptimizationService');
+const advancedCacheService = require('./services/advancedCacheService');
+const loadBalancingService = require('./services/loadBalancingService');
+const frameworkEvaluationService = require('./services/frameworkEvaluationService');
+const realTimeAnalyticsService = require('./services/realTimeAnalyticsService');
+const machineLearningService = require('./services/machineLearningService');
+const businessIntelligenceService = require('./services/businessIntelligenceService');
+const abTestingService = require('./services/abTestingService');
 
 // Import routes
 const namesRoutes = require('./routes/names');
+const enhancedNamesRoutes = require('./routes/enhancedNames');
 const paymentsRoutes = require('./routes/payments');
 const paymentsPhase4Routes = require('./routes/paymentsPhase4');
 const domainsRoutes = require('./routes/domains');
@@ -103,20 +119,26 @@ const aiLimiter = rateLimit({
 });
 
 // Middleware
-app.use(generalLimiter);
 app.use(compression());
-app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
+
+// Load balancing and admission control
+app.use(loadBalancingService.admitRequest.bind(loadBalancingService));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}));
 
 // Trust proxy for production
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({
+// Health check endpoint with enhanced monitoring
+app.get('/api/health', async (req, res) => {
+  const healthData = {
     status: 'healthy',
     service: 'StartupNamer.org API',
     version: process.env.API_VERSION || '1.0.0',
@@ -127,13 +149,34 @@ app.get('/api/health', (req, res) => {
       community: process.env.ENABLE_COMMUNITY === 'true',
       expertReviews: process.env.ENABLE_EXPERT_REVIEWS === 'true',
       trademarkCheck: process.env.ENABLE_TRADEMARK_CHECK === 'true',
-      domainSuggestions: process.env.ENABLE_DOMAIN_SUGGESTIONS === 'true'
+      domainSuggestions: process.env.ENABLE_DOMAIN_SUGGESTIONS === 'true',
+      telemetry: process.env.ENABLE_TELEMETRY !== 'false',
+      vectorDatabase: true,
+      caching: cacheService.isAvailable()
+    },
+    services: {
+    cache_service: await cacheService.healthCheck(),
+    advanced_cache_service: await advancedCacheService.healthCheck(),
+    database_optimization: await databaseOptimizationService.healthCheck(),
+    load_balancing: await loadBalancingService.healthCheck(),
+    framework_evaluation: await frameworkEvaluationService.healthCheck(),
+    real_time_analytics: await realTimeAnalyticsService.healthCheck(),
+    machine_learning: await machineLearningService.healthCheck(),
+    business_intelligence: await businessIntelligenceService.healthCheck(),
+    ab_testing: await abTestingService.healthCheck(),
+    vector_database: await vectorDB.healthCheck()
     }
-  });
+  };
+  
+  // Record health check
+  telemetryHelpers.recordUserSession('health_check');
+  
+  res.json(healthData);
 });
 
 // Routes
 app.use('/api/names', namesRoutes);
+app.use('/api/enhanced/names', enhancedNamesRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/payments/phase4', paymentsPhase4Routes);
 app.use('/api/domains', domainsRoutes);
@@ -151,6 +194,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/api/health',
       names: '/api/names/*',
+      enhanced_names: '/api/enhanced/names/*',
       domains: '/api/domains/*',
       auth: '/api/auth/*',
       payments: '/api/payments/*',
@@ -233,8 +277,25 @@ process.on('unhandledRejection', (reason, promise) => {
   logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
+// Initialize services
+async function initializeServices() {
+  try {
+    // Initialize vector database
+    if (process.env.DATABASE_URL) {
+      await vectorDB.initialize();
+      logger.info('✅ Vector database initialized');
+    }
+    
+    // Cache service initializes automatically
+    logger.info('✅ Cache service initialized');
+    
+  } catch (error) {
+    logger.error('❌ Service initialization failed:', error);
+  }
+}
+
 // Start server
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
   logger.info(`
 🚀 StartupNamer.org API Server Started
 📍 Port: ${PORT}
@@ -244,12 +305,18 @@ const server = app.listen(PORT, () => {
 📚 AI-powered naming: Ready
 🎯 Authority positioning: Enabled
 📊 Logging: Winston configured
+🔍 Telemetry: OpenTelemetry enabled
+🗄️ Vector DB: pgvector ready
+⚡ Cache: Redis/Valkey ready
 🔧 Health check: /api/health
 
 ${process.env.NODE_ENV === 'development' ?
       `🔗 Local URL: http://localhost:${PORT}` :
       '🔗 Production server running'}
   `);
+  
+  // Initialize services after server starts
+  await initializeServices();
 });
 
 module.exports = app;

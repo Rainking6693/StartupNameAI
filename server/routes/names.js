@@ -2,6 +2,9 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const rateLimit = require('express-rate-limit');
 const nameGenerator = require('../services/nameGenerator');
+const enhancedNameGenerator = require('../services/enhancedNameGenerator');
+const cacheService = require('../services/cacheService');
+const { telemetryHelpers } = require('../config/telemetry');
 const domainChecker = require('../services/domainChecker');
 const { AppError, logger } = require('../middleware/errorHandler');
 const { pool } = require('../config/database');
@@ -94,13 +97,25 @@ router.post('/generate', nameGenerationLimiter, validateNameRequest, async (req,
       sessionId = `temp_${Date.now()}`; // Temporary session ID
     }
 
-    // Generate names using AI (this works independently of database)
-    generatedNames = await nameGenerator.generateNames({
-      keywords,
-      industry,
-      style,
-      count
-    });
+    // Check cache first for faster response
+    const cacheKey = `names_${JSON.stringify({ keywords, industry, style, count })}`;
+    let generatedNames = await cacheService.getCachedNameGeneration({ keywords, industry, style, count });
+    
+    if (generatedNames) {
+      logger.info('Serving cached name generation results');
+      telemetryHelpers.recordNameGeneration(count, 0, 'cache');
+    } else {
+      // Generate names using enhanced AI service
+      generatedNames = await enhancedNameGenerator.generateNames({
+        keywords,
+        industry,
+        style,
+        count
+      });
+      
+      // Cache the results
+      await cacheService.cacheNameGeneration({ keywords, industry, style, count }, generatedNames);
+    }
 
     // Try to save to database, but don't fail if unavailable
     try {
