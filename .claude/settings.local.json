@@ -13,7 +13,11 @@
       "Bash(npm run dev:*)",
       "Bash(npm install)",
       "WebFetch(domain:localhost)",
-      "Bash(CI=false npm run build)"
+      "Bash(CI=false npm run build)",
+      "Read(//c/Users/Ben/OneDrive/Documents/GitHub/StartupnameAI/client/src/components/**)",
+      "Read(//c/Users/Ben/OneDrive/Documents/GitHub/StartupnameAI/client/src/**)",
+      "Read(//c/Users/Ben/OneDrive/Documents/GitHub/StartupnameAI/client/**)",
+      "Read(//c/Users/Ben/OneDrive/Documents/GitHub/StartupnameAI/**)"
     ],
     "deny": [],
     "ask": []
