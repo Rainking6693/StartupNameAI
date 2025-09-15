@@ -4,7 +4,7 @@ import {
   CheckCircle,
   Crown,
   Lock,
-  Sparkles,
+  Star,
   Star,
   X,
   Zap
@@ -20,7 +20,7 @@ const UpgradePromptModal = ({ isOpen, onClose, feature, context, currentAction }
     premiumAnalysis: {
       title: 'Premium AI Analysis',
       description: 'Get detailed brandability insights, competitor analysis, and market intelligence',
-      icon: Sparkles,
+      icon: Star,
       benefits: [
         'Advanced brandability scoring',
         'Competitor landscape analysis',

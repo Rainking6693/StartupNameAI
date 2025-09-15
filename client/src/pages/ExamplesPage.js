@@ -17,7 +17,6 @@ import {
   Globe,
   Users,
   Target,
-  Brain,
   Search,
   Filter
 } from 'lucide-react';
@@ -217,7 +216,7 @@ const ExamplesPage = () => {
       name: 'Modified Words',
       description: 'Adapt existing words with prefixes/suffixes',
       examples: ['Finova', 'Netflix', 'Spotify'],
-      icon: Brain
+      icon: Star
     },
     {
       name: 'Abstract Concepts',

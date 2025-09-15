@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { 
   Zap, 
-  Brain, 
+  Star, 
   Target, 
   CheckCircle, 
   Cpu, 
@@ -11,7 +11,6 @@ import {
   Globe, 
   Users,
   ArrowRight,
-  Sparkles,
   Database,
   Search
 } from 'lucide-react';
@@ -35,7 +34,7 @@ const HowItWorksPage = () => {
       number: 2,
       title: "AI Analysis & Generation",
       description: "Our advanced AI analyzes thousands of naming patterns, linguistic rules, and market trends to create unique options.",
-      icon: Brain,
+      icon: Star,
       details: [
         "Natural language processing",
         "Pattern recognition algorithms",
@@ -134,7 +133,7 @@ const HowItWorksPage = () => {
             <div className="text-center max-w-4xl mx-auto">
               <div className="flex items-center justify-center mb-6">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Sparkles className="w-8 h-8 text-white" />
+                  <Star className="w-8 h-8 text-white" />
                 </div>
               </div>
               

@@ -44,7 +44,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "node build-fixed.js",
+    "build": "react-scripts build",
     "build:original": "react-scripts build",
     "build:netlify": "node build-netlify.js",
     "test": "react-scripts test",

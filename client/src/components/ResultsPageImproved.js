@@ -11,7 +11,7 @@ import {
   Shield, 
   Zap, 
   Target, 
-  Brain, 
+  Star, 
   TrendingUp,
   ExternalLink,
   Clock,
@@ -20,7 +20,7 @@ import {
   Copy,
   Crown,
   Lock,
-  Sparkles
+  Star
 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DomainService from '../utils/domainService';
@@ -314,7 +314,7 @@ const ResultsPageImproved = () => {
             {!isPremium && (
               <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl p-4 max-w-2xl mx-auto">
                 <div className="flex items-center justify-center space-x-2 text-yellow-300">
-                  <Sparkles className="w-5 h-5" />
+                  <Star className="w-5 h-5" />
                   <span className="font-semibold">Showing {freeNamesShown} of {totalNames} names</span>
                 </div>
                 <p className="text-yellow-200/80 text-sm mt-2">
@@ -427,7 +427,7 @@ const ResultsPageImproved = () => {
                 <div className="flex items-center space-x-3">
                   <Lock className="w-5 h-5" />
                   <span>Unlock {totalNames - freeNamesShown} More Premium Names</span>
-                  <Sparkles className="w-5 h-5" />
+                  <Star className="w-5 h-5" />
                 </div>
               </motion.button>
               <p className="text-white/60 text-sm mt-3">
@@ -693,7 +693,7 @@ const NameCard = ({
       {/* Enhanced Detailed Scores */}
       <div className="space-y-3 mb-4">
         {[
-          { label: 'Memorability', value: nameData.memorability, icon: Brain },
+          { label: 'Memorability', value: nameData.memorability, icon: Star },
           { label: 'Pronunciation', value: nameData.pronunciation, icon: Target },
           { label: 'Uniqueness', value: nameData.uniqueness, icon: Zap },
           { label: 'Brandability', value: nameData.brandability, icon: TrendingUp }

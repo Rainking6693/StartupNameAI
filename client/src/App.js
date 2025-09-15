@@ -14,8 +14,23 @@ import LandingPage from './components/LandingPage';
 import NamingTool from './components/NamingTool';
 import ResultsPagePhase4 from './components/ResultsPagePhase4';
 import PricingPage from './pages/PricingPage';
-import StartupNamingGuide from './pages/StartupNamingGuide';
-import TechStartupNames from './pages/TechStartupNames';
+// import StartupNamingGuide from './pages/StartupNamingGuide';
+// import TechStartupNames from './pages/TechStartupNames';
+import FeaturesPage from './pages/FeaturesPage';
+import ExamplesPage from './pages/ExamplesPage';
+import HowItWorksPage from './pages/HowItWorksPage';
+import FAQPage from './pages/FAQPage';
+import ContactPage from './pages/ContactPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+// import UltimateStartupNamingGuide from './pages/UltimateStartupNamingGuide';
+// import SuccessfulTechStartupNames from './pages/SuccessfulTechStartupNames';
+// Temporarily disabled corrupted pages
+// import AiVsHumanNaming from './pages/AiVsHumanNaming';
+// import SaasStartupNames from './pages/SaasStartupNames';
+// import FintechStartupNames from './pages/FintechStartupNames';
+// import HealthcareStartupNames from './pages/HealthcareStartupNames';
+import AiStartupNames from './pages/AiStartupNames';
 
 // Enhanced loading component with SEO optimization
 const LoadingFallback = ({ message = "Loading..." }) => (
@@ -271,25 +286,25 @@ function App() {
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/naming-tool" element={<NamingTool />} />
                   <Route path="/results/:sessionId" element={<ResultsPagePhase4 />} />
-                  <Route path="/features" element={<LandingPage />} />
+                  <Route path="/features" element={<FeaturesPage />} />
                   <Route path="/pricing" element={<PricingPage />} />
-                  <Route path="/examples" element={<LandingPage />} />
-                  <Route path="/how-it-works" element={<LandingPage />} />
-                  <Route path="/faq" element={<LandingPage />} />
-                  <Route path="/contact" element={<LandingPage />} />
-                  <Route path="/startup-naming-guide" element={<StartupNamingGuide />} />
-                  <Route path="/tech-startup-names" element={<TechStartupNames />} />
+                  <Route path="/examples" element={<ExamplesPage />} />
+                  <Route path="/how-it-works" element={<HowItWorksPage />} />
+                  <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/startup-naming-guide" element={<LandingPage />} />
+                  <Route path="/tech-startup-names" element={<LandingPage />} />
                   <Route path="/blog" element={<LandingPage />} />
-                  <Route path="/ultimate-startup-naming-guide" element={<UltimateStartupNamingGuide />} />
-                  <Route path="/successful-tech-startup-names" element={<SuccessfulTechStartupNames />} />
-                  <Route path="/ai-vs-human-naming" element={<AiVsHumanNaming />} />
-                  <Route path="/privacy-policy" element={<LandingPage />} />
-                  <Route path="/terms-of-service" element={<LandingPage />} />
+                  <Route path="/ultimate-startup-naming-guide" element={<LandingPage />} />
+                  <Route path="/successful-tech-startup-names" element={<LandingPage />} />
+                  <Route path="/ai-vs-human-naming" element={<LandingPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                   {/* Industry-specific pages */}
-                  <Route path="/tech-startup-names" element={<TechStartupNames />} />
-                  <Route path="/saas-startup-names" element={<SaasStartupNames />} />
-                  <Route path="/fintech-startup-names" element={<FintechStartupNames />} />
-                  <Route path="/healthcare-startup-names" element={<HealthcareStartupNames />} />
+                  <Route path="/tech-startup-names" element={<LandingPage />} />
+                  <Route path="/saas-startup-names" element={<LandingPage />} />
+                  <Route path="/fintech-startup-names" element={<LandingPage />} />
+                  <Route path="/healthcare-startup-names" element={<LandingPage />} />
                   <Route path="/ai-startup-names" element={<AiStartupNames />} />
                   <Route path="/ecommerce-startup-names" element={<LandingPage />} />
                 </Routes>

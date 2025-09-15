@@ -215,3 +215,65 @@ const NamingTool = () => {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <Lightbulb className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-white">AI Startup Name Generator</span>
+              <div className="text-white/60 text-sm">Powered by Advanced AI</div>
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => navigate('/')}
+            className="text-white/80 hover:text-white transition-colors"
+          >
+            ← Back to Home
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="px-6 pb-20">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Generate Perfect Startup Names
+            </h1>
+            <p className="text-xl text-white/80">
+              Our AI analyzes thousands of successful startups to create names that resonate with your target audience.
+            </p>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Lightbulb className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-4">Coming Soon</h2>
+              <p className="text-white/80 mb-6">
+                We're working on an enhanced version of our naming tool. 
+                In the meantime, check out our curated naming guides!
+              </p>
+              <div className="space-y-3">
+                <button
+                  onClick={() => navigate('/startup-naming-guide')}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
+                >
+                  Startup Naming Guide
+                </button>
+                <button
+                  onClick={() => navigate('/tech-startup-names')}
+                  className="w-full bg-white/10 border border-white/30 text-white font-medium py-3 px-6 rounded-xl hover:bg-white/20 transition-all duration-300"
+                >
+                  Tech Startup Names
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NamingTool;

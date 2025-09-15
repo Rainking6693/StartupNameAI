@@ -12,7 +12,8 @@
       "Bash(curl:*)",
       "Bash(npm run dev:*)",
       "Bash(npm install)",
-      "WebFetch(domain:localhost)"
+      "WebFetch(domain:localhost)",
+      "Bash(CI=false npm run build)"
     ],
     "deny": [],
     "ask": []

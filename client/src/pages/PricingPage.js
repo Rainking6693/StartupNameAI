@@ -1,13 +1,11 @@
 import {
   ArrowRight,
-  Brain,
+  Star,
   Check,
   Crown,
   Globe,
   Rocket,
   Shield,
-  Sparkles,
-  Star,
   TrendingUp,
   X,
   Zap
@@ -169,7 +167,7 @@ const PricingPage = () => {
 
   const features = [
     {
-      icon: Brain,
+      icon: Star,
       title: "Advanced AI Technology",
       description: "Powered by cutting-edge language models trained on millions of brand names and market data."
     },
@@ -246,7 +244,7 @@ const PricingPage = () => {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
             <div className="container text-center">
               <div className="flex items-center justify-center space-x-2">
-                <Brain className="w-5 h-5" />
+                <Star className="w-5 h-5" />
                 <span className="font-semibold">Unlock Advanced AI Analysis!</span>
                 <span className="text-blue-200">Get detailed brandability insights, competitor analysis, and trademark screening.</span>
               </div>
@@ -438,7 +436,7 @@ const PricingPage = () => {
                 to="/naming-tool"
                 className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
               >
-                <Sparkles className="w-5 h-5 mr-2 inline" />
+                <Star className="w-5 h-5 mr-2 inline" />
                 Start Free Today
               </Link>
               <Link

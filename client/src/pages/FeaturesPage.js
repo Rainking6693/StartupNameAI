@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { 
-  Brain, 
+  Star, 
   Zap, 
   Target, 
   Globe, 
@@ -10,10 +10,8 @@ import {
   Shield,
   Users,
   Clock,
-  Sparkles,
   ArrowRight,
   CheckCircle,
-  Star,
   Lightbulb,
   Database,
   Search,
@@ -29,7 +27,7 @@ import {
 const FeaturesPage = () => {
   const heroFeatures = [
     {
-      icon: Brain,
+      icon: Star,
       title: "AI-Powered Generation",
       description: "Advanced language models trained on millions of successful brand names",
       color: "from-blue-500 to-cyan-500"
@@ -194,7 +192,7 @@ const FeaturesPage = () => {
             <div className="text-center max-w-4xl mx-auto mb-16">
               <div className="flex items-center justify-center mb-6">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Sparkles className="w-8 h-8 text-white" />
+                  <Star className="w-8 h-8 text-white" />
                 </div>
               </div>
               
@@ -336,7 +334,7 @@ const FeaturesPage = () => {
                     <th className="text-left p-6 font-semibold">Feature</th>
                     <th className="text-center p-6 font-semibold">StartupNamer.org</th>
                     <th className="text-center p-6 font-semibold">Naming Agencies</th>
-                    <th className="text-center p-6 font-semibold">DIY Brainstorming</th>
+                    <th className="text-center p-6 font-semibold">DIY Starstorming</th>
                   </tr>
                 </thead>
                 <tbody>
