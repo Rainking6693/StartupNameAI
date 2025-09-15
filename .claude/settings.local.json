@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(netlify:*)",
+      "Bash(npm run info:*)",
+      "Bash(npm run deploy:production:*)",
+      "WebFetch(domain:startupnamer.org)",
+      "Bash(npm test:*)",
+      "WebFetch(domain:68c8139e74a4580fa3e91486--startupnameorg.netlify.app)",
+      "Bash(find:*)",
+      "Bash(curl:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm install)",
+      "WebFetch(domain:localhost)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
