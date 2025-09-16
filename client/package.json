@@ -10,6 +10,7 @@
   "dependencies": {
     "@stripe/react-stripe-js": "2.3.0",
     "@stripe/stripe-js": "2.1.0",
+    "ajv": "8.17.1",
     "axios": "1.6.2",
     "copy-to-clipboard": "^3.3.3",
     "dotenv-expand": "^12.0.3",
