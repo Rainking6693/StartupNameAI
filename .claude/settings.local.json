@@ -19,7 +19,14 @@
       "Read(//c/Users/Ben/OneDrive/Documents/GitHub/StartupnameAI/client/**)",
       "Read(//c/Users/Ben/OneDrive/Documents/GitHub/StartupnameAI/**)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run lint)",
+      "Bash(npm start)",
+      "Bash(PORT=3001 npm start)",
+      "Bash(PORT=3002 npm start)",
+      "Bash(npx http-server:*)",
+      "Bash(taskkill:*)",
+      "Bash(PORT=3004 npm start)"
     ],
     "deny": [],
     "ask": []

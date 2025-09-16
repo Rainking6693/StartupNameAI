@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, 
   ArrowLeft, 
-  Sparkles, 
-  Brain,
+  Star, 
+  Lightbulb,
   Target,
   Zap,
   CheckCircle,
@@ -202,7 +202,7 @@ const NamingTool = () => {
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6"
           >
-            <Brain className="w-10 h-10 text-white" />
+            <Lightbulb className="w-10 h-10 text-white" />
           </motion.div>
           <h2 className="text-3xl font-bold text-white mb-4">Generating Your Names</h2>
           <p className="text-white/80 text-lg mb-8">Our AI is crafting the perfect startup names for you...</p>
@@ -240,7 +240,7 @@ const NamingTool = () => {
       <div className="px-6 py-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <Sparkles className="w-8 h-8 text-white" />
+            <Star className="w-8 h-8 text-white" />
             <span className="text-2xl font-bold text-white">StartupNamer.org</span>
           </div>
           

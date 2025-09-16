@@ -11,8 +11,7 @@ import {
   Globe,
   Award,
   TrendingUp,
-  Brain,
-  Sparkles,
+  Lightbulb,
   Filter,
   SortAsc,
   Crown,
@@ -74,7 +73,7 @@ const NameResults = () => {
       health: ['Health', 'Care', 'Med', 'Vital', 'Life', 'Pulse', 'Heal', 'Wellness', 'Pure', 'Fit', 'Strong', 'Active', 'Thrive', 'Nourish', 'Balance'],
       fintech: ['Pay', 'Coin', 'Bank', 'Fund', 'Cash', 'Finance', 'Capital', 'Invest', 'Money', 'Vault', 'Credit', 'Wallet', 'Trade', 'Ledger', 'Asset'],
       ecommerce: ['Shop', 'Buy', 'Cart', 'Market', 'Store', 'Trade', 'Sale', 'Deal', 'Retail', 'Commerce', 'Goods', 'Items', 'Products', 'Bazaar'],
-      education: ['Learn', 'Edu', 'Study', 'Know', 'Skill', 'Mind', 'Brain', 'Academy', 'Scholar', 'Teach', 'Course', 'Lesson', 'Training', 'Mentor'],
+      education: ['Learn', 'Edu', 'Study', 'Know', 'Skill', 'Mind', 'Smart', 'Academy', 'Scholar', 'Teach', 'Course', 'Lesson', 'Training', 'Mentor'],
       food: ['Taste', 'Fresh', 'Bite', 'Flavor', 'Cook', 'Chef', 'Kitchen', 'Recipe', 'Meal', 'Dish', 'Food', 'Eat', 'Feast', 'Culinary'],
       travel: ['Go', 'Trip', 'Journey', 'Explore', 'Adventure', 'Wander', 'Roam', 'Discover', 'Venture', 'Quest', 'Travel', 'Tour', 'Voyage'],
       other: ['Pro', 'Max', 'Plus', 'Prime', 'Elite', 'Smart', 'Quick', 'Easy', 'Simple', 'Best', 'Top', 'Core', 'Base', 'Hub']
@@ -258,7 +257,7 @@ const NameResults = () => {
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6"
           >
-            <Brain className="w-10 h-10 text-white" />
+            <Lightbulb className="w-10 h-10 text-white" />
           </motion.div>
           <h2 className="text-3xl font-bold text-white mb-4">Finalizing Your Names</h2>
           <p className="text-white/80 text-lg">Adding the finishing touches to your perfect startup names...</p>
@@ -286,7 +285,7 @@ const NameResults = () => {
             <div className="hidden md:block text-white/40">|</div>
             
             <div className="flex items-center space-x-3">
-              <Sparkles className="w-8 h-8 text-white" />
+              <Star className="w-8 h-8 text-white" />
               <span className="text-xl font-bold text-white">Your Startup Names</span>
             </div>
           </div>
