@@ -1,1 +1,967 @@
-import React, { useState, useEffect } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { \n  ArrowRight, \n  ArrowLeft, \n  Star, \n  Cpu,\n  Target,\n  Zap,\n  CheckCircle,\n  Lightbulb,\n  Building,\n  Palette,\n  Hash,\n  Clock,\n  AlertCircle,\n  Settings,\n  Filter,\n  BarChart3,\n  Crown,\n  Star\n} from 'lucide-react';\nimport { useNavigate } from 'react-router-dom';\nimport enhancedAI from '../services/enhancedAI';\n\nconst EnhancedNamingTool = () => {\n  const navigate = useNavigate();\n  const [currentStep, setCurrentStep] = useState(1);\n  const [isLoading, setIsLoading] = useState(false);\n  const [error, setError] = useState('');\n  const [selectedPackage, setSelectedPackage] = useState('professional');\n  const [advancedOptions, setAdvancedOptions] = useState({\n    qualityFilter: true,\n    includeVariations: true,\n    industryDeepDive: true,\n    batchSize: 100\n  });\n  const [formData, setFormData] = useState({\n    keywords: [],\n    industry: '',\n    style: '',\n    description: '',\n    targetAudience: '',\n    brandPersonality: []\n  });\n\n  const totalSteps = 5; // Added advanced options step\n\n  // Enhanced industry options with AI insights\n  const industries = [\n    { \n      id: 'tech', \n      name: 'Technology', \n      icon: '💻', \n      desc: 'SaaS, apps, software platforms',\n      aiInsights: 'AI optimized for tech naming patterns'\n    },\n    { \n      id: 'health', \n      name: 'Healthcare', \n      icon: '🏥', \n      desc: 'Medical, wellness, fitness',\n      aiInsights: 'Trust-focused naming algorithms'\n    },\n    { \n      id: 'fintech', \n      name: 'FinTech', \n      icon: '💳', \n      desc: 'Banking, payments, crypto',\n      aiInsights: 'Security-oriented name generation'\n    },\n    { \n      id: 'ecommerce', \n      name: 'E-commerce', \n      icon: '🛒', \n      desc: 'Online retail, marketplaces',\n      aiInsights: 'Conversion-optimized naming'\n    },\n    { \n      id: 'education', \n      name: 'Education', \n      icon: '🎓', \n      desc: 'EdTech, learning, training',\n      aiInsights: 'Authority-building name patterns'\n    },\n    { \n      id: 'food', \n      name: 'Food & Beverage', \n      icon: '🍽️', \n      desc: 'Restaurants, delivery, food tech',\n      aiInsights: 'Appetite-appealing linguistics'\n    },\n    { \n      id: 'travel', \n      name: 'Travel', \n      icon: '✈️', \n      desc: 'Tourism, booking, hospitality',\n      aiInsights: 'Adventure-inspiring names'\n    },\n    { \n      id: 'other', \n      name: 'Other', \n      icon: '🎯', \n      desc: 'Tell us more about your industry',\n      aiInsights: 'Custom AI analysis'\n    }\n  ];\n\n  // Enhanced style preferences with psychology insights\n  const styles = [\n    { \n      id: 'modern', \n      name: 'Modern', \n      icon: '⚡', \n      desc: 'Clean, tech-forward, innovative',\n      psychology: 'Appeals to early adopters and tech-savvy users'\n    },\n    { \n      id: 'classic', \n      name: 'Classic', \n      icon: '🏛️', \n      desc: 'Timeless, established, trustworthy',\n      psychology: 'Builds trust with traditional audiences'\n    },\n    { \n      id: 'creative', \n      name: 'Creative', \n      icon: '🎨', \n      desc: 'Unique, artistic, memorable',\n      psychology: 'Attracts creative and artistic demographics'\n    },\n    { \n      id: 'professional', \n      name: 'Professional', \n      icon: '💼', \n      desc: 'Corporate, enterprise-ready',\n      psychology: 'Resonates with B2B and enterprise clients'\n    }\n  ];\n\n  // Package options with enhanced features\n  const packages = {\n    starter: {\n      name: 'Starter',\n      price: 49,\n      originalPrice: 98,\n      names: 50,\n      features: [\n        '50 AI-generated names',\n        'Basic trademark search (US)',\n        'Brand strategy PDF (8 pages)',\n        '3 logo concepts',\n        'Domain availability check',\n        'Basic legal compliance'\n      ],\n      badge: 'BEST VALUE'\n    },\n    professional: {\n      name: 'Professional',\n      price: 79,\n      originalPrice: 158,\n      names: 150,\n      features: [\n        '150 premium AI names',\n        'Global trademark research',\n        'Comprehensive brand strategy (15 pages)',\n        '6 logo concepts + guidelines',\n        'Premium domain suggestions',\n        'Industry compliance review',\n        'Competitor analysis report'\n      ],\n      badge: 'MOST POPULAR'\n    },\n    enterprise: {\n      name: 'Enterprise',\n      price: 159,\n      originalPrice: 318,\n      names: 300,\n      features: [\n        '300 premium quality names',\n        'Global trademark + 6-month monitoring',\n        'Executive brand strategy (25+ pages)',\n        '12 custom logo designs',\n        'Legal compliance (all jurisdictions)',\n        'White-label naming rights',\n        'Priority AI processing',\n        'Custom brand consultation'\n      ],\n      badge: 'ENTERPRISE'\n    }\n  };\n\n  // Brand personality options\n  const brandPersonalities = [\n    { id: 'innovative', name: 'Innovative', icon: '🚀' },\n    { id: 'trustworthy', name: 'Trustworthy', icon: '🛡️' },\n    { id: 'friendly', name: 'Friendly', icon: '😊' },\n    { id: 'premium', name: 'Premium', icon: '👑' },\n    { id: 'playful', name: 'Playful', icon: '🎮' },\n    { id: 'sophisticated', name: 'Sophisticated', icon: '🎩' }\n  ];\n\n  const handleNext = () => {\n    if (currentStep < totalSteps) {\n      setCurrentStep(currentStep + 1);\n    } else {\n      handleGenerate();\n    }\n  };\n\n  const handleBack = () => {\n    if (currentStep > 1) {\n      setCurrentStep(currentStep - 1);\n    }\n  };\n\n  const handleKeywordAdd = (keyword) => {\n    if (keyword.trim() && formData.keywords.length < 8 && !formData.keywords.includes(keyword.trim())) {\n      setFormData({\n        ...formData,\n        keywords: [...formData.keywords, keyword.trim()]\n      });\n    }\n  };\n\n  const handleKeywordRemove = (keyword) => {\n    setFormData({\n      ...formData,\n      keywords: formData.keywords.filter(k => k !== keyword)\n    });\n  };\n\n  const handlePersonalityToggle = (personality) => {\n    const current = formData.brandPersonality || [];\n    const updated = current.includes(personality)\n      ? current.filter(p => p !== personality)\n      : [...current, personality];\n    \n    setFormData({\n      ...formData,\n      brandPersonality: updated\n    });\n  };\n\n  const handleGenerate = async () => {\n    console.log('🚀 ENHANCED GENERATE CLICKED - Starting AI process...');\n    setIsLoading(true);\n    setError('');\n    \n    try {\n      console.log('📊 Enhanced form data:', formData);\n      console.log('⚙️ Advanced options:', advancedOptions);\n      console.log('📦 Selected package:', selectedPackage);\n      \n      // Validate form data\n      if (!formData.industry || !formData.style || formData.keywords.length === 0) {\n        throw new Error('Please complete all required fields');\n      }\n      \n      // Get package configuration\n      const packageConfig = packages[selectedPackage];\n      const nameCount = packageConfig.names;\n      \n      console.log('🔄 Generating', nameCount, 'names with enhanced AI...');\n      \n      // Generate names using enhanced AI service\n      const result = await enhancedAI.generateBatchNames(formData, {\n        count: nameCount,\n        qualityFilter: advancedOptions.qualityFilter,\n        includeVariations: advancedOptions.includeVariations,\n        industryDeepDive: advancedOptions.industryDeepDive\n      });\n      \n      console.log('✅ Enhanced AI generation complete:', result);\n      \n      if (!result || !result.names || result.names.length === 0) {\n        throw new Error('No names were generated by enhanced AI');\n      }\n\n      // Create enhanced session data\n      const sessionId = Date.now().toString();\n      const sessionData = {\n        formData,\n        advancedOptions,\n        selectedPackage,\n        packageConfig,\n        results: result.names,\n        metadata: result.metadata,\n        timestamp: new Date().toISOString(),\n        enhanced: true\n      };\n      \n      console.log('💾 Saving enhanced session data:', sessionId);\n      \n      // Store in localStorage with enhanced data\n      try {\n        localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));\n        console.log('✅ Enhanced session data saved');\n        \n        // Verify the data was saved\n        const savedData = localStorage.getItem(`naming_session_${sessionId}`);\n        if (!savedData) {\n          throw new Error('Failed to save enhanced session data');\n        }\n        \n      } catch (storageError) {\n        console.error('❌ Failed to save to localStorage:', storageError);\n        // Continue anyway - results page can handle missing data\n      }\n\n      console.log('🧭 Navigating to enhanced results:', `/results/${sessionId}`);\n      \n      // Navigate to results\n      navigate(`/results/${sessionId}`, { replace: true });\n\n    } catch (error) {\n      console.error('❌ Enhanced name generation failed:', error);\n      setError(error.message || 'Failed to generate names. Please try again.');\n      setIsLoading(false);\n    }\n  };\n\n  const canProceed = () => {\n    switch (currentStep) {\n      case 1: return formData.industry !== '';\n      case 2: return formData.style !== '';\n      case 3: return formData.keywords.length > 0;\n      case 4: return selectedPackage !== '';\n      case 5: return true;\n      default: return false;\n    }\n  };\n\n  if (isLoading) {\n    return (\n      <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center\">\n        <div className=\"text-center max-w-md mx-auto\">\n          <motion.div\n            animate={{ rotate: 360 }}\n            transition={{ duration: 2, repeat: Infinity, ease: \"linear\" }}\n            className=\"w-20 h-20 bg-gradient-to-r from-white to-purple-200 rounded-full flex items-center justify-center mx-auto mb-8\"\n          >\n            <Star className=\"w-10 h-10 text-purple-900\" />\n          </motion.div>\n          <h2 className=\"text-3xl font-bold text-white mb-4\">Enhanced AI is Creating Your Names</h2>\n          <p className=\"text-white/80 mb-6\">Using advanced algorithms to generate {packages[selectedPackage].names} premium startup names...</p>\n          \n          <div className=\"bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6\">\n            <h3 className=\"text-lg font-semibold text-white mb-4\">AI Processing Steps:</h3>\n            <div className=\"space-y-3\">\n              {[\n                'Analyzing industry patterns...',\n                'Processing linguistic structures...',\n                'Applying brand psychology...',\n                'Generating name variants...',\n                'Scoring brandability...',\n                'Ranking by quality...'\n              ].map((step, index) => (\n                <motion.div\n                  key={index}\n                  initial={{ opacity: 0, x: -20 }}\n                  animate={{ opacity: 1, x: 0 }}\n                  transition={{ delay: index * 1.2 }}\n                  className=\"text-left text-white/80 flex items-center space-x-3\"\n                >\n                  <CheckCircle className=\"w-4 h-4 text-green-400 flex-shrink-0\" />\n                  <span className=\"text-sm\">{step}</span>\n                </motion.div>\n              ))}\n            </div>\n          </div>\n          \n          <div className=\"text-white/60 text-sm\">\n            <p>Package: {packages[selectedPackage].name}</p>\n            <p>Names: {packages[selectedPackage].names}</p>\n          </div>\n        </div>\n      </div>\n    );\n  }\n\n  return (\n    <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800\">\n      {/* Enhanced Header */}\n      <div className=\"px-6 py-6\">\n        <div className=\"max-w-4xl mx-auto flex items-center justify-between\">\n          <div className=\"flex items-center space-x-3\">\n            <div className=\"w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center\">\n              <Crown className=\"w-6 h-6 text-white\" />\n            </div>\n            <div>\n              <span className=\"text-2xl font-bold text-white\">Enhanced AI Naming</span>\n              <div className=\"text-yellow-300 text-sm font-semibold\">Enterprise-Grade Platform</div>\n            </div>\n          </div>\n          \n          <button \n            onClick={() => navigate('/')}\n            className=\"text-white/80 hover:text-white transition-colors\"\n          >\n            ← Back to Home\n          </button>\n        </div>\n      </div>\n\n      {/* Enhanced Progress Bar */}\n      <div className=\"px-6 mb-8\">\n        <div className=\"max-w-4xl mx-auto\">\n          <div className=\"flex items-center justify-between mb-2\">\n            <span className=\"text-sm font-medium text-white/80\">Step {currentStep} of {totalSteps}</span>\n            <span className=\"text-sm font-medium text-white/80\">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>\n          </div>\n          <div className=\"w-full bg-white/20 rounded-full h-3\">\n            <motion.div\n              className=\"bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full\"\n              initial={{ width: 0 }}\n              animate={{ width: `${(currentStep / totalSteps) * 100}%` }}\n              transition={{ duration: 0.5 }}\n            />\n          </div>\n        </div>\n      </div>\n\n      {/* Error Display */}\n      {error && (\n        <div className=\"px-6 mb-8\">\n          <div className=\"max-w-4xl mx-auto\">\n            <div className=\"bg-red-500/20 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3\">\n              <AlertCircle className=\"w-5 h-5 text-red-400\" />\n              <span className=\"text-red-200\">{error}</span>\n              <button \n                onClick={() => setError('')}\n                className=\"ml-auto text-red-400 hover:text-red-200\"\n              >\n                ×\n              </button>\n            </div>\n          </div>\n        </div>\n      )}\n\n      {/* Main Content */}\n      <div className=\"px-6 pb-20\">\n        <div className=\"max-w-4xl mx-auto\">\n          <AnimatePresence mode=\"wait\">\n            {/* Step 1: Industry Selection (Enhanced) */}\n            {currentStep === 1 && (\n              <motion.div\n                key=\"step1\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Building className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">What's your industry?</h2>\n                  <p className=\"text-xl text-white/80\">Our enhanced AI understands 50,000+ industry naming patterns</p>\n                </div>\n\n                <div className=\"grid md:grid-cols-2 gap-6\">\n                  {industries.map((industry) => (\n                    <motion.div\n                      key={industry.id}\n                      whileHover={{ y: -4, scale: 1.02 }}\n                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-all duration-300 border-2 ${\n                        formData.industry === industry.id \n                          ? 'border-yellow-400 shadow-lg bg-white/20' \n                          : 'border-transparent hover:bg-white/15'\n                      }`}\n                      onClick={() => setFormData({...formData, industry: industry.id})}\n                    >\n                      <div className=\"flex items-start space-x-4\">\n                        <div className=\"text-3xl\">{industry.icon}</div>\n                        <div className=\"flex-1\">\n                          <h3 className=\"text-lg font-bold text-white mb-1\">{industry.name}</h3>\n                          <p className=\"text-white/70 text-sm mb-2\">{industry.desc}</p>\n                          <div className=\"bg-yellow-400/20 text-yellow-300 px-2 py-1 rounded-full text-xs font-semibold\">\n                            {industry.aiInsights}\n                          </div>\n                        </div>\n                      </div>\n                    </motion.div>\n                  ))}\n                </div>\n              </motion.div>\n            )}\n\n            {/* Step 2: Style Selection (Enhanced) */}\n            {currentStep === 2 && (\n              <motion.div\n                key=\"step2\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Palette className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">What's your style?</h2>\n                  <p className=\"text-xl text-white/80\">Choose the brand personality that resonates with your target audience</p>\n                </div>\n\n                <div className=\"grid md:grid-cols-2 gap-6\">\n                  {styles.map((style) => (\n                    <motion.div\n                      key={style.id}\n                      whileHover={{ y: -4, scale: 1.02 }}\n                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-8 cursor-pointer transition-all duration-300 border-2 ${\n                        formData.style === style.id \n                          ? 'border-yellow-400 shadow-lg bg-white/20' \n                          : 'border-transparent hover:bg-white/15'\n                      }`}\n                      onClick={() => setFormData({...formData, style: style.id})}\n                    >\n                      <div className=\"text-center\">\n                        <div className=\"text-4xl mb-4\">{style.icon}</div>\n                        <h3 className=\"text-xl font-bold text-white mb-2\">{style.name}</h3>\n                        <p className=\"text-white/70 mb-3\">{style.desc}</p>\n                        <div className=\"bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs\">\n                          {style.psychology}\n                        </div>\n                      </div>\n                    </motion.div>\n                  ))}\n                </div>\n              </motion.div>\n            )}\n\n            {/* Step 3: Keywords & Brand Personality */}\n            {currentStep === 3 && (\n              <motion.div\n                key=\"step3\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Hash className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">Define your brand</h2>\n                  <p className=\"text-xl text-white/80\">Keywords and personality traits that represent your startup</p>\n                </div>\n\n                <div className=\"max-w-3xl mx-auto space-y-8\">\n                  {/* Keywords Section */}\n                  <div className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8\">\n                    <h3 className=\"text-xl font-bold text-white mb-4\">Keywords (1-8 words)</h3>\n                    <KeywordInput \n                      keywords={formData.keywords}\n                      onAdd={handleKeywordAdd}\n                      onRemove={handleKeywordRemove}\n                      maxKeywords={8}\n                    />\n                  </div>\n\n                  {/* Brand Personality */}\n                  <div className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8\">\n                    <h3 className=\"text-xl font-bold text-white mb-4\">Brand Personality (Optional)</h3>\n                    <div className=\"grid grid-cols-2 md:grid-cols-3 gap-3\">\n                      {brandPersonalities.map((personality) => (\n                        <button\n                          key={personality.id}\n                          onClick={() => handlePersonalityToggle(personality.id)}\n                          className={`p-3 rounded-xl text-sm font-medium transition-all duration-300 ${\n                            formData.brandPersonality?.includes(personality.id)\n                              ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/50'\n                              : 'bg-white/10 text-white/80 hover:bg-white/20'\n                          }`}\n                        >\n                          <div className=\"text-lg mb-1\">{personality.icon}</div>\n                          {personality.name}\n                        </button>\n                      ))}\n                    </div>\n                  </div>\n\n                  {/* Additional Details */}\n                  <div className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8\">\n                    <h3 className=\"text-xl font-bold text-white mb-4\">Additional Details</h3>\n                    <div className=\"space-y-4\">\n                      <div>\n                        <label className=\"block text-white font-medium mb-2\">\n                          Target Audience (Optional)\n                        </label>\n                        <input\n                          type=\"text\"\n                          value={formData.targetAudience}\n                          onChange={(e) => setFormData({...formData, targetAudience: e.target.value})}\n                          placeholder=\"e.g., Small business owners, Tech professionals, Students\"\n                          className=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent text-white placeholder-white/50\"\n                        />\n                      </div>\n                      \n                      <div>\n                        <label className=\"block text-white font-medium mb-2\">\n                          Brief Description (Optional)\n                        </label>\n                        <textarea\n                          value={formData.description}\n                          onChange={(e) => setFormData({...formData, description: e.target.value})}\n                          placeholder=\"Tell us more about your startup idea...\"\n                          className=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent resize-none text-white placeholder-white/50\"\n                          rows={3}\n                        />\n                      </div>\n                    </div>\n                  </div>\n                </div>\n              </motion.div>\n            )}\n\n            {/* Step 4: Package Selection */}\n            {currentStep === 4 && (\n              <motion.div\n                key=\"step4\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Crown className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">Choose Your Package</h2>\n                  <p className=\"text-xl text-white/80\">Select the level of AI analysis and deliverables you need</p>\n                  \n                  <div className=\"bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 max-w-lg mx-auto mt-6\">\n                    <div className=\"flex items-center justify-center space-x-2 text-yellow-300\">\n                      <Clock className=\"w-5 h-5 animate-pulse\" />\n                      <span className=\"font-bold\">LIMITED TIME: 50% OFF ALL PACKAGES</span>\n                    </div>\n                  </div>\n                </div>\n\n                <div className=\"grid md:grid-cols-3 gap-6\">\n                  {Object.entries(packages).map(([key, pkg]) => (\n                    <motion.div\n                      key={key}\n                      whileHover={{ y: -4, scale: 1.02 }}\n                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-all duration-300 border-2 relative ${\n                        selectedPackage === key \n                          ? 'border-yellow-400 shadow-lg bg-white/20' \n                          : 'border-transparent hover:bg-white/15'\n                      } ${key === 'professional' ? 'ring-2 ring-yellow-400/50' : ''}`}\n                      onClick={() => setSelectedPackage(key)}\n                    >\n                      {pkg.badge && (\n                        <div className=\"absolute -top-3 left-1/2 transform -translate-x-1/2\">\n                          <div className=\"bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-4 py-1 rounded-full font-bold text-xs\">\n                            {pkg.badge}\n                          </div>\n                        </div>\n                      )}\n                      \n                      <div className=\"text-center mb-6 pt-2\">\n                        <h3 className=\"text-xl font-bold text-white mb-2\">{pkg.name}</h3>\n                        <div className=\"text-3xl font-black text-white mb-2\">\n                          <span className=\"line-through text-gray-400 text-lg\">${pkg.originalPrice}</span> ${pkg.price}\n                        </div>\n                        <div className=\"text-green-400 font-semibold text-sm\">Save ${pkg.originalPrice - pkg.price}</div>\n                        <div className=\"text-yellow-300 font-semibold text-sm mt-1\">{pkg.names} AI Names</div>\n                      </div>\n                      \n                      <div className=\"space-y-2 mb-6\">\n                        {pkg.features.map((feature, index) => (\n                          <div key={index} className=\"flex items-center space-x-2\">\n                            <CheckCircle className=\"w-4 h-4 text-green-400 flex-shrink-0\" />\n                            <span className=\"text-white/90 text-sm\">{feature}</span>\n                          </div>\n                        ))}\n                      </div>\n                    </motion.div>\n                  ))}\n                </div>\n              </motion.div>\n            )}\n\n            {/* Step 5: Advanced Options & Review */}\n            {currentStep === 5 && (\n              <motion.div\n                key=\"step5\"\n                initial={{ opacity: 0, x: 20 }}\n                animate={{ opacity: 1, x: 0 }}\n                exit={{ opacity: 0, x: -20 }}\n                transition={{ duration: 0.3 }}\n              >\n                <div className=\"text-center mb-12\">\n                  <div className=\"w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center mx-auto mb-6\">\n                    <Settings className=\"w-8 h-8 text-white\" />\n                  </div>\n                  <h2 className=\"text-4xl font-bold text-white mb-4\">Advanced Options & Review</h2>\n                  <p className=\"text-xl text-white/80\">Fine-tune your AI generation and review your selections</p>\n                </div>\n\n                <div className=\"max-w-3xl mx-auto space-y-8\">\n                  {/* Advanced Options */}\n                  <div className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8\">\n                    <h3 className=\"text-xl font-bold text-white mb-6 flex items-center space-x-2\">\n                      <Settings className=\"w-5 h-5\" />\n                      <span>AI Generation Options</span>\n                    </h3>\n                    \n                    <div className=\"grid md:grid-cols-2 gap-6\">\n                      <div className=\"space-y-4\">\n                        <label className=\"flex items-center space-x-3\">\n                          <input\n                            type=\"checkbox\"\n                            checked={advancedOptions.qualityFilter}\n                            onChange={(e) => setAdvancedOptions({...advancedOptions, qualityFilter: e.target.checked})}\n                            className=\"w-5 h-5 text-yellow-400 bg-white/10 border-white/20 rounded focus:ring-yellow-400\"\n                          />\n                          <div>\n                            <div className=\"text-white font-medium\">Quality Filter</div>\n                            <div className=\"text-white/60 text-sm\">Only show names with 8.0+ brandability score</div>\n                          </div>\n                        </label>\n                        \n                        <label className=\"flex items-center space-x-3\">\n                          <input\n                            type=\"checkbox\"\n                            checked={advancedOptions.includeVariations}\n                            onChange={(e) => setAdvancedOptions({...advancedOptions, includeVariations: e.target.checked})}\n                            className=\"w-5 h-5 text-yellow-400 bg-white/10 border-white/20 rounded focus:ring-yellow-400\"\n                          />\n                          <div>\n                            <div className=\"text-white font-medium\">Include Variations</div>\n                            <div className=\"text-white/60 text-sm\">Generate linguistic variations of keywords</div>\n                          </div>\n                        </label>\n                      </div>\n                      \n                      <div className=\"space-y-4\">\n                        <label className=\"flex items-center space-x-3\">\n                          <input\n                            type=\"checkbox\"\n                            checked={advancedOptions.industryDeepDive}\n                            onChange={(e) => setAdvancedOptions({...advancedOptions, industryDeepDive: e.target.checked})}\n                            className=\"w-5 h-5 text-yellow-400 bg-white/10 border-white/20 rounded focus:ring-yellow-400\"\n                          />\n                          <div>\n                            <div className=\"text-white font-medium\">Industry Deep Dive</div>\n                            <div className=\"text-white/60 text-sm\">Advanced industry-specific analysis</div>\n                          </div>\n                        </label>\n                      </div>\n                    </div>\n                  </div>\n\n                  {/* Review Summary */}\n                  <div className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8\">\n                    <h3 className=\"text-xl font-bold text-white mb-6\">Generation Summary</h3>\n                    \n                    <div className=\"grid md:grid-cols-2 gap-6\">\n                      <div className=\"space-y-4\">\n                        <div className=\"flex justify-between items-center p-3 bg-white/10 rounded-xl\">\n                          <span className=\"text-white/80\">Industry:</span>\n                          <span className=\"font-semibold text-white capitalize\">{formData.industry}</span>\n                        </div>\n                        \n                        <div className=\"flex justify-between items-center p-3 bg-white/10 rounded-xl\">\n                          <span className=\"text-white/80\">Style:</span>\n                          <span className=\"font-semibold text-white capitalize\">{formData.style}</span>\n                        </div>\n                        \n                        <div className=\"flex justify-between items-center p-3 bg-white/10 rounded-xl\">\n                          <span className=\"text-white/80\">Package:</span>\n                          <span className=\"font-semibold text-white\">{packages[selectedPackage].name}</span>\n                        </div>\n                      </div>\n                      \n                      <div className=\"space-y-4\">\n                        <div className=\"p-3 bg-white/10 rounded-xl\">\n                          <span className=\"text-white/80 block mb-2\">Keywords:</span>\n                          <div className=\"flex flex-wrap gap-2\">\n                            {formData.keywords.map(keyword => (\n                              <span key={keyword} className=\"bg-yellow-400/20 text-yellow-300 px-2 py-1 rounded-full text-sm font-medium\">\n                                {keyword}\n                              </span>\n                            ))}\n                          </div>\n                        </div>\n                        \n                        {formData.brandPersonality && formData.brandPersonality.length > 0 && (\n                          <div className=\"p-3 bg-white/10 rounded-xl\">\n                            <span className=\"text-white/80 block mb-2\">Personality:</span>\n                            <div className=\"flex flex-wrap gap-2\">\n                              {formData.brandPersonality.map(personality => (\n                                <span key={personality} className=\"bg-purple-400/20 text-purple-300 px-2 py-1 rounded-full text-sm font-medium\">\n                                  {personality}\n                                </span>\n                              ))}\n                            </div>\n                          </div>\n                        )}\n                      </div>\n                    </div>\n\n                    <div className=\"mt-8 p-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30\">\n                      <h4 className=\"font-bold text-white mb-3 flex items-center space-x-2\">\n                        <Star className=\"w-5 h-5\" />\n                        <span>What you'll get with Enhanced AI:</span>\n                      </h4>\n                      <div className=\"grid md:grid-cols-2 gap-4\">\n                        <ul className=\"space-y-2 text-white/80 text-sm\">\n                          <li className=\"flex items-center space-x-2\">\n                            <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                            <span>{packages[selectedPackage].names} AI-generated names</span>\n                          </li>\n                          <li className=\"flex items-center space-x-2\">\n                            <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                            <span>Advanced brandability scoring</span>\n                          </li>\n                          <li className=\"flex items-center space-x-2\">\n                            <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                            <span>Psychology insights for each name</span>\n                          </li>\n                        </ul>\n                        <ul className=\"space-y-2 text-white/80 text-sm\">\n                          <li className=\"flex items-center space-x-2\">\n                            <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                            <span>Industry-specific analysis</span>\n                          </li>\n                          <li className=\"flex items-center space-x-2\">\n                            <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                            <span>Domain-friendly assessment</span>\n                          </li>\n                          <li className=\"flex items-center space-x-2\">\n                            <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                            <span>Detailed scoring breakdown</span>\n                          </li>\n                        </ul>\n                      </div>\n                    </div>\n                  </div>\n                </div>\n              </motion.div>\n            )}\n          </AnimatePresence>\n\n          {/* Enhanced Navigation */}\n          <div className=\"flex items-center justify-between mt-12\">\n            <button\n              onClick={handleBack}\n              disabled={currentStep === 1}\n              className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${\n                currentStep === 1 \n                  ? 'text-white/40 cursor-not-allowed' \n                  : 'text-white hover:bg-white/10'\n              }`}\n            >\n              <ArrowLeft className=\"w-5 h-5\" />\n              <span>Previous</span>\n            </button>\n\n            <div className=\"flex space-x-2\">\n              {Array.from({ length: totalSteps }, (_, index) => (\n                <div\n                  key={index}\n                  className={`w-3 h-3 rounded-full transition-all duration-300 ${\n                    index + 1 <= currentStep \n                      ? 'bg-yellow-400' \n                      : 'bg-white/30'\n                  }`}\n                />\n              ))}\n            </div>\n\n            <button\n              onClick={handleNext}\n              disabled={!canProceed()}\n              className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${\n                canProceed()\n                  ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600 shadow-lg hover:shadow-xl'\n                  : 'bg-white/20 text-white/40 cursor-not-allowed'\n              }`}\n            >\n              <span>{currentStep === totalSteps ? 'Generate Enhanced Names' : 'Next'}</span>\n              {currentStep === totalSteps ? <Star className=\"w-5 h-5\" /> : <ArrowRight className=\"w-5 h-5\" />}\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// Enhanced Keyword Input Component\nconst KeywordInput = ({ keywords, onAdd, onRemove, maxKeywords = 8 }) => {\n  const [inputValue, setInputValue] = useState('');\n\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    if (inputValue.trim()) {\n      onAdd(inputValue);\n      setInputValue('');\n    }\n  };\n\n  const handleKeyPress = (e) => {\n    if (e.key === 'Enter') {\n      e.preventDefault();\n      handleSubmit(e);\n    }\n  };\n\n  return (\n    <div>\n      <form onSubmit={handleSubmit} className=\"mb-6\">\n        <div className=\"flex space-x-3\">\n          <input\n            type=\"text\"\n            value={inputValue}\n            onChange={(e) => setInputValue(e.target.value)}\n            onKeyPress={handleKeyPress}\n            placeholder=\"Enter a keyword...\"\n            className=\"flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent text-white placeholder-white/50\"\n            maxLength={25}\n          />\n          <button\n            type=\"submit\"\n            disabled={!inputValue.trim() || keywords.length >= maxKeywords}\n            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${\n              inputValue.trim() && keywords.length < maxKeywords\n                ? 'bg-yellow-400 text-black hover:bg-yellow-500'\n                : 'bg-white/20 text-white/40 cursor-not-allowed'\n            }`}\n          >\n            Add\n          </button>\n        </div>\n      </form>\n\n      <div className=\"flex flex-wrap gap-3\">\n        {keywords.map((keyword, index) => (\n          <motion.div\n            key={index}\n            initial={{ opacity: 0, scale: 0.8 }}\n            animate={{ opacity: 1, scale: 1 }}\n            exit={{ opacity: 0, scale: 0.8 }}\n            className=\"flex items-center space-x-2 bg-yellow-400/20 text-yellow-300 px-4 py-2 rounded-full border border-yellow-400/30\"\n          >\n            <span className=\"font-medium\">{keyword}</span>\n            <button\n              onClick={() => onRemove(keyword)}\n              className=\"text-yellow-300/70 hover:text-yellow-300 transition-colors font-bold\"\n            >\n              ×\n            </button>\n          </motion.div>\n        ))}\n      </div>\n\n      <p className=\"text-white/60 text-sm mt-3\">\n        {keywords.length}/{maxKeywords} keywords added\n      </p>\n    </div>\n  );\n};\n\nexport default EnhancedNamingTool;"
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ArrowRight,
+  ArrowLeft,
+  Star,
+  Cpu,
+  Target,
+  Zap,
+  CheckCircle,
+  Lightbulb,
+  Building,
+  Palette,
+  Hash,
+  Clock,
+  AlertCircle,
+  Settings,
+  Filter,
+  BarChart3,
+  Crown
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import enhancedAI from '../services/enhancedAI';
+
+const EnhancedNamingTool = () => {
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [selectedPackage, setSelectedPackage] = useState('professional');
+  const [advancedOptions, setAdvancedOptions] = useState({
+    qualityFilter: true,
+    includeVariations: true,
+    industryDeepDive: true,
+    batchSize: 100
+  });
+  const [formData, setFormData] = useState({
+    keywords: [],
+    industry: '',
+    style: '',
+    description: '',
+    targetAudience: '',
+    brandPersonality: []
+  });
+
+  const totalSteps = 5; // Added advanced options step
+
+  // Enhanced industry options with AI insights
+  const industries = [
+    { 
+      id: 'tech', 
+      name: 'Technology', 
+      icon: 'ð»', 
+      desc: 'SaaS, apps, software platforms',
+      aiInsights: 'AI optimized for tech naming patterns'
+    },
+    { 
+      id: 'health', 
+      name: 'Healthcare', 
+      icon: 'ð¥', 
+      desc: 'Medical, wellness, fitness',
+      aiInsights: 'Trust-focused naming algorithms'
+    },
+    { 
+      id: 'fintech', 
+      name: 'FinTech', 
+      icon: 'ð³', 
+      desc: 'Banking, payments, crypto',
+      aiInsights: 'Security-oriented name generation'
+    },
+    { 
+      id: 'ecommerce', 
+      name: 'E-commerce', 
+      icon: 'ð', 
+      desc: 'Online retail, marketplaces',
+      aiInsights: 'Conversion-optimized naming'
+    },
+    { 
+      id: 'education', 
+      name: 'Education', 
+      icon: 'ð', 
+      desc: 'EdTech, learning, training',
+      aiInsights: 'Authority-building name patterns'
+    },
+    { 
+      id: 'food', 
+      name: 'Food & Beverage', 
+      icon: 'ð½ï¸', 
+      desc: 'Restaurants, delivery, food tech',
+      aiInsights: 'Appetite-appealing linguistics'
+    },
+    { 
+      id: 'travel', 
+      name: 'Travel', 
+      icon: 'âï¸', 
+      desc: 'Tourism, booking, hospitality',
+      aiInsights: 'Adventure-inspiring names'
+    },
+    { 
+      id: 'other', 
+      name: 'Other', 
+      icon: 'ð¯', 
+      desc: 'Tell us more about your industry',
+      aiInsights: 'Custom AI analysis'
+    }
+  ];
+
+  // Enhanced style preferences with psychology insights
+  const styles = [
+    { 
+      id: 'modern', 
+      name: 'Modern', 
+      icon: 'â¡', 
+      desc: 'Clean, tech-forward, innovative',
+      psychology: 'Appeals to early adopters and tech-savvy users'
+    },
+    { 
+      id: 'classic', 
+      name: 'Classic', 
+      icon: 'ðï¸', 
+      desc: 'Timeless, established, trustworthy',
+      psychology: 'Builds trust with traditional audiences'
+    },
+    { 
+      id: 'creative', 
+      name: 'Creative', 
+      icon: 'ð¨', 
+      desc: 'Unique, artistic, memorable',
+      psychology: 'Attracts creative and artistic demographics'
+    },
+    { 
+      id: 'professional', 
+      name: 'Professional', 
+      icon: 'ð¼', 
+      desc: 'Corporate, enterprise-ready',
+      psychology: 'Resonates with B2B and enterprise clients'
+    }
+  ];
+
+  // Package options with enhanced features
+  const packages = {
+    starter: {
+      name: 'Starter',
+      price: 49,
+      originalPrice: 98,
+      names: 50,
+      features: [
+        '50 AI-generated names',
+        'Basic trademark search (US)',
+        'Brand strategy PDF (8 pages)',
+        '3 logo concepts',
+        'Domain availability check',
+        'Basic legal compliance'
+      ],
+      badge: 'BEST VALUE'
+    },
+    professional: {
+      name: 'Professional',
+      price: 79,
+      originalPrice: 158,
+      names: 150,
+      features: [
+        '150 premium AI names',
+        'Global trademark research',
+        'Comprehensive brand strategy (15 pages)',
+        '6 logo concepts + guidelines',
+        'Premium domain suggestions',
+        'Industry compliance review',
+        'Competitor analysis report'
+      ],
+      badge: 'MOST POPULAR'
+    },
+    enterprise: {
+      name: 'Enterprise',
+      price: 159,
+      originalPrice: 318,
+      names: 300,
+      features: [
+        '300 premium quality names',
+        'Global trademark + 6-month monitoring',
+        'Executive brand strategy (25+ pages)',
+        '12 custom logo designs',
+        'Legal compliance (all jurisdictions)',
+        'White-label naming rights',
+        'Priority AI processing',
+        'Custom brand consultation'
+      ],
+      badge: 'ENTERPRISE'
+    }
+  };
+
+  // Brand personality options
+  const brandPersonalities = [
+    { id: 'innovative', name: 'Innovative', icon: 'ð' },
+    { id: 'trustworthy', name: 'Trustworthy', icon: 'ð¡ï¸' },
+    { id: 'friendly', name: 'Friendly', icon: 'ð' },
+    { id: 'premium', name: 'Premium', icon: 'ð' },
+    { id: 'playful', name: 'Playful', icon: 'ð®' },
+    { id: 'sophisticated', name: 'Sophisticated', icon: 'ð©' }
+  ];
+
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      handleGenerate();
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleKeywordAdd = (keyword) => {
+    if (keyword.trim() && formData.keywords.length < 8 && !formData.keywords.includes(keyword.trim())) {
+      setFormData({
+        ...formData,
+        keywords: [...formData.keywords, keyword.trim()]
+      });
+    }
+  };
+
+  const handleKeywordRemove = (keyword) => {
+    setFormData({
+      ...formData,
+      keywords: formData.keywords.filter(k => k !== keyword)
+    });
+  };
+
+  const handlePersonalityToggle = (personality) => {
+    const current = formData.brandPersonality || [];
+    const updated = current.includes(personality)
+      ? current.filter(p => p !== personality)
+      : [...current, personality];
+    
+    setFormData({
+      ...formData,
+      brandPersonality: updated
+    });
+  };
+
+  const handleGenerate = async () => {
+    console.log('ð ENHANCED GENERATE CLICKED - Starting AI process...');
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      console.log('ð Enhanced form data:', formData);
+      console.log('âï¸ Advanced options:', advancedOptions);
+      console.log('ð¦ Selected package:', selectedPackage);
+      
+      // Validate form data
+      if (!formData.industry || !formData.style || formData.keywords.length === 0) {
+        throw new Error('Please complete all required fields');
+      }
+      
+      // Get package configuration
+      const packageConfig = packages[selectedPackage];
+      const nameCount = packageConfig.names;
+      
+      console.log('ð Generating', nameCount, 'names with enhanced AI...');
+      
+      // Generate names using enhanced AI service
+      const result = await enhancedAI.generateBatchNames(formData, {
+        count: nameCount,
+        qualityFilter: advancedOptions.qualityFilter,
+        includeVariations: advancedOptions.includeVariations,
+        industryDeepDive: advancedOptions.industryDeepDive
+      });
+      
+      console.log('â Enhanced AI generation complete:', result);
+      
+      if (!result || !result.names || result.names.length === 0) {
+        throw new Error('No names were generated by enhanced AI');
+      }
+
+      // Create enhanced session data
+      const sessionId = Date.now().toString();
+      const sessionData = {
+        formData,
+        advancedOptions,
+        selectedPackage,
+        packageConfig,
+        results: result.names,
+        metadata: result.metadata,
+        timestamp: new Date().toISOString(),
+        enhanced: true
+      };
+      
+      console.log('ð¾ Saving enhanced session data:', sessionId);
+      
+      // Store in localStorage with enhanced data
+      try {
+        localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));
+        console.log('â Enhanced session data saved');
+        
+        // Verify the data was saved
+        const savedData = localStorage.getItem(`naming_session_${sessionId}`);
+        if (!savedData) {
+          throw new Error('Failed to save enhanced session data');
+        }
+        
+      } catch (storageError) {
+        console.error('â Failed to save to localStorage:', storageError);
+        // Continue anyway - results page can handle missing data
+      }
+
+      console.log('ð§­ Navigating to enhanced results:', `/results/${sessionId}`);
+      
+      // Navigate to results
+      navigate(`/results/${sessionId}`, { replace: true });
+
+    } catch (error) {
+      console.error('â Enhanced name generation failed:', error);
+      setError(error.message || 'Failed to generate names. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  const canProceed = () => {
+    switch (currentStep) {
+      case 1: return formData.industry !== '';
+      case 2: return formData.style !== '';
+      case 3: return formData.keywords.length > 0;
+      case 4: return selectedPackage !== '';
+      case 5: return true;
+      default: return false;
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-20 h-20 bg-gradient-to-r from-white to-purple-200 rounded-full flex items-center justify-center mx-auto mb-8"
+          >
+            <Star className="w-10 h-10 text-purple-900" />
+          </motion.div>
+          <h2 className="text-3xl font-bold text-white mb-4">Enhanced AI is Creating Your Names</h2>
+          <p className="text-white/80 mb-6">Using advanced algorithms to generate {packages[selectedPackage].names} premium startup names...</p>
+          
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
+            <h3 className="text-lg font-semibold text-white mb-4">AI Processing Steps:</h3>
+            <div className="space-y-3">
+              {[
+                'Analyzing industry patterns...',
+                'Processing linguistic structures...',
+                'Applying brand psychology...',
+                'Generating name variants...',
+                'Scoring brandability...',
+                'Ranking by quality...'
+              ].map((step, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 1.2 }}
+                  className="text-left text-white/80 flex items-center space-x-3"
+                >
+                  <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                  <span className="text-sm">{step}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="text-white/60 text-sm">
+            <p>Package: {packages[selectedPackage].name}</p>
+            <p>Names: {packages[selectedPackage].names}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      {/* Enhanced Header */}
+      <div className="px-6 py-6">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+              <Crown className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-white">Enhanced AI Naming</span>
+              <div className="text-yellow-300 text-sm font-semibold">Enterprise-Grade Platform</div>
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => navigate('/')}
+            className="text-white/80 hover:text-white transition-colors"
+          >
+            â Back to Home
+          </button>
+        </div>
+      </div>
+
+      {/* Enhanced Progress Bar */}
+      <div className="px-6 mb-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-white/80">Step {currentStep} of {totalSteps}</span>
+            <span className="text-sm font-medium text-white/80">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+          </div>
+          <div className="w-full bg-white/20 rounded-full h-3">
+            <motion.div
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="px-6 mb-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3">
+              <AlertCircle className="w-5 h-5 text-red-400" />
+              <span className="text-red-200">{error}</span>
+              <button 
+                onClick={() => setError('')}
+                className="ml-auto text-red-400 hover:text-red-200"
+              >
+                Ã
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <div className="px-6 pb-20">
+        <div className="max-w-4xl mx-auto">
+          <AnimatePresence mode="wait">
+            {/* Step 1: Industry Selection (Enhanced) */}
+            {currentStep === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Building className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">What's your industry?</h2>
+                  <p className="text-xl text-white/80">Our enhanced AI understands 50,000+ industry naming patterns</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  {industries.map((industry) => (
+                    <motion.div
+                      key={industry.id}
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-all duration-300 border-2 ${
+                        formData.industry === industry.id 
+                          ? 'border-yellow-400 shadow-lg bg-white/20' 
+                          : 'border-transparent hover:bg-white/15'
+                      }`}
+                      onClick={() => setFormData({...formData, industry: industry.id})}
+                    >
+                      <div className="flex items-start space-x-4">
+                        <div className="text-3xl">{industry.icon}</div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-white mb-1">{industry.name}</h3>
+                          <p className="text-white/70 text-sm mb-2">{industry.desc}</p>
+                          <div className="bg-yellow-400/20 text-yellow-300 px-2 py-1 rounded-full text-xs font-semibold">
+                            {industry.aiInsights}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 2: Style Selection (Enhanced) */}
+            {currentStep === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Palette className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">What's your style?</h2>
+                  <p className="text-xl text-white/80">Choose the brand personality that resonates with your target audience</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  {styles.map((style) => (
+                    <motion.div
+                      key={style.id}
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-8 cursor-pointer transition-all duration-300 border-2 ${
+                        formData.style === style.id 
+                          ? 'border-yellow-400 shadow-lg bg-white/20' 
+                          : 'border-transparent hover:bg-white/15'
+                      }`}
+                      onClick={() => setFormData({...formData, style: style.id})}
+                    >
+                      <div className="text-center">
+                        <div className="text-4xl mb-4">{style.icon}</div>
+                        <h3 className="text-xl font-bold text-white mb-2">{style.name}</h3>
+                        <p className="text-white/70 mb-3">{style.desc}</p>
+                        <div className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs">
+                          {style.psychology}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 3: Keywords & Brand Personality */}
+            {currentStep === 3 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Hash className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">Define your brand</h2>
+                  <p className="text-xl text-white/80">Keywords and personality traits that represent your startup</p>
+                </div>
+
+                <div className="max-w-3xl mx-auto space-y-8">
+                  {/* Keywords Section */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <h3 className="text-xl font-bold text-white mb-4">Keywords (1-8 words)</h3>
+                    <KeywordInput 
+                      keywords={formData.keywords}
+                      onAdd={handleKeywordAdd}
+                      onRemove={handleKeywordRemove}
+                      maxKeywords={8}
+                    />
+                  </div>
+
+                  {/* Brand Personality */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <h3 className="text-xl font-bold text-white mb-4">Brand Personality (Optional)</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {brandPersonalities.map((personality) => (
+                        <button
+                          key={personality.id}
+                          onClick={() => handlePersonalityToggle(personality.id)}
+                          className={`p-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                            formData.brandPersonality?.includes(personality.id)
+                              ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/50'
+                              : 'bg-white/10 text-white/80 hover:bg-white/20'
+                          }`}
+                        >
+                          <div className="text-lg mb-1">{personality.icon}</div>
+                          {personality.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Additional Details */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <h3 className="text-xl font-bold text-white mb-4">Additional Details</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-white font-medium mb-2">
+                          Target Audience (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.targetAudience}
+                          onChange={(e) => setFormData({...formData, targetAudience: e.target.value})}
+                          placeholder="e.g., Small business owners, Tech professionals, Students"
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent text-white placeholder-white/50"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-white font-medium mb-2">
+                          Brief Description (Optional)
+                        </label>
+                        <textarea
+                          value={formData.description}
+                          onChange={(e) => setFormData({...formData, description: e.target.value})}
+                          placeholder="Tell us more about your startup idea..."
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent resize-none text-white placeholder-white/50"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 4: Package Selection */}
+            {currentStep === 4 && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Crown className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">Choose Your Package</h2>
+                  <p className="text-xl text-white/80">Select the level of AI analysis and deliverables you need</p>
+                  
+                  <div className="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 max-w-lg mx-auto mt-6">
+                    <div className="flex items-center justify-center space-x-2 text-yellow-300">
+                      <Clock className="w-5 h-5 animate-pulse" />
+                      <span className="font-bold">LIMITED TIME: 50% OFF ALL PACKAGES</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  {Object.entries(packages).map(([key, pkg]) => (
+                    <motion.div
+                      key={key}
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-all duration-300 border-2 relative ${
+                        selectedPackage === key 
+                          ? 'border-yellow-400 shadow-lg bg-white/20' 
+                          : 'border-transparent hover:bg-white/15'
+                      } ${key === 'professional' ? 'ring-2 ring-yellow-400/50' : ''}`}
+                      onClick={() => setSelectedPackage(key)}
+                    >
+                      {pkg.badge && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-4 py-1 rounded-full font-bold text-xs">
+                            {pkg.badge}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="text-center mb-6 pt-2">
+                        <h3 className="text-xl font-bold text-white mb-2">{pkg.name}</h3>
+                        <div className="text-3xl font-black text-white mb-2">
+                          <span className="line-through text-gray-400 text-lg">${pkg.originalPrice}</span> ${pkg.price}
+                        </div>
+                        <div className="text-green-400 font-semibold text-sm">Save ${pkg.originalPrice - pkg.price}</div>
+                        <div className="text-yellow-300 font-semibold text-sm mt-1">{pkg.names} AI Names</div>
+                      </div>
+                      
+                      <div className="space-y-2 mb-6">
+                        {pkg.features.map((feature, index) => (
+                          <div key={index} className="flex items-center space-x-2">
+                            <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                            <span className="text-white/90 text-sm">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 5: Advanced Options & Review */}
+            {currentStep === 5 && (
+              <motion.div
+                key="step5"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center mb-12">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <Settings className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">Advanced Options & Review</h2>
+                  <p className="text-xl text-white/80">Fine-tune your AI generation and review your selections</p>
+                </div>
+
+                <div className="max-w-3xl mx-auto space-y-8">
+                  {/* Advanced Options */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                      <Settings className="w-5 h-5" />
+                      <span>AI Generation Options</span>
+                    </h3>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <label className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            checked={advancedOptions.qualityFilter}
+                            onChange={(e) => setAdvancedOptions({...advancedOptions, qualityFilter: e.target.checked})}
+                            className="w-5 h-5 text-yellow-400 bg-white/10 border-white/20 rounded focus:ring-yellow-400"
+                          />
+                          <div>
+                            <div className="text-white font-medium">Quality Filter</div>
+                            <div className="text-white/60 text-sm">Only show names with 8.0+ brandability score</div>
+                          </div>
+                        </label>
+                        
+                        <label className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            checked={advancedOptions.includeVariations}
+                            onChange={(e) => setAdvancedOptions({...advancedOptions, includeVariations: e.target.checked})}
+                            className="w-5 h-5 text-yellow-400 bg-white/10 border-white/20 rounded focus:ring-yellow-400"
+                          />
+                          <div>
+                            <div className="text-white font-medium">Include Variations</div>
+                            <div className="text-white/60 text-sm">Generate linguistic variations of keywords</div>
+                          </div>
+                        </label>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <label className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            checked={advancedOptions.industryDeepDive}
+                            onChange={(e) => setAdvancedOptions({...advancedOptions, industryDeepDive: e.target.checked})}
+                            className="w-5 h-5 text-yellow-400 bg-white/10 border-white/20 rounded focus:ring-yellow-400"
+                          />
+                          <div>
+                            <div className="text-white font-medium">Industry Deep Dive</div>
+                            <div className="text-white/60 text-sm">Advanced industry-specific analysis</div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Review Summary */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <h3 className="text-xl font-bold text-white mb-6">Generation Summary</h3>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center p-3 bg-white/10 rounded-xl">
+                          <span className="text-white/80">Industry:</span>
+                          <span className="font-semibold text-white capitalize">{formData.industry}</span>
+                        </div>
+                        
+                        <div className="flex justify-between items-center p-3 bg-white/10 rounded-xl">
+                          <span className="text-white/80">Style:</span>
+                          <span className="font-semibold text-white capitalize">{formData.style}</span>
+                        </div>
+                        
+                        <div className="flex justify-between items-center p-3 bg-white/10 rounded-xl">
+                          <span className="text-white/80">Package:</span>
+                          <span className="font-semibold text-white">{packages[selectedPackage].name}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="p-3 bg-white/10 rounded-xl">
+                          <span className="text-white/80 block mb-2">Keywords:</span>
+                          <div className="flex flex-wrap gap-2">
+                            {formData.keywords.map(keyword => (
+                              <span key={keyword} className="bg-yellow-400/20 text-yellow-300 px-2 py-1 rounded-full text-sm font-medium">
+                                {keyword}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {formData.brandPersonality && formData.brandPersonality.length > 0 && (
+                          <div className="p-3 bg-white/10 rounded-xl">
+                            <span className="text-white/80 block mb-2">Personality:</span>
+                            <div className="flex flex-wrap gap-2">
+                              {formData.brandPersonality.map(personality => (
+                                <span key={personality} className="bg-purple-400/20 text-purple-300 px-2 py-1 rounded-full text-sm font-medium">
+                                  {personality}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="mt-8 p-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
+                      <h4 className="font-bold text-white mb-3 flex items-center space-x-2">
+                        <Star className="w-5 h-5" />
+                        <span>What you'll get with Enhanced AI:</span>
+                      </h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <ul className="space-y-2 text-white/80 text-sm">
+                          <li className="flex items-center space-x-2">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span>{packages[selectedPackage].names} AI-generated names</span>
+                          </li>
+                          <li className="flex items-center space-x-2">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span>Advanced brandability scoring</span>
+                          </li>
+                          <li className="flex items-center space-x-2">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span>Psychology insights for each name</span>
+                          </li>
+                        </ul>
+                        <ul className="space-y-2 text-white/80 text-sm">
+                          <li className="flex items-center space-x-2">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span>Industry-specific analysis</span>
+                          </li>
+                          <li className="flex items-center space-x-2">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span>Domain-friendly assessment</span>
+                          </li>
+                          <li className="flex items-center space-x-2">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span>Detailed scoring breakdown</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Enhanced Navigation */}
+          <div className="flex items-center justify-between mt-12">
+            <button
+              onClick={handleBack}
+              disabled={currentStep === 1}
+              className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                currentStep === 1 
+                  ? 'text-white/40 cursor-not-allowed' 
+                  : 'text-white hover:bg-white/10'
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Previous</span>
+            </button>
+
+            <div className="flex space-x-2">
+              {Array.from({ length: totalSteps }, (_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index + 1 <= currentStep 
+                      ? 'bg-yellow-400' 
+                      : 'bg-white/30'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                canProceed()
+                  ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600 shadow-lg hover:shadow-xl'
+                  : 'bg-white/20 text-white/40 cursor-not-allowed'
+              }`}
+            >
+              <span>{currentStep === totalSteps ? 'Generate Enhanced Names' : 'Next'}</span>
+              {currentStep === totalSteps ? <Star className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Enhanced Keyword Input Component
+const KeywordInput = ({ keywords, onAdd, onRemove, maxKeywords = 8 }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      onAdd(inputValue);
+      setInputValue('');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="mb-6">
+        <div className="flex space-x-3">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Enter a keyword..."
+            className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-yellow-400/50 focus:border-transparent text-white placeholder-white/50"
+            maxLength={25}
+          />
+          <button
+            type="submit"
+            disabled={!inputValue.trim() || keywords.length >= maxKeywords}
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              inputValue.trim() && keywords.length < maxKeywords
+                ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                : 'bg-white/20 text-white/40 cursor-not-allowed'
+            }`}
+          >
+            Add
+          </button>
+        </div>
+      </form>
+
+      <div className="flex flex-wrap gap-3">
+        {keywords.map((keyword, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="flex items-center space-x-2 bg-yellow-400/20 text-yellow-300 px-4 py-2 rounded-full border border-yellow-400/30"
+          >
+            <span className="font-medium">{keyword}</span>
+            <button
+              onClick={() => onRemove(keyword)}
+              className="text-yellow-300/70 hover:text-yellow-300 transition-colors font-bold"
+            >
+              Ã
+            </button>
+          </motion.div>
+        ))}
+      </div>
+
+      <p className="text-white/60 text-sm mt-3">
+        {keywords.length}/{maxKeywords} keywords added
+      </p>
+    </div>
+  );
+};
+
+export default EnhancedNamingTool;

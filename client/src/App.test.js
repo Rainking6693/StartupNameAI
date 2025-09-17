@@ -24,28 +24,26 @@ test('renders without crashing', () => {
   render(<App />);
 });
 
-test('renders application structure', () => {
-  const { container } = render(<App />);
-  
-  // App should render without throwing - this is a basic smoke test
-  // Check that the app rendered some content
-  expect(container.firstChild).toBeTruthy();
-  expect(container.innerHTML.length).toBeGreaterThan(0);
+test('renders key landing content', () => {
+  render(<App />);
+  expect(screen.getByText(/AI Startup Name Generator/i)).toBeInTheDocument();
 });
 
 test('application initializes without critical JavaScript errors', () => {
   const spy = jest.spyOn(console, 'error');
   render(<App />);
-  
+
   // Filter out known React warnings that are not actual errors
   const actualErrors = spy.mock.calls.filter(call => {
     const message = call[0] || '';
-    return !message.includes('Warning:') && 
-           !message.includes('validateDOMNesting') &&
-           !message.includes('React does not recognize') &&
-           message.includes('Error');
+    return (
+      !message.includes('Warning:') &&
+      !message.includes('validateDOMNesting') &&
+      !message.includes('React does not recognize') &&
+      message.includes('Error')
+    );
   });
-  
+
   expect(actualErrors.length).toBe(0);
   spy.mockRestore();
 });

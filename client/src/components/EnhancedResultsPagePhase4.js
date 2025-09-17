@@ -1,1 +1,817 @@
-import React, { useState, useEffect } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { \n  Star, \n  Heart, \n  Download, \n  Share2, \n  ArrowLeft, \n  CheckCircle, \n  Globe, \n  Shield, \n  Zap, \n  Target, \n  Star, \n  TrendingUp,\n  ExternalLink,\n  Clock,\n  AlertCircle,\n  Loader,\n  Copy,\n  FileText,\n  Crown,\n  Lock,\n  Star,\n  Award,\n  Filter,\n  Grid,\n  List,\n  Eye,\n  ThumbsUp\n} from 'lucide-react';\nimport { useParams, useNavigate } from 'react-router-dom';\nimport apiServicePhase3 from '../services/apiPhase3';\n\nconst EnhancedResultsPagePhase4 = () => {\n  const { sessionId } = useParams();\n  const navigate = useNavigate();\n  const [sessionData, setSessionData] = useState(null);\n  const [favorites, setFavorites] = useState([]);\n  const [selectedName, setSelectedName] = useState(null);\n  const [domainResults, setDomainResults] = useState(null);\n  const [isCheckingDomains, setIsCheckingDomains] = useState(false);\n  const [error, setError] = useState('');\n  const [sortBy, setSortBy] = useState('score');\n  const [filterBy, setFilterBy] = useState('all');\n  const [viewMode, setViewMode] = useState('grid'); // grid or list\n  const [showFreemiumModal, setShowFreemiumModal] = useState(false);\n  const [showPackageSelection, setShowPackageSelection] = useState(false);\n  const [copiedName, setCopiedName] = useState(null);\n  const [isExporting, setIsExporting] = useState(false);\n  const [exportFormat, setExportFormat] = useState('pdf');\n\n  // Freemium state\n  const [freeNamesShown, setFreeNamesShown] = useState(10);\n  const [isPremium, setIsPremium] = useState(false);\n\n  useEffect(() => {\n    loadSessionData();\n  }, [sessionId]);\n\n  const loadSessionData = async () => {\n    try {\n      console.log('📋 Loading Phase 4 enhanced session data:', sessionId);\n      \n      // Try backend first, then localStorage fallback\n      const response = await apiServicePhase3.getSessionWithFallback(sessionId);\n      \n      if (response.success) {\n        setSessionData(response.data);\n        console.log('✅ Loaded enhanced session data:', response.data);\n        \n        // Check if user has premium access\n        if (response.data.packageConfig || response.data.isPremium) {\n          setIsPremium(true);\n          setFreeNamesShown(response.data.results?.length || 50);\n        }\n      } else {\n        setError('Session not found. Please generate names again.');\n      }\n    } catch (error) {\n      console.error('❌ Failed to load session data:', error);\n      setError('Failed to load results. Please try again.');\n    }\n  };\n\n  const handleFavorite = (nameData) => {\n    const nameId = nameData.name;\n    setFavorites(prev => \n      prev.includes(nameId) \n        ? prev.filter(f => f !== nameId)\n        : [...prev, nameId]\n    );\n  };\n\n  const handleCopyName = async (name) => {\n    try {\n      await navigator.clipboard.writeText(name);\n      setCopiedName(name);\n      setTimeout(() => setCopiedName(null), 2000);\n    } catch (error) {\n      console.error('Failed to copy name:', error);\n    }\n  };\n\n  const handleViewMore = () => {\n    if (isPremium) {\n      // Show all names for premium users\n      setFreeNamesShown(sessionData.results.length);\n    } else {\n      // Show freemium modal for free users\n      setShowFreemiumModal(true);\n    }\n  };\n\n  const handleUpgrade = () => {\n    setShowFreemiumModal(false);\n    setShowPackageSelection(true);\n  };\n\n  const handleExport = async (format) => {\n    setIsExporting(true);\n    setExportFormat(format);\n    \n    try {\n      console.log(`📄 Exporting results as ${format}...`);\n      \n      const exportData = {\n        sessionId,\n        names: getSortedAndFilteredNames(),\n        formData: sessionData.formData,\n        format,\n        timestamp: new Date().toISOString()\n      };\n      \n      // In a real implementation, this would call the backend export API\n      // For now, we'll simulate the export process\n      await new Promise(resolve => setTimeout(resolve, 2000));\n      \n      console.log('✅ Export completed:', format);\n      \n      // Trigger download (simulated)\n      const filename = `startup-names-${sessionId}.${format}`;\n      console.log(`📥 Download triggered: ${filename}`);\n      \n    } catch (error) {\n      console.error('❌ Export failed:', error);\n      setError(`Failed to export as ${format}. Please try again.`);\n    } finally {\n      setIsExporting(false);\n    }\n  };\n\n  const getSortedAndFilteredNames = () => {\n    if (!sessionData?.results) return [];\n    \n    let filtered = sessionData.results;\n    \n    // Apply filters\n    if (filterBy === 'favorites') {\n      filtered = filtered.filter(name => favorites.includes(name.name));\n    } else if (filterBy === 'high-score') {\n      filtered = filtered.filter(name => name.score >= 8.0);\n    } else if (filterBy === 'premium') {\n      filtered = filtered.filter(name => name.score >= 8.5);\n    }\n    \n    // Apply freemium limit\n    if (!isPremium && filterBy !== 'favorites') {\n      filtered = filtered.slice(0, freeNamesShown);\n    }\n    \n    // Apply sorting\n    return filtered.sort((a, b) => {\n      switch (sortBy) {\n        case 'score':\n          return b.score - a.score;\n        case 'name':\n          return a.name.localeCompare(b.name);\n        case 'memorability':\n          return b.memorability - a.memorability;\n        case 'uniqueness':\n          return b.uniqueness - a.uniqueness;\n        case 'brandability':\n          return b.brandability - a.brandability;\n        default:\n          return 0;\n      }\n    });\n  };\n\n  const getScoreColor = (score) => {\n    if (score >= 9) return 'text-green-400';\n    if (score >= 8) return 'text-blue-400';\n    if (score >= 7) return 'text-yellow-400';\n    return 'text-gray-400';\n  };\n\n  const getScoreLabel = (score) => {\n    if (score >= 9) return 'Excellent';\n    if (score >= 8) return 'Very Good';\n    if (score >= 7) return 'Good';\n    return 'Fair';\n  };\n\n  const getScoreBadge = (score) => {\n    if (score >= 9) return { icon: Crown, label: 'Premium', color: 'bg-yellow-500/20 text-yellow-300' };\n    if (score >= 8) return { icon: Award, label: 'Excellent', color: 'bg-blue-500/20 text-blue-300' };\n    if (score >= 7) return { icon: ThumbsUp, label: 'Good', color: 'bg-green-500/20 text-green-300' };\n    return { icon: Eye, label: 'Fair', color: 'bg-gray-500/20 text-gray-300' };\n  };\n\n  if (error && !sessionData) {\n    return (\n      <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center\">\n        <div className=\"text-center\">\n          <AlertCircle className=\"w-16 h-16 text-red-400 mx-auto mb-4\" />\n          <h2 className=\"text-2xl font-bold text-white mb-2\">Oops! Something went wrong</h2>\n          <p className=\"text-white/80 mb-6\">{error}</p>\n          <button\n            onClick={() => navigate('/naming-tool')}\n            className=\"bg-gradient-to-r from-white to-purple-200 text-purple-900 px-6 py-3 rounded-xl font-semibold hover:from-purple-100 hover:to-purple-300 transition-all duration-300\"\n          >\n            Generate New Names\n          </button>\n        </div>\n      </div>\n    );\n  }\n\n  if (!sessionData) {\n    return (\n      <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center\">\n        <div className=\"text-center\">\n          <Loader className=\"w-8 h-8 text-white animate-spin mx-auto mb-4\" />\n          <p className=\"text-white/80\">Loading your results...</p>\n        </div>\n      </div>\n    );\n  }\n\n  const sortedNames = getSortedAndFilteredNames();\n  const totalNames = sessionData.results?.length || 0;\n  const hasMoreNames = !isPremium && totalNames > freeNamesShown;\n\n  return (\n    <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800\">\n      {/* Enhanced Header */}\n      <div className=\"px-6 py-6\">\n        <div className=\"max-w-7xl mx-auto flex items-center justify-between\">\n          <div className=\"flex items-center space-x-3\">\n            <div className=\"w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center\">\n              <Star className=\"w-6 h-6 text-white\" />\n            </div>\n            <div>\n              <span className=\"text-2xl font-bold text-white\">StartupNamer.org</span>\n              {isPremium && (\n                <div className=\"text-yellow-300 text-sm font-semibold\">Premium Results</div>\n              )}\n            </div>\n          </div>\n          \n          <button \n            onClick={() => navigate('/naming-tool')}\n            className=\"flex items-center space-x-2 text-white/80 hover:text-white transition-colors\"\n          >\n            <ArrowLeft className=\"w-5 h-5\" />\n            <span>Generate New Names</span>\n          </button>\n        </div>\n      </div>\n\n      {/* Enhanced Results Header */}\n      <div className=\"px-6 mb-8\">\n        <div className=\"max-w-7xl mx-auto\">\n          <div className=\"text-center mb-8\">\n            <h1 className=\"text-4xl md:text-5xl font-black text-white mb-4\">\n              Your AI-Generated Names\n            </h1>\n            <p className=\"text-xl text-white/80 mb-4\">\n              {totalNames} intelligent names created for your {sessionData.formData?.industry} startup\n            </p>\n            \n            {!isPremium && (\n              <div className=\"bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl p-4 max-w-2xl mx-auto\">\n                <div className=\"flex items-center justify-center space-x-2 text-yellow-300\">\n                  <Star className=\"w-5 h-5\" />\n                  <span className=\"font-semibold\">Showing {freeNamesShown} of {totalNames} names</span>\n                </div>\n                <p className=\"text-yellow-200/80 text-sm mt-2\">\n                  Upgrade to see all {totalNames} names with advanced features\n                </p>\n              </div>\n            )}\n          </div>\n\n          {/* Enhanced Filters and Controls */}\n          <div className=\"flex flex-wrap items-center justify-between gap-4 mb-8\">\n            <div className=\"flex items-center space-x-4\">\n              <select\n                value={sortBy}\n                onChange={(e) => setSortBy(e.target.value)}\n                className=\"bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-yellow-400/50\"\n              >\n                <option value=\"score\">Sort by Overall Score</option>\n                <option value=\"name\">Sort by Name</option>\n                <option value=\"memorability\">Sort by Memorability</option>\n                <option value=\"uniqueness\">Sort by Uniqueness</option>\n                <option value=\"brandability\">Sort by Brandability</option>\n              </select>\n              \n              <select\n                value={filterBy}\n                onChange={(e) => setFilterBy(e.target.value)}\n                className=\"bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-yellow-400/50\"\n              >\n                <option value=\"all\">All Names</option>\n                <option value=\"high-score\">High Score (8.0+)</option>\n                <option value=\"premium\">Premium Quality (8.5+)</option>\n                <option value=\"favorites\">Favorites ({favorites.length})</option>\n              </select>\n              \n              <div className=\"flex items-center bg-white/10 rounded-lg p-1\">\n                <button\n                  onClick={() => setViewMode('grid')}\n                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white/20 text-white' : 'text-white/60'}`}\n                >\n                  <Grid className=\"w-4 h-4\" />\n                </button>\n                <button\n                  onClick={() => setViewMode('list')}\n                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-white/20 text-white' : 'text-white/60'}`}\n                >\n                  <List className=\"w-4 h-4\" />\n                </button>\n              </div>\n            </div>\n            \n            <div className=\"flex items-center space-x-2\">\n              <div className=\"flex items-center bg-white/10 rounded-lg\">\n                <button \n                  onClick={() => handleExport('pdf')}\n                  disabled={isExporting}\n                  className=\"flex items-center space-x-2 px-4 py-2 text-white hover:bg-white/20 transition-colors rounded-l-lg disabled:opacity-50\"\n                >\n                  {isExporting && exportFormat === 'pdf' ? (\n                    <Loader className=\"w-4 h-4 animate-spin\" />\n                  ) : (\n                    <FileText className=\"w-4 h-4\" />\n                  )}\n                  <span>PDF</span>\n                </button>\n                <button \n                  onClick={() => handleExport('csv')}\n                  disabled={isExporting}\n                  className=\"flex items-center space-x-2 px-4 py-2 text-white hover:bg-white/20 transition-colors rounded-r-lg disabled:opacity-50\"\n                >\n                  {isExporting && exportFormat === 'csv' ? (\n                    <Loader className=\"w-4 h-4 animate-spin\" />\n                  ) : (\n                    <Download className=\"w-4 h-4\" />\n                  )}\n                  <span>CSV</span>\n                </button>\n              </div>\n              \n              <button className=\"flex items-center space-x-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-white transition-colors\">\n                <Share2 className=\"w-4 h-4\" />\n                <span>Share</span>\n              </button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      {/* Error Display */}\n      {error && (\n        <div className=\"px-6 mb-8\">\n          <div className=\"max-w-7xl mx-auto\">\n            <motion.div\n              initial={{ opacity: 0, y: -10 }}\n              animate={{ opacity: 1, y: 0 }}\n              className=\"bg-red-500/20 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3\"\n            >\n              <AlertCircle className=\"w-5 h-5 text-red-400\" />\n              <span className=\"text-red-200\">{error}</span>\n              <button \n                onClick={() => setError('')}\n                className=\"ml-auto text-red-400 hover:text-red-200\"\n              >\n                ×\n              </button>\n            </motion.div>\n          </div>\n        </div>\n      )}\n\n      {/* Enhanced Names Display */}\n      <div className=\"px-6 pb-20\">\n        <div className=\"max-w-7xl mx-auto\">\n          {viewMode === 'grid' ? (\n            <div className=\"grid md:grid-cols-2 lg:grid-cols-3 gap-6\">\n              {sortedNames.map((nameData, index) => (\n                <NameCard \n                  key={index}\n                  nameData={nameData}\n                  index={index}\n                  favorites={favorites}\n                  onFavorite={handleFavorite}\n                  onCopy={handleCopyName}\n                  copiedName={copiedName}\n                  getScoreColor={getScoreColor}\n                  getScoreLabel={getScoreLabel}\n                  getScoreBadge={getScoreBadge}\n                  isPremium={isPremium}\n                />\n              ))}\n            </div>\n          ) : (\n            <div className=\"space-y-4\">\n              {sortedNames.map((nameData, index) => (\n                <NameListItem \n                  key={index}\n                  nameData={nameData}\n                  index={index}\n                  favorites={favorites}\n                  onFavorite={handleFavorite}\n                  onCopy={handleCopyName}\n                  copiedName={copiedName}\n                  getScoreColor={getScoreColor}\n                  getScoreLabel={getScoreLabel}\n                  getScoreBadge={getScoreBadge}\n                  isPremium={isPremium}\n                />\n              ))}\n            </div>\n          )}\n          \n          {/* View More Button */}\n          {hasMoreNames && (\n            <div className=\"text-center mt-12\">\n              <motion.button\n                whileHover={{ scale: 1.05 }}\n                whileTap={{ scale: 0.95 }}\n                onClick={handleViewMore}\n                className=\"bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 shadow-lg\"\n              >\n                <div className=\"flex items-center space-x-3\">\n                  <Lock className=\"w-5 h-5\" />\n                  <span>Unlock {totalNames - freeNamesShown} More Premium Names</span>\n                  <Star className=\"w-5 h-5\" />\n                </div>\n              </motion.button>\n              <p className=\"text-white/60 text-sm mt-3\">\n                See all {totalNames} AI-generated names with advanced scoring\n              </p>\n            </div>\n          )}\n        </div>\n      </div>\n\n      {/* Freemium Modal */}\n      <FreemiumModal \n        show={showFreemiumModal}\n        onClose={() => setShowFreemiumModal(false)}\n        onUpgrade={handleUpgrade}\n        totalNames={totalNames}\n        freeNamesShown={freeNamesShown}\n      />\n\n      {/* Package Selection Modal */}\n      <PackageSelectionModal \n        show={showPackageSelection}\n        onClose={() => setShowPackageSelection(false)}\n        sessionData={sessionData}\n      />\n    </div>\n  );\n};\n\n// Enhanced Name Card Component\nconst NameCard = ({ nameData, index, favorites, onFavorite, onCopy, copiedName, getScoreColor, getScoreLabel, getScoreBadge, isPremium }) => {\n  const badge = getScoreBadge(nameData.score);\n  const BadgeIcon = badge.icon;\n  \n  return (\n    <motion.div\n      initial={{ opacity: 0, y: 20 }}\n      animate={{ opacity: 1, y: 0 }}\n      transition={{ delay: index * 0.05 }}\n      className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 group\"\n    >\n      {/* Name Header with Badge */}\n      <div className=\"flex items-center justify-between mb-4\">\n        <div className=\"flex-1\">\n          <h3 className=\"text-2xl font-bold text-white mb-2\">{nameData.name}</h3>\n          <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold ${badge.color}`}>\n            <BadgeIcon className=\"w-3 h-3\" />\n            <span>{badge.label}</span>\n          </div>\n        </div>\n        <div className=\"flex items-center space-x-2\">\n          <button\n            onClick={() => onCopy(nameData.name)}\n            className=\"p-2 rounded-lg bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-colors\"\n          >\n            {copiedName === nameData.name ? (\n              <CheckCircle className=\"w-4 h-4 text-green-400\" />\n            ) : (\n              <Copy className=\"w-4 h-4\" />\n            )}\n          </button>\n          <button\n            onClick={() => onFavorite(nameData)}\n            className={`p-2 rounded-lg transition-colors ${\n              favorites.includes(nameData.name)\n                ? 'bg-red-500/20 text-red-400'\n                : 'bg-white/10 text-white/60 hover:text-white hover:bg-white/20'\n            }`}\n          >\n            <Heart className={`w-4 h-4 ${favorites.includes(nameData.name) ? 'fill-current' : ''}`} />\n          </button>\n        </div>\n      </div>\n\n      {/* Enhanced Overall Score */}\n      <div className=\"flex items-center justify-between mb-4\">\n        <span className=\"text-white/80\">Overall Score:</span>\n        <div className=\"flex items-center space-x-2\">\n          <span className={`text-3xl font-bold ${getScoreColor(nameData.score)}`}>\n            {nameData.score}\n          </span>\n          <span className={`text-sm ${getScoreColor(nameData.score)}`}>\n            {getScoreLabel(nameData.score)}\n          </span>\n        </div>\n      </div>\n\n      {/* Enhanced Detailed Scores */}\n      <div className=\"space-y-3 mb-4\">\n        {[\n          { label: 'Memorability', value: nameData.memorability, icon: Star },\n          { label: 'Pronunciation', value: nameData.pronunciation, icon: Target },\n          { label: 'Uniqueness', value: nameData.uniqueness, icon: Zap },\n          { label: 'Brandability', value: nameData.brandability, icon: TrendingUp }\n        ].map((metric, idx) => (\n          <div key={idx} className=\"flex items-center justify-between\">\n            <div className=\"flex items-center space-x-2\">\n              <metric.icon className=\"w-4 h-4 text-white/60\" />\n              <span className=\"text-white/80 text-sm\">{metric.label}:</span>\n            </div>\n            <div className=\"flex items-center space-x-2\">\n              <div className=\"w-20 bg-gray-700 rounded-full h-2\">\n                <div \n                  className={`h-2 rounded-full transition-all duration-500 ${getScoreColor(metric.value).replace('text-', 'bg-')}`}\n                  style={{width: `${metric.value * 10}%`}}\n                ></div>\n              </div>\n              <span className={`text-sm font-semibold ${getScoreColor(metric.value)} min-w-[2rem]`}>\n                {metric.value}\n              </span>\n            </div>\n          </div>\n        ))}\n      </div>\n\n      {/* Description */}\n      <p className=\"text-white/70 text-sm mb-4\">{nameData.description}</p>\n      \n      {/* Reasoning */}\n      <p className=\"text-white/60 text-xs mb-6 italic\">{nameData.reasoning}</p>\n\n      {/* Action Buttons */}\n      <div className=\"space-y-3\">\n        <button className=\"w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300\">\n          <Globe className=\"w-4 h-4\" />\n          <span>Check Domains</span>\n        </button>\n        \n        {isPremium && (\n          <button className=\"w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300\">\n            <Shield className=\"w-4 h-4\" />\n            <span>Reserve Domain</span>\n          </button>\n        )}\n      </div>\n    </motion.div>\n  );\n};\n\n// Enhanced Name List Item Component\nconst NameListItem = ({ nameData, index, favorites, onFavorite, onCopy, copiedName, getScoreColor, getScoreLabel, getScoreBadge, isPremium }) => {\n  const badge = getScoreBadge(nameData.score);\n  const BadgeIcon = badge.icon;\n  \n  return (\n    <motion.div\n      initial={{ opacity: 0, x: -20 }}\n      animate={{ opacity: 1, x: 0 }}\n      transition={{ delay: index * 0.02 }}\n      className=\"bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300\"\n    >\n      <div className=\"flex items-center justify-between\">\n        <div className=\"flex items-center space-x-6 flex-1\">\n          <div className=\"flex-1\">\n            <div className=\"flex items-center space-x-3 mb-2\">\n              <h3 className=\"text-xl font-bold text-white\">{nameData.name}</h3>\n              <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold ${badge.color}`}>\n                <BadgeIcon className=\"w-3 h-3\" />\n                <span>{badge.label}</span>\n              </div>\n            </div>\n            <p className=\"text-white/70 text-sm\">{nameData.description}</p>\n          </div>\n          \n          <div className=\"flex items-center space-x-4\">\n            <div className=\"text-center\">\n              <div className={`text-2xl font-bold ${getScoreColor(nameData.score)}`}>\n                {nameData.score}\n              </div>\n              <div className=\"text-white/60 text-xs\">Overall</div>\n            </div>\n            \n            <div className=\"flex space-x-3\">\n              {[\n                { label: 'Mem', value: nameData.memorability },\n                { label: 'Pro', value: nameData.pronunciation },\n                { label: 'Uniq', value: nameData.uniqueness },\n                { label: 'Brand', value: nameData.brandability }\n              ].map((metric, idx) => (\n                <div key={idx} className=\"text-center\">\n                  <div className={`text-sm font-semibold ${getScoreColor(metric.value)}`}>\n                    {metric.value}\n                  </div>\n                  <div className=\"text-white/60 text-xs\">{metric.label}</div>\n                </div>\n              ))}\n            </div>\n          </div>\n        </div>\n        \n        <div className=\"flex items-center space-x-2 ml-6\">\n          <button\n            onClick={() => onCopy(nameData.name)}\n            className=\"p-2 rounded-lg bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-colors\"\n          >\n            {copiedName === nameData.name ? (\n              <CheckCircle className=\"w-4 h-4 text-green-400\" />\n            ) : (\n              <Copy className=\"w-4 h-4\" />\n            )}\n          </button>\n          <button\n            onClick={() => onFavorite(nameData)}\n            className={`p-2 rounded-lg transition-colors ${\n              favorites.includes(nameData.name)\n                ? 'bg-red-500/20 text-red-400'\n                : 'bg-white/10 text-white/60 hover:text-white hover:bg-white/20'\n            }`}\n          >\n            <Heart className={`w-4 h-4 ${favorites.includes(nameData.name) ? 'fill-current' : ''}`} />\n          </button>\n        </div>\n      </div>\n    </motion.div>\n  );\n};\n\n// Freemium Modal Component\nconst FreemiumModal = ({ show, onClose, onUpgrade, totalNames, freeNamesShown }) => {\n  if (!show) return null;\n  \n  return (\n    <AnimatePresence>\n      <motion.div\n        initial={{ opacity: 0 }}\n        animate={{ opacity: 1 }}\n        exit={{ opacity: 0 }}\n        className=\"fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-6 z-50\"\n        onClick={onClose}\n      >\n        <motion.div\n          initial={{ scale: 0.9, opacity: 0 }}\n          animate={{ scale: 1, opacity: 1 }}\n          exit={{ scale: 0.9, opacity: 0 }}\n          className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-md w-full border border-white/20\"\n          onClick={(e) => e.stopPropagation()}\n        >\n          <div className=\"text-center\">\n            <div className=\"w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6\">\n              <Crown className=\"w-8 h-8 text-white\" />\n            </div>\n            \n            <h3 className=\"text-2xl font-bold text-white mb-4\">Unlock All Premium Names</h3>\n            <p className=\"text-white/80 mb-6\">\n              You've seen {freeNamesShown} of {totalNames} AI-generated names. Upgrade to access all premium names with advanced features.\n            </p>\n            \n            <div className=\"bg-white/10 rounded-xl p-4 mb-6\">\n              <h4 className=\"font-bold text-white mb-3\">Premium Features:</h4>\n              <div className=\"space-y-2 text-sm text-white/80\">\n                <div className=\"flex items-center space-x-2\">\n                  <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                  <span>All {totalNames} premium quality names</span>\n                </div>\n                <div className=\"flex items-center space-x-2\">\n                  <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                  <span>Advanced brandability analysis</span>\n                </div>\n                <div className=\"flex items-center space-x-2\">\n                  <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                  <span>Domain checking & reservation</span>\n                </div>\n                <div className=\"flex items-center space-x-2\">\n                  <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                  <span>PDF & CSV export</span>\n                </div>\n              </div>\n            </div>\n            \n            <div className=\"space-y-3\">\n              <button\n                onClick={onUpgrade}\n                className=\"w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-xl font-bold hover:from-yellow-600 hover:to-orange-600 transition-all duration-300\"\n              >\n                Upgrade Now - $2.99\n              </button>\n              \n              <button\n                onClick={onClose}\n                className=\"w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300\"\n              >\n                Maybe Later\n              </button>\n            </div>\n          </div>\n        </motion.div>\n      </motion.div>\n    </AnimatePresence>\n  );\n};\n\n// Package Selection Modal Component\nconst PackageSelectionModal = ({ show, onClose, sessionData }) => {\n  if (!show) return null;\n  \n  const packages = {\n    basic: {\n      name: 'Basic',\n      price: 2.99,\n      features: ['All generated names', 'Basic export', 'Domain suggestions']\n    },\n    premium: {\n      name: 'Premium', \n      price: 9.99,\n      features: ['All generated names', 'Advanced analysis', 'Domain checking', 'PDF export', 'Priority support']\n    },\n    enterprise: {\n      name: 'Enterprise',\n      price: 29.99, \n      features: ['All features', 'Custom branding', 'API access', 'Dedicated support']\n    }\n  };\n  \n  return (\n    <AnimatePresence>\n      <motion.div\n        initial={{ opacity: 0 }}\n        animate={{ opacity: 1 }}\n        exit={{ opacity: 0 }}\n        className=\"fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-6 z-50\"\n        onClick={onClose}\n      >\n        <motion.div\n          initial={{ scale: 0.9, opacity: 0 }}\n          animate={{ scale: 1, opacity: 1 }}\n          exit={{ scale: 0.9, opacity: 0 }}\n          className=\"bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-4xl w-full border border-white/20 max-h-[80vh] overflow-y-auto\"\n          onClick={(e) => e.stopPropagation()}\n        >\n          <div className=\"text-center mb-8\">\n            <h3 className=\"text-3xl font-bold text-white mb-4\">Choose Your Package</h3>\n            <p className=\"text-white/80\">Unlock the full potential of your startup names</p>\n          </div>\n          \n          <div className=\"grid md:grid-cols-3 gap-6\">\n            {Object.entries(packages).map(([key, pkg]) => (\n              <div key={key} className=\"bg-white/10 rounded-xl p-6 border border-white/20\">\n                <h4 className=\"text-xl font-bold text-white mb-2\">{pkg.name}</h4>\n                <div className=\"text-3xl font-bold text-white mb-4\">${pkg.price}</div>\n                <div className=\"space-y-2 mb-6\">\n                  {pkg.features.map((feature, idx) => (\n                    <div key={idx} className=\"flex items-center space-x-2\">\n                      <CheckCircle className=\"w-4 h-4 text-green-400\" />\n                      <span className=\"text-white/80 text-sm\">{feature}</span>\n                    </div>\n                  ))}\n                </div>\n                <button className=\"w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300\">\n                  Select {pkg.name}\n                </button>\n              </div>\n            ))}\n          </div>\n          \n          <div className=\"text-center mt-8\">\n            <button\n              onClick={onClose}\n              className=\"text-white/60 hover:text-white transition-colors\"\n            >\n              Close\n            </button>\n          </div>\n        </motion.div>\n      </motion.div>\n    </AnimatePresence>\n  );\n};\n\nexport default EnhancedResultsPagePhase4;"
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Star,
+  Heart,
+  Download,
+  Share2,
+  ArrowLeft,
+  CheckCircle,
+  Globe,
+  Shield,
+  Zap,
+  Target,
+  TrendingUp,
+  ExternalLink,
+  Clock,
+  AlertCircle,
+  Loader,
+  Copy,
+  FileText,
+  Crown,
+  Lock,
+  Award,
+  Filter,
+  Grid,
+  List,
+  Eye,
+  ThumbsUp
+} from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import apiServicePhase3 from '../services/apiPhase3';
+
+const EnhancedResultsPagePhase4 = () => {
+  const { sessionId } = useParams();
+  const navigate = useNavigate();
+  const [sessionData, setSessionData] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+  const [selectedName, setSelectedName] = useState(null);
+  const [domainResults, setDomainResults] = useState(null);
+  const [isCheckingDomains, setIsCheckingDomains] = useState(false);
+  const [error, setError] = useState('');
+  const [sortBy, setSortBy] = useState('score');
+  const [filterBy, setFilterBy] = useState('all');
+  const [viewMode, setViewMode] = useState('grid'); // grid or list
+  const [showFreemiumModal, setShowFreemiumModal] = useState(false);
+  const [showPackageSelection, setShowPackageSelection] = useState(false);
+  const [copiedName, setCopiedName] = useState(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportFormat, setExportFormat] = useState('pdf');
+
+  // Freemium state
+  const [freeNamesShown, setFreeNamesShown] = useState(10);
+  const [isPremium, setIsPremium] = useState(false);
+
+  useEffect(() => {
+    loadSessionData();
+  }, [sessionId]);
+
+  const loadSessionData = async () => {
+    try {
+      console.log('ð Loading Phase 4 enhanced session data:', sessionId);
+      
+      // Try backend first, then localStorage fallback
+      const response = await apiServicePhase3.getSessionWithFallback(sessionId);
+      
+      if (response.success) {
+        setSessionData(response.data);
+        console.log('â Loaded enhanced session data:', response.data);
+        
+        // Check if user has premium access
+        if (response.data.packageConfig || response.data.isPremium) {
+          setIsPremium(true);
+          setFreeNamesShown(response.data.results?.length || 50);
+        }
+      } else {
+        setError('Session not found. Please generate names again.');
+      }
+    } catch (error) {
+      console.error('â Failed to load session data:', error);
+      setError('Failed to load results. Please try again.');
+    }
+  };
+
+  const handleFavorite = (nameData) => {
+    const nameId = nameData.name;
+    setFavorites(prev => 
+      prev.includes(nameId) 
+        ? prev.filter(f => f !== nameId)
+        : [...prev, nameId]
+    );
+  };
+
+  const handleCopyName = async (name) => {
+    try {
+      await navigator.clipboard.writeText(name);
+      setCopiedName(name);
+      setTimeout(() => setCopiedName(null), 2000);
+    } catch (error) {
+      console.error('Failed to copy name:', error);
+    }
+  };
+
+  const handleViewMore = () => {
+    if (isPremium) {
+      // Show all names for premium users
+      setFreeNamesShown(sessionData.results.length);
+    } else {
+      // Show freemium modal for free users
+      setShowFreemiumModal(true);
+    }
+  };
+
+  const handleUpgrade = () => {
+    setShowFreemiumModal(false);
+    setShowPackageSelection(true);
+  };
+
+  const handleExport = async (format) => {
+    setIsExporting(true);
+    setExportFormat(format);
+    
+    try {
+      console.log(`ð Exporting results as ${format}...`);
+      
+      const exportData = {
+        sessionId,
+        names: getSortedAndFilteredNames(),
+        formData: sessionData.formData,
+        format,
+        timestamp: new Date().toISOString()
+      };
+      
+      // In a real implementation, this would call the backend export API
+      // For now, we'll simulate the export process
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      console.log('â Export completed:', format);
+      
+      // Trigger download (simulated)
+      const filename = `startup-names-${sessionId}.${format}`;
+      console.log(`ð¥ Download triggered: ${filename}`);
+      
+    } catch (error) {
+      console.error('â Export failed:', error);
+      setError(`Failed to export as ${format}. Please try again.`);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const getSortedAndFilteredNames = () => {
+    if (!sessionData?.results) return [];
+    
+    let filtered = sessionData.results;
+    
+    // Apply filters
+    if (filterBy === 'favorites') {
+      filtered = filtered.filter(name => favorites.includes(name.name));
+    } else if (filterBy === 'high-score') {
+      filtered = filtered.filter(name => name.score >= 8.0);
+    } else if (filterBy === 'premium') {
+      filtered = filtered.filter(name => name.score >= 8.5);
+    }
+    
+    // Apply freemium limit
+    if (!isPremium && filterBy !== 'favorites') {
+      filtered = filtered.slice(0, freeNamesShown);
+    }
+    
+    // Apply sorting
+    return filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'score':
+          return b.score - a.score;
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'memorability':
+          return b.memorability - a.memorability;
+        case 'uniqueness':
+          return b.uniqueness - a.uniqueness;
+        case 'brandability':
+          return b.brandability - a.brandability;
+        default:
+          return 0;
+      }
+    });
+  };
+
+  const getScoreColor = (score) => {
+    if (score >= 9) return 'text-green-400';
+    if (score >= 8) return 'text-blue-400';
+    if (score >= 7) return 'text-yellow-400';
+    return 'text-gray-400';
+  };
+
+  const getScoreLabel = (score) => {
+    if (score >= 9) return 'Excellent';
+    if (score >= 8) return 'Very Good';
+    if (score >= 7) return 'Good';
+    return 'Fair';
+  };
+
+  const getScoreBadge = (score) => {
+    if (score >= 9) return { icon: Crown, label: 'Premium', color: 'bg-yellow-500/20 text-yellow-300' };
+    if (score >= 8) return { icon: Award, label: 'Excellent', color: 'bg-blue-500/20 text-blue-300' };
+    if (score >= 7) return { icon: ThumbsUp, label: 'Good', color: 'bg-green-500/20 text-green-300' };
+    return { icon: Eye, label: 'Fair', color: 'bg-gray-500/20 text-gray-300' };
+  };
+
+  if (error && !sessionData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-2">Oops! Something went wrong</h2>
+          <p className="text-white/80 mb-6">{error}</p>
+          <button
+            onClick={() => navigate('/naming-tool')}
+            className="bg-gradient-to-r from-white to-purple-200 text-purple-900 px-6 py-3 rounded-xl font-semibold hover:from-purple-100 hover:to-purple-300 transition-all duration-300"
+          >
+            Generate New Names
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!sessionData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
+        <div className="text-center">
+          <Loader className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
+          <p className="text-white/80">Loading your results...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const sortedNames = getSortedAndFilteredNames();
+  const totalNames = sessionData.results?.length || 0;
+  const hasMoreNames = !isPremium && totalNames > freeNamesShown;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      {/* Enhanced Header */}
+      <div className="px-6 py-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+              <Star className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-white">StartupNamer.org</span>
+              {isPremium && (
+                <div className="text-yellow-300 text-sm font-semibold">Premium Results</div>
+              )}
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => navigate('/naming-tool')}
+            className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Generate New Names</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Enhanced Results Header */}
+      <div className="px-6 mb-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
+              Your AI-Generated Names
+            </h1>
+            <p className="text-xl text-white/80 mb-4">
+              {totalNames} intelligent names created for your {sessionData.formData?.industry} startup
+            </p>
+            
+            {!isPremium && (
+              <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl p-4 max-w-2xl mx-auto">
+                <div className="flex items-center justify-center space-x-2 text-yellow-300">
+                  <Star className="w-5 h-5" />
+                  <span className="font-semibold">Showing {freeNamesShown} of {totalNames} names</span>
+                </div>
+                <p className="text-yellow-200/80 text-sm mt-2">
+                  Upgrade to see all {totalNames} names with advanced features
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Enhanced Filters and Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+            <div className="flex items-center space-x-4">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-yellow-400/50"
+              >
+                <option value="score">Sort by Overall Score</option>
+                <option value="name">Sort by Name</option>
+                <option value="memorability">Sort by Memorability</option>
+                <option value="uniqueness">Sort by Uniqueness</option>
+                <option value="brandability">Sort by Brandability</option>
+              </select>
+              
+              <select
+                value={filterBy}
+                onChange={(e) => setFilterBy(e.target.value)}
+                className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-yellow-400/50"
+              >
+                <option value="all">All Names</option>
+                <option value="high-score">High Score (8.0+)</option>
+                <option value="premium">Premium Quality (8.5+)</option>
+                <option value="favorites">Favorites ({favorites.length})</option>
+              </select>
+              
+              <div className="flex items-center bg-white/10 rounded-lg p-1">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white/20 text-white' : 'text-white/60'}`}
+                >
+                  <Grid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded ${viewMode === 'list' ? 'bg-white/20 text-white' : 'text-white/60'}`}
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center bg-white/10 rounded-lg">
+                <button 
+                  onClick={() => handleExport('pdf')}
+                  disabled={isExporting}
+                  className="flex items-center space-x-2 px-4 py-2 text-white hover:bg-white/20 transition-colors rounded-l-lg disabled:opacity-50"
+                >
+                  {isExporting && exportFormat === 'pdf' ? (
+                    <Loader className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <FileText className="w-4 h-4" />
+                  )}
+                  <span>PDF</span>
+                </button>
+                <button 
+                  onClick={() => handleExport('csv')}
+                  disabled={isExporting}
+                  className="flex items-center space-x-2 px-4 py-2 text-white hover:bg-white/20 transition-colors rounded-r-lg disabled:opacity-50"
+                >
+                  {isExporting && exportFormat === 'csv' ? (
+                    <Loader className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Download className="w-4 h-4" />
+                  )}
+                  <span>CSV</span>
+                </button>
+              </div>
+              
+              <button className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-white transition-colors">
+                <Share2 className="w-4 h-4" />
+                <span>Share</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="px-6 mb-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 flex items-center space-x-3"
+            >
+              <AlertCircle className="w-5 h-5 text-red-400" />
+              <span className="text-red-200">{error}</span>
+              <button 
+                onClick={() => setError('')}
+                className="ml-auto text-red-400 hover:text-red-200"
+              >
+                Ã
+              </button>
+            </motion.div>
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced Names Display */}
+      <div className="px-6 pb-20">
+        <div className="max-w-7xl mx-auto">
+          {viewMode === 'grid' ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedNames.map((nameData, index) => (
+                <NameCard 
+                  key={index}
+                  nameData={nameData}
+                  index={index}
+                  favorites={favorites}
+                  onFavorite={handleFavorite}
+                  onCopy={handleCopyName}
+                  copiedName={copiedName}
+                  getScoreColor={getScoreColor}
+                  getScoreLabel={getScoreLabel}
+                  getScoreBadge={getScoreBadge}
+                  isPremium={isPremium}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {sortedNames.map((nameData, index) => (
+                <NameListItem 
+                  key={index}
+                  nameData={nameData}
+                  index={index}
+                  favorites={favorites}
+                  onFavorite={handleFavorite}
+                  onCopy={handleCopyName}
+                  copiedName={copiedName}
+                  getScoreColor={getScoreColor}
+                  getScoreLabel={getScoreLabel}
+                  getScoreBadge={getScoreBadge}
+                  isPremium={isPremium}
+                />
+              ))}
+            </div>
+          )}
+          
+          {/* View More Button */}
+          {hasMoreNames && (
+            <div className="text-center mt-12">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleViewMore}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 shadow-lg"
+              >
+                <div className="flex items-center space-x-3">
+                  <Lock className="w-5 h-5" />
+                  <span>Unlock {totalNames - freeNamesShown} More Premium Names</span>
+                  <Star className="w-5 h-5" />
+                </div>
+              </motion.button>
+              <p className="text-white/60 text-sm mt-3">
+                See all {totalNames} AI-generated names with advanced scoring
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Freemium Modal */}
+      <FreemiumModal 
+        show={showFreemiumModal}
+        onClose={() => setShowFreemiumModal(false)}
+        onUpgrade={handleUpgrade}
+        totalNames={totalNames}
+        freeNamesShown={freeNamesShown}
+      />
+
+      {/* Package Selection Modal */}
+      <PackageSelectionModal 
+        show={showPackageSelection}
+        onClose={() => setShowPackageSelection(false)}
+        sessionData={sessionData}
+      />
+    </div>
+  );
+};
+
+// Enhanced Name Card Component
+const NameCard = ({ nameData, index, favorites, onFavorite, onCopy, copiedName, getScoreColor, getScoreLabel, getScoreBadge, isPremium }) => {
+  const badge = getScoreBadge(nameData.score);
+  const BadgeIcon = badge.icon;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 group"
+    >
+      {/* Name Header with Badge */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex-1">
+          <h3 className="text-2xl font-bold text-white mb-2">{nameData.name}</h3>
+          <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold ${badge.color}`}>
+            <BadgeIcon className="w-3 h-3" />
+            <span>{badge.label}</span>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => onCopy(nameData.name)}
+            className="p-2 rounded-lg bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-colors"
+          >
+            {copiedName === nameData.name ? (
+              <CheckCircle className="w-4 h-4 text-green-400" />
+            ) : (
+              <Copy className="w-4 h-4" />
+            )}
+          </button>
+          <button
+            onClick={() => onFavorite(nameData)}
+            className={`p-2 rounded-lg transition-colors ${
+              favorites.includes(nameData.name)
+                ? 'bg-red-500/20 text-red-400'
+                : 'bg-white/10 text-white/60 hover:text-white hover:bg-white/20'
+            }`}
+          >
+            <Heart className={`w-4 h-4 ${favorites.includes(nameData.name) ? 'fill-current' : ''}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Enhanced Overall Score */}
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-white/80">Overall Score:</span>
+        <div className="flex items-center space-x-2">
+          <span className={`text-3xl font-bold ${getScoreColor(nameData.score)}`}>
+            {nameData.score}
+          </span>
+          <span className={`text-sm ${getScoreColor(nameData.score)}`}>
+            {getScoreLabel(nameData.score)}
+          </span>
+        </div>
+      </div>
+
+      {/* Enhanced Detailed Scores */}
+      <div className="space-y-3 mb-4">
+        {[
+          { label: 'Memorability', value: nameData.memorability, icon: Star },
+          { label: 'Pronunciation', value: nameData.pronunciation, icon: Target },
+          { label: 'Uniqueness', value: nameData.uniqueness, icon: Zap },
+          { label: 'Brandability', value: nameData.brandability, icon: TrendingUp }
+        ].map((metric, idx) => (
+          <div key={idx} className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <metric.icon className="w-4 h-4 text-white/60" />
+              <span className="text-white/80 text-sm">{metric.label}:</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-20 bg-gray-700 rounded-full h-2">
+                <div 
+                  className={`h-2 rounded-full transition-all duration-500 ${getScoreColor(metric.value).replace('text-', 'bg-')}`}
+                  style={{width: `${metric.value * 10}%`}}
+                ></div>
+              </div>
+              <span className={`text-sm font-semibold ${getScoreColor(metric.value)} min-w-[2rem]`}>
+                {metric.value}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Description */}
+      <p className="text-white/70 text-sm mb-4">{nameData.description}</p>
+      
+      {/* Reasoning */}
+      <p className="text-white/60 text-xs mb-6 italic">{nameData.reasoning}</p>
+
+      {/* Action Buttons */}
+      <div className="space-y-3">
+        <button className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300">
+          <Globe className="w-4 h-4" />
+          <span>Check Domains</span>
+        </button>
+        
+        {isPremium && (
+          <button className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300">
+            <Shield className="w-4 h-4" />
+            <span>Reserve Domain</span>
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+// Enhanced Name List Item Component
+const NameListItem = ({ nameData, index, favorites, onFavorite, onCopy, copiedName, getScoreColor, getScoreLabel, getScoreBadge, isPremium }) => {
+  const badge = getScoreBadge(nameData.score);
+  const BadgeIcon = badge.icon;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.02 }}
+      className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-6 flex-1">
+          <div className="flex-1">
+            <div className="flex items-center space-x-3 mb-2">
+              <h3 className="text-xl font-bold text-white">{nameData.name}</h3>
+              <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold ${badge.color}`}>
+                <BadgeIcon className="w-3 h-3" />
+                <span>{badge.label}</span>
+              </div>
+            </div>
+            <p className="text-white/70 text-sm">{nameData.description}</p>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <div className="text-center">
+              <div className={`text-2xl font-bold ${getScoreColor(nameData.score)}`}>
+                {nameData.score}
+              </div>
+              <div className="text-white/60 text-xs">Overall</div>
+            </div>
+            
+            <div className="flex space-x-3">
+              {[
+                { label: 'Mem', value: nameData.memorability },
+                { label: 'Pro', value: nameData.pronunciation },
+                { label: 'Uniq', value: nameData.uniqueness },
+                { label: 'Brand', value: nameData.brandability }
+              ].map((metric, idx) => (
+                <div key={idx} className="text-center">
+                  <div className={`text-sm font-semibold ${getScoreColor(metric.value)}`}>
+                    {metric.value}
+                  </div>
+                  <div className="text-white/60 text-xs">{metric.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-2 ml-6">
+          <button
+            onClick={() => onCopy(nameData.name)}
+            className="p-2 rounded-lg bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-colors"
+          >
+            {copiedName === nameData.name ? (
+              <CheckCircle className="w-4 h-4 text-green-400" />
+            ) : (
+              <Copy className="w-4 h-4" />
+            )}
+          </button>
+          <button
+            onClick={() => onFavorite(nameData)}
+            className={`p-2 rounded-lg transition-colors ${
+              favorites.includes(nameData.name)
+                ? 'bg-red-500/20 text-red-400'
+                : 'bg-white/10 text-white/60 hover:text-white hover:bg-white/20'
+            }`}
+          >
+            <Heart className={`w-4 h-4 ${favorites.includes(nameData.name) ? 'fill-current' : ''}`} />
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Freemium Modal Component
+const FreemiumModal = ({ show, onClose, onUpgrade, totalNames, freeNamesShown }) => {
+  if (!show) return null;
+  
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-6 z-50"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-md w-full border border-white/20"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Crown className="w-8 h-8 text-white" />
+            </div>
+            
+            <h3 className="text-2xl font-bold text-white mb-4">Unlock All Premium Names</h3>
+            <p className="text-white/80 mb-6">
+              You've seen {freeNamesShown} of {totalNames} AI-generated names. Upgrade to access all premium names with advanced features.
+            </p>
+            
+            <div className="bg-white/10 rounded-xl p-4 mb-6">
+              <h4 className="font-bold text-white mb-3">Premium Features:</h4>
+              <div className="space-y-2 text-sm text-white/80">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>All {totalNames} premium quality names</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>Advanced brandability analysis</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>Domain checking & reservation</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>PDF & CSV export</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <button
+                onClick={onUpgrade}
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-xl font-bold hover:from-yellow-600 hover:to-orange-600 transition-all duration-300"
+              >
+                Upgrade Now - $2.99
+              </button>
+              
+              <button
+                onClick={onClose}
+                className="w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+              >
+                Maybe Later
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+// Package Selection Modal Component
+const PackageSelectionModal = ({ show, onClose, sessionData }) => {
+  if (!show) return null;
+  
+  const packages = {
+    basic: {
+      name: 'Basic',
+      price: 2.99,
+      features: ['All generated names', 'Basic export', 'Domain suggestions']
+    },
+    premium: {
+      name: 'Premium', 
+      price: 9.99,
+      features: ['All generated names', 'Advanced analysis', 'Domain checking', 'PDF export', 'Priority support']
+    },
+    enterprise: {
+      name: 'Enterprise',
+      price: 29.99, 
+      features: ['All features', 'Custom branding', 'API access', 'Dedicated support']
+    }
+  };
+  
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-6 z-50"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-4xl w-full border border-white/20 max-h-[80vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-bold text-white mb-4">Choose Your Package</h3>
+            <p className="text-white/80">Unlock the full potential of your startup names</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {Object.entries(packages).map(([key, pkg]) => (
+              <div key={key} className="bg-white/10 rounded-xl p-6 border border-white/20">
+                <h4 className="text-xl font-bold text-white mb-2">{pkg.name}</h4>
+                <div className="text-3xl font-bold text-white mb-4">${pkg.price}</div>
+                <div className="space-y-2 mb-6">
+                  {pkg.features.map((feature, idx) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <span className="text-white/80 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300">
+                  Select {pkg.name}
+                </button>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-8">
+            <button
+              onClick={onClose}
+              className="text-white/60 hover:text-white transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+export default EnhancedResultsPagePhase4;

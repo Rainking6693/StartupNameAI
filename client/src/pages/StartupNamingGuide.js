@@ -1,1 +1,438 @@
-import React from 'react';\nimport { Link } from 'react-router-dom';\nimport SEOHelmet from '../components/SEOHelmet';\nimport {\n  Star,\n  Target,\n  Shield,\n  Globe,\n  CheckCircle,\n  ArrowRight,\n  Lightbulb,\n  Users,\n  TrendingUp,\n  AlertTriangle,\n  BookOpen,\n  Star\n} from 'lucide-react';\n\nconst StartupNamingGuide = () => {\n  const tableOfContents = [\n    { id: 'psychology', title: 'Psychology of Startup Names', icon: Star },\n    { id: 'methodologies', title: 'Naming Methodologies & Frameworks', icon: Target },\n    { id: 'industry-specific', title: 'Industry-Specific Strategies', icon: Users },\n    { id: 'legal', title: 'Legal Considerations & Trademarks', icon: Shield },\n    { id: 'domain-strategy', title: 'Domain Strategy & Selection', icon: Globe },\n    { id: 'testing', title: 'Testing & Validation', icon: CheckCircle },\n    { id: 'mistakes', title: 'Common Naming Mistakes', icon: AlertTriangle },\n    { id: 'examples', title: 'Successful Name Examples', icon: Star }\n  ];\n\n  const namingMethodologies = [\n    {\n      name: 'Descriptive Naming',\n      description: 'Names that clearly describe what the company does',\n      examples: ['PayPal', 'Facebook', 'LinkedIn'],\n      pros: ['Clear communication', 'Easy to understand', 'SEO benefits'],\n      cons: ['Limited scalability', 'Generic feel', 'Hard to trademark']\n    },\n    {\n      name: 'Abstract Naming',\n      description: 'Invented or abstract names with no direct meaning',\n      examples: ['Google', 'Kodak', 'Xerox'],\n      pros: ['Highly brandable', 'Easy to trademark', 'Memorable'],\n      cons: ['Requires marketing investment', 'Initial confusion', 'Harder to understand']\n    },\n    {\n      name: 'Metaphorical Naming',\n      description: 'Names that use metaphors or analogies',\n      examples: ['Apple', 'Amazon', 'Tesla'],\n      pros: ['Emotional connection', 'Memorable', 'Storytelling potential'],\n      cons: ['Cultural sensitivity', 'Interpretation varies', 'May limit perception']\n    },\n    {\n      name: 'Compound Naming',\n      description: 'Combining two or more words',\n      examples: ['Microsoft', 'Facebook', 'YouTube'],\n      pros: ['Clear meaning', 'Brandable', 'Descriptive'],\n      cons: ['Can be long', 'Domain availability', 'Pronunciation issues']\n    }\n  ];\n\n  const industryStrategies = [\n    {\n      industry: 'Technology',\n      characteristics: ['Innovation-focused', 'Future-oriented', 'Technical credibility'],\n      examples: ['Nvidia', 'Palantir', 'Anthropic'],\n      tips: ['Use tech-related metaphors', 'Consider invented words', 'Emphasize innovation']\n    },\n    {\n      industry: 'Healthcare',\n      characteristics: ['Trust-building', 'Professional', 'Care-oriented'],\n      examples: ['Moderna', 'Illumina', 'Veracyte'],\n      tips: ['Emphasize trust and care', 'Use Latin roots', 'Avoid scary connotations']\n    },\n    {\n      industry: 'Fintech',\n      characteristics: ['Security-focused', 'Trust-building', 'Professional'],\n      examples: ['Stripe', 'Plaid', 'Robinhood'],\n      tips: ['Convey security and trust', 'Use financial metaphors', 'Avoid risky associations']\n    },\n    {\n      industry: 'SaaS',\n      characteristics: ['Productivity-focused', 'Efficiency', 'Professional'],\n      examples: ['Slack', 'Notion', 'Figma'],\n      tips: ['Emphasize productivity', 'Use action words', 'Consider workflow metaphors']\n    }\n  ];\n\n  const commonMistakes = [\n    {\n      mistake: 'Being Too Descriptive',\n      description: 'Names that are overly literal and limit future growth',\n      example: 'BookStore.com (limits to just books)',\n      solution: 'Choose names that allow for business evolution'\n    },\n    {\n      mistake: 'Ignoring Domain Availability',\n      description: 'Falling in love with a name without checking domains',\n      example: 'Perfect name but .com costs $50,000',\n      solution: 'Always check domain availability early in the process'\n    },\n    {\n      mistake: 'Cultural Insensitivity',\n      description: 'Names that have negative meanings in other languages',\n      example: 'Chevy Nova (\"no va\" means \"doesn\\'t go\" in Spanish)',\n      solution: 'Research international meanings and cultural implications'\n    },\n    {\n      mistake: 'Trademark Conflicts',\n      description: 'Not researching existing trademarks',\n      example: 'Using a name already trademarked in your industry',\n      solution: 'Conduct thorough trademark searches before finalizing'\n    },\n    {\n      mistake: 'Hard to Pronounce',\n      description: 'Names that are difficult to say or spell',\n      example: 'Xobni (inbox backwards - confusing)',\n      solution: 'Test pronunciation with diverse groups'\n    }\n  ];\n\n  return (\n    <>\n      <SEOHelmet page=\"namingGuide\" />\n      \n      <div className=\"min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100\">\n        {/* Hero Section */}\n        <section className=\"relative py-20 overflow-hidden\">\n          <div className=\"absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-pink-600/5\"></div>\n          \n          <div className=\"container relative\">\n            <div className=\"text-center max-w-4xl mx-auto\">\n              <div className=\"flex items-center justify-center mb-6\">\n                <div className=\"w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl\">\n                  <BookOpen className=\"w-8 h-8 text-white\" />\n                </div>\n              </div>\n              \n              <h1 className=\"text-4xl md:text-6xl font-bold text-slate-800 mb-6\">\n                The Complete\n                <span className=\"bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent\"> Startup Naming Guide</span>\n              </h1>\n              \n              <p className=\"text-xl text-slate-600 mb-10 leading-relaxed\">\n                Master the art and science of startup naming. Learn proven methodologies, avoid common pitfalls, and create names that drive business success.\n              </p>\n              \n              <div className=\"flex flex-col sm:flex-row gap-4 justify-center\">\n                <Link\n                  to=\"/naming-tool\"\n                  className=\"bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-xl\"\n                >\n                  <Lightbulb className=\"w-5 h-5 mr-2 inline\" />\n                  Try Our AI Name Generator\n                </Link>\n                <a\n                  href=\"#psychology\"\n                  className=\"bg-white/20 backdrop-blur-sm border border-white/30 text-slate-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/30 transition-all duration-300\"\n                >\n                  Start Reading Guide\n                  <ArrowRight className=\"w-5 h-5 ml-2 inline\" />\n                </a>\n              </div>\n            </div>\n          </div>\n        </section>\n\n        {/* Table of Contents */}\n        <section className=\"py-16\">\n          <div className=\"container\">\n            <div className=\"max-w-4xl mx-auto\">\n              <h2 className=\"text-3xl font-bold text-slate-800 mb-8 text-center\">Table of Contents</h2>\n              \n              <div className=\"grid md:grid-cols-2 gap-4\">\n                {tableOfContents.map((item, index) => (\n                  <a\n                    key={index}\n                    href={`#${item.id}`}\n                    className=\"flex items-center p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105\"\n                  >\n                    <div className=\"w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4\">\n                      <item.icon className=\"w-6 h-6 text-white\" />\n                    </div>\n                    <div>\n                      <h3 className=\"font-semibold text-slate-800\">{item.title}</h3>\n                      <p className=\"text-sm text-slate-600\">Chapter {index + 1}</p>\n                    </div>\n                  </a>\n                ))}\n              </div>\n            </div>\n          </div>\n        </section>\n\n        {/* Psychology Section */}\n        <section id=\"psychology\" className=\"py-16 bg-white\">\n          <div className=\"container\">\n            <div className=\"max-w-4xl mx-auto\">\n              <div className=\"flex items-center mb-8\">\n                <div className=\"w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4\">\n                  <Star className=\"w-6 h-6 text-white\" />\n                </div>\n                <h2 className=\"text-3xl font-bold text-slate-800\">Psychology of Startup Names</h2>\n              </div>\n              \n              <div className=\"prose prose-lg max-w-none\">\n                <p className=\"text-slate-600 leading-relaxed mb-6\">\n                  The psychology behind startup names is crucial for brand success. Research shows that memorable names increase brand recall by 67% and can impact customer perception within 50 milliseconds of exposure. Understanding the psychological principles behind effective naming can give your startup a significant competitive advantage.\n                </p>\n                \n                <h3 className=\"text-2xl font-bold text-slate-800 mb-4\">Cognitive Processing and Memory</h3>\n                <p className=\"text-slate-600 leading-relaxed mb-6\">\n                  Human brains process names through multiple cognitive pathways. Short, phonetically simple names are easier to remember and pronounce, leading to better word-of-mouth marketing. Names with 1-3 syllables perform best in recall tests, while names with familiar phonetic patterns feel more trustworthy to consumers.\n                </p>\n                \n                <h3 className=\"text-2xl font-bold text-slate-800 mb-4\">Emotional Associations</h3>\n                <p className=\"text-slate-600 leading-relaxed mb-6\">\n                  Names trigger emotional responses that influence purchasing decisions. Positive emotional associations can increase customer loyalty by up to 40%. Consider how names like \"Apple\" evoke freshness and simplicity, while \"Amazon\" suggests vastness and abundance.\n                </p>\n                \n                <div className=\"bg-blue-50 border-l-4 border-blue-500 p-6 my-8\">\n                  <h4 className=\"font-bold text-blue-800 mb-2\">💡 Pro Tip: The Mere Exposure Effect</h4>\n                  <p className=\"text-blue-700\">\n                    People develop preferences for things they're familiar with. This is why consistent use of your startup name across all touchpoints is crucial for building brand recognition and trust.\n                  </p>\n                </div>\n                \n                <h3 className=\"text-2xl font-bold text-slate-800 mb-4\">Cultural and Linguistic Considerations</h3>\n                <p className=\"text-slate-600 leading-relaxed mb-6\">\n                  Names carry cultural baggage that can help or hurt your brand. Research shows that names with positive connotations in the target market's native language perform 23% better in brand recognition tests. Always research your name's meaning across different languages and cultures, especially if you plan to expand internationally.\n                </p>\n              </div>\n            </div>\n          </div>\n        </section>\n\n        {/* Methodologies Section */}\n        <section id=\"methodologies\" className=\"py-16\">\n          <div className=\"container\">\n            <div className=\"max-w-6xl mx-auto\">\n              <div className=\"flex items-center mb-8\">\n                <div className=\"w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4\">\n                  <Target className=\"w-6 h-6 text-white\" />\n                </div>\n                <h2 className=\"text-3xl font-bold text-slate-800\">Naming Methodologies & Frameworks</h2>\n              </div>\n              \n              <p className=\"text-slate-600 leading-relaxed mb-8\">\n                There are four primary methodologies for creating startup names, each with distinct advantages and challenges. Understanding these approaches will help you choose the right strategy for your business.\n              </p>\n              \n              <div className=\"grid md:grid-cols-2 gap-8\">\n                {namingMethodologies.map((method, index) => (\n                  <div key={index} className=\"bg-white rounded-2xl p-6 shadow-lg\">\n                    <h3 className=\"text-xl font-bold text-slate-800 mb-3\">{method.name}</h3>\n                    <p className=\"text-slate-600 mb-4\">{method.description}</p>\n                    \n                    <div className=\"mb-4\">\n                      <h4 className=\"font-semibold text-slate-700 mb-2\">Examples:</h4>\n                      <div className=\"flex flex-wrap gap-2\">\n                        {method.examples.map((example, idx) => (\n                          <span key={idx} className=\"bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium\">\n                            {example}\n                          </span>\n                        ))}\n                      </div>\n                    </div>\n                    \n                    <div className=\"grid grid-cols-2 gap-4\">\n                      <div>\n                        <h4 className=\"font-semibold text-green-700 mb-2\">Pros:</h4>\n                        <ul className=\"text-sm text-slate-600 space-y-1\">\n                          {method.pros.map((pro, idx) => (\n                            <li key={idx} className=\"flex items-start\">\n                              <CheckCircle className=\"w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0\" />\n                              {pro}\n                            </li>\n                          ))}\n                        </ul>\n                      </div>\n                      \n                      <div>\n                        <h4 className=\"font-semibold text-red-700 mb-2\">Cons:</h4>\n                        <ul className=\"text-sm text-slate-600 space-y-1\">\n                          {method.cons.map((con, idx) => (\n                            <li key={idx} className=\"flex items-start\">\n                              <AlertTriangle className=\"w-4 h-4 text-red-500 mr-2 mt-0.5 flex-shrink-0\" />\n                              {con}\n                            </li>\n                          ))}\n                        </ul>\n                      </div>\n                    </div>\n                  </div>\n                ))}\n              </div>\n            </div>\n          </div>\n        </section>\n\n        {/* Industry-Specific Section */}\n        <section id=\"industry-specific\" className=\"py-16 bg-white\">\n          <div className=\"container\">\n            <div className=\"max-w-6xl mx-auto\">\n              <div className=\"flex items-center mb-8\">\n                <div className=\"w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4\">\n                  <Users className=\"w-6 h-6 text-white\" />\n                </div>\n                <h2 className=\"text-3xl font-bold text-slate-800\">Industry-Specific Naming Strategies</h2>\n              </div>\n              \n              <p className=\"text-slate-600 leading-relaxed mb-8\">\n                Different industries have unique naming conventions and audience expectations. Tailoring your naming strategy to your industry can significantly improve market acceptance and brand recognition.\n              </p>\n              \n              <div className=\"grid md:grid-cols-2 gap-8\">\n                {industryStrategies.map((strategy, index) => (\n                  <div key={index} className=\"bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 border border-slate-200\">\n                    <h3 className=\"text-xl font-bold text-slate-800 mb-3\">{strategy.industry}</h3>\n                    \n                    <div className=\"mb-4\">\n                      <h4 className=\"font-semibold text-slate-700 mb-2\">Key Characteristics:</h4>\n                      <ul className=\"text-sm text-slate-600 space-y-1\">\n                        {strategy.characteristics.map((char, idx) => (\n                          <li key={idx} className=\"flex items-start\">\n                            <TrendingUp className=\"w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0\" />\n                            {char}\n                          </li>\n                        ))}\n                      </ul>\n                    </div>\n                    \n                    <div className=\"mb-4\">\n                      <h4 className=\"font-semibold text-slate-700 mb-2\">Successful Examples:</h4>\n                      <div className=\"flex flex-wrap gap-2\">\n                        {strategy.examples.map((example, idx) => (\n                          <span key={idx} className=\"bg-white text-slate-800 px-3 py-1 rounded-full text-sm font-medium border\">\n                            {example}\n                          </span>\n                        ))}\n                      </div>\n                    </div>\n                    \n                    <div>\n                      <h4 className=\"font-semibold text-slate-700 mb-2\">Naming Tips:</h4>\n                      <ul className=\"text-sm text-slate-600 space-y-1\">\n                        {strategy.tips.map((tip, idx) => (\n                          <li key={idx} className=\"flex items-start\">\n                            <Lightbulb className=\"w-4 h-4 text-yellow-500 mr-2 mt-0.5 flex-shrink-0\" />\n                            {tip}\n                          </li>\n                        ))}\n                      </ul>\n                    </div>\n                  </div>\n                ))}\n              </div>\n            </div>\n          </div>\n        </section>\n\n        {/* Common Mistakes Section */}\n        <section id=\"mistakes\" className=\"py-16\">\n          <div className=\"container\">\n            <div className=\"max-w-6xl mx-auto\">\n              <div className=\"flex items-center mb-8\">\n                <div className=\"w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center mr-4\">\n                  <AlertTriangle className=\"w-6 h-6 text-white\" />\n                </div>\n                <h2 className=\"text-3xl font-bold text-slate-800\">Common Naming Mistakes to Avoid</h2>\n              </div>\n              \n              <p className=\"text-slate-600 leading-relaxed mb-8\">\n                Learning from others' mistakes can save you time, money, and potential legal issues. Here are the most common naming pitfalls and how to avoid them.\n              </p>\n              \n              <div className=\"space-y-6\">\n                {commonMistakes.map((mistake, index) => (\n                  <div key={index} className=\"bg-white rounded-2xl p-6 shadow-lg border-l-4 border-red-500\">\n                    <div className=\"flex items-start\">\n                      <div className=\"w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-4 mt-1\">\n                        <AlertTriangle className=\"w-5 h-5 text-red-600\" />\n                      </div>\n                      <div className=\"flex-1\">\n                        <h3 className=\"text-xl font-bold text-slate-800 mb-2\">{mistake.mistake}</h3>\n                        <p className=\"text-slate-600 mb-3\">{mistake.description}</p>\n                        \n                        <div className=\"bg-red-50 rounded-lg p-3 mb-3\">\n                          <h4 className=\"font-semibold text-red-800 mb-1\">Example:</h4>\n                          <p className=\"text-red-700 text-sm\">{mistake.example}</p>\n                        </div>\n                        \n                        <div className=\"bg-green-50 rounded-lg p-3\">\n                          <h4 className=\"font-semibold text-green-800 mb-1\">Solution:</h4>\n                          <p className=\"text-green-700 text-sm\">{mistake.solution}</p>\n                        </div>\n                      </div>\n                    </div>\n                  </div>\n                ))}\n              </div>\n            </div>\n          </div>\n        </section>\n\n        {/* CTA Section */}\n        <section className=\"py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white\">\n          <div className=\"container text-center\">\n            <h2 className=\"text-3xl md:text-5xl font-bold mb-6\">\n              Ready to Name Your Startup?\n            </h2>\n            <p className=\"text-xl mb-10 opacity-90 max-w-2xl mx-auto\">\n              Put these naming principles into practice with our AI-powered startup name generator. Create memorable, brandable names in seconds.\n            </p>\n            \n            <div className=\"flex flex-col sm:flex-row gap-4 justify-center\">\n              <Link\n                to=\"/naming-tool\"\n                className=\"bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-xl\"\n              >\n                <Lightbulb className=\"w-5 h-5 mr-2 inline\" />\n                Generate Names with AI\n              </Link>\n              <Link\n                to=\"/examples\"\n                className=\"bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/30 transition-all duration-300\"\n              >\n                Browse Name Examples\n                <ArrowRight className=\"w-5 h-5 ml-2 inline\" />\n              </Link>\n            </div>\n          </div>\n        </section>\n      </div>\n    </>\n  );\n};\n\nexport default StartupNamingGuide;"
+import React from 'react';
+import { Link } from 'react-router-dom';
+import SEOHelmet from '../components/SEOHelmet';
+import { 
+  Star,
+  Target,
+  Shield,
+  Globe,
+  CheckCircle,
+  ArrowRight,
+  Lightbulb,
+  Users,
+  TrendingUp,
+  AlertTriangle,
+  BookOpen
+} from 'lucide-react';
+
+const StartupNamingGuide = () => {
+  const tableOfContents = [
+    { id: 'psychology', title: 'Psychology of Startup Names', icon: Star },
+    { id: 'methodologies', title: 'Naming Methodologies & Frameworks', icon: Target },
+    { id: 'industry-specific', title: 'Industry-Specific Strategies', icon: Users },
+    { id: 'legal', title: 'Legal Considerations & Trademarks', icon: Shield },
+    { id: 'domain-strategy', title: 'Domain Strategy & Selection', icon: Globe },
+    { id: 'testing', title: 'Testing & Validation', icon: CheckCircle },
+    { id: 'mistakes', title: 'Common Naming Mistakes', icon: AlertTriangle },
+    { id: 'examples', title: 'Successful Name Examples', icon: Star }
+  ];
+
+  const namingMethodologies = [
+    {
+      name: 'Descriptive Naming',
+      description: 'Names that clearly describe what the company does',
+      examples: ['PayPal', 'Facebook', 'LinkedIn'],
+      pros: ['Clear communication', 'Easy to understand', 'SEO benefits'],
+      cons: ['Limited scalability', 'Generic feel', 'Hard to trademark']
+    },
+    {
+      name: 'Abstract Naming',
+      description: 'Invented or abstract names with no direct meaning',
+      examples: ['Google', 'Kodak', 'Xerox'],
+      pros: ['Highly brandable', 'Easy to trademark', 'Memorable'],
+      cons: ['Requires marketing investment', 'Initial confusion', 'Harder to understand']
+    },
+    {
+      name: 'Metaphorical Naming',
+      description: 'Names that use metaphors or analogies',
+      examples: ['Apple', 'Amazon', 'Tesla'],
+      pros: ['Emotional connection', 'Memorable', 'Storytelling potential'],
+      cons: ['Cultural sensitivity', 'Interpretation varies', 'May limit perception']
+    },
+    {
+      name: 'Compound Naming',
+      description: 'Combining two or more words',
+      examples: ['Microsoft', 'Facebook', 'YouTube'],
+      pros: ['Clear meaning', 'Brandable', 'Descriptive'],
+      cons: ['Can be long', 'Domain availability', 'Pronunciation issues']
+    }
+  ];
+
+  const industryStrategies = [
+    {
+      industry: 'Technology',
+      characteristics: ['Innovation-focused', 'Future-oriented', 'Technical credibility'],
+      examples: ['Nvidia', 'Palantir', 'Anthropic'],
+      tips: ['Use tech-related metaphors', 'Consider invented words', 'Emphasize innovation']
+    },
+    {
+      industry: 'Healthcare',
+      characteristics: ['Trust-building', 'Professional', 'Care-oriented'],
+      examples: ['Moderna', 'Illumina', 'Veracyte'],
+      tips: ['Emphasize trust and care', 'Use Latin roots', 'Avoid scary connotations']
+    },
+    {
+      industry: 'Fintech',
+      characteristics: ['Security-focused', 'Trust-building', 'Professional'],
+      examples: ['Stripe', 'Plaid', 'Robinhood'],
+      tips: ['Convey security and trust', 'Use financial metaphors', 'Avoid risky associations']
+    },
+    {
+      industry: 'SaaS',
+      characteristics: ['Productivity-focused', 'Efficiency', 'Professional'],
+      examples: ['Slack', 'Notion', 'Figma'],
+      tips: ['Emphasize productivity', 'Use action words', 'Consider workflow metaphors']
+    }
+  ];
+
+  const commonMistakes = [
+    {
+      mistake: 'Being Too Descriptive',
+      description: 'Names that are overly literal and limit future growth',
+      example: 'BookStore.com (limits to just books)',
+      solution: 'Choose names that allow for business evolution'
+    },
+    {
+      mistake: 'Ignoring Domain Availability',
+      description: 'Falling in love with a name without checking domains',
+      example: 'Perfect name but .com costs $50,000',
+      solution: 'Always check domain availability early in the process'
+    },
+    {
+      mistake: 'Cultural Insensitivity',
+      description: 'Names that have negative meanings in other languages',
+      example: 'Chevy Nova ("no va" means "doesn\'t go" in Spanish)',
+      solution: 'Research international meanings and cultural implications'
+    },
+    {
+      mistake: 'Trademark Conflicts',
+      description: 'Not researching existing trademarks',
+      example: 'Using a name already trademarked in your industry',
+      solution: 'Conduct thorough trademark searches before finalizing'
+    },
+    {
+      mistake: 'Hard to Pronounce',
+      description: 'Names that are difficult to say or spell',
+      example: 'Xobni (inbox backwards - confusing)',
+      solution: 'Test pronunciation with diverse groups'
+    }
+  ];
+
+  return (
+    <>
+      <SEOHelmet page="namingGuide" />
+      
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        {/* Hero Section */}
+        <section className="relative py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-pink-600/5"></div>
+          
+          <div className="container relative">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                  <BookOpen className="w-8 h-8 text-white" />
+                </div>
+              </div>
+              
+              <h1 className="text-4xl md:text-6xl font-bold text-slate-800 mb-6">
+                The Complete
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Startup Naming Guide</span>
+              </h1>
+              
+              <p className="text-xl text-slate-600 mb-10 leading-relaxed">
+                Master the art and science of startup naming. Learn proven methodologies, avoid common pitfalls, and create names that drive business success.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/naming-tool"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                >
+                  <Lightbulb className="w-5 h-5 mr-2 inline" />
+                  Try Our AI Name Generator
+                </Link>
+                <a
+                  href="#psychology"
+                  className="bg-white/20 backdrop-blur-sm border border-white/30 text-slate-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/30 transition-all duration-300"
+                >
+                  Start Reading Guide
+                  <ArrowRight className="w-5 h-5 ml-2 inline" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Table of Contents */}
+        <section className="py-16">
+          <div className="container">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold text-slate-800 mb-8 text-center">Table of Contents</h2>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                {tableOfContents.map((item, index) => (
+                  <a
+                    key={index}
+                    href={`#${item.id}`}
+                    className="flex items-center p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+                      <item.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-slate-800">{item.title}</h3>
+                      <p className="text-sm text-slate-600">Chapter {index + 1}</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Psychology Section */}
+        <section id="psychology" className="py-16 bg-white">
+          <div className="container">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+                  <Star className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-slate-800">Psychology of Startup Names</h2>
+              </div>
+              
+              <div className="prose prose-lg max-w-none">
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  The psychology behind startup names is crucial for brand success. Research shows that memorable names increase brand recall by 67% and can impact customer perception within 50 milliseconds of exposure. Understanding the psychological principles behind effective naming can give your startup a significant competitive advantage.
+                </p>
+                
+                <h3 className="text-2xl font-bold text-slate-800 mb-4">Cognitive Processing and Memory</h3>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  Human brains process names through multiple cognitive pathways. Short, phonetically simple names are easier to remember and pronounce, leading to better word-of-mouth marketing. Names with 1-3 syllables perform best in recall tests, while names with familiar phonetic patterns feel more trustworthy to consumers.
+                </p>
+                
+                <h3 className="text-2xl font-bold text-slate-800 mb-4">Emotional Associations</h3>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  Names trigger emotional responses that influence purchasing decisions. Positive emotional associations can increase customer loyalty by up to 40%. Consider how names like "Apple" evoke freshness and simplicity, while "Amazon" suggests vastness and abundance.
+                </p>
+                
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 my-8">
+                  <h4 className="font-bold text-blue-800 mb-2">ð¡ Pro Tip: The Mere Exposure Effect</h4>
+                  <p className="text-blue-700">
+                    People develop preferences for things they're familiar with. This is why consistent use of your startup name across all touchpoints is crucial for building brand recognition and trust.
+                  </p>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-slate-800 mb-4">Cultural and Linguistic Considerations</h3>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  Names carry cultural baggage that can help or hurt your brand. Research shows that names with positive connotations in the target market's native language perform 23% better in brand recognition tests. Always research your name's meaning across different languages and cultures, especially if you plan to expand internationally.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Methodologies Section */}
+        <section id="methodologies" className="py-16">
+          <div className="container">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-slate-800">Naming Methodologies & Frameworks</h2>
+              </div>
+              
+              <p className="text-slate-600 leading-relaxed mb-8">
+                There are four primary methodologies for creating startup names, each with distinct advantages and challenges. Understanding these approaches will help you choose the right strategy for your business.
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                {namingMethodologies.map((method, index) => (
+                  <div key={index} className="bg-white rounded-2xl p-6 shadow-lg">
+                    <h3 className="text-xl font-bold text-slate-800 mb-3">{method.name}</h3>
+                    <p className="text-slate-600 mb-4">{method.description}</p>
+                    
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-slate-700 mb-2">Examples:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {method.examples.map((example, idx) => (
+                          <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {example}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="font-semibold text-green-700 mb-2">Pros:</h4>
+                        <ul className="text-sm text-slate-600 space-y-1">
+                          {method.pros.map((pro, idx) => (
+                            <li key={idx} className="flex items-start">
+                              <CheckCircle className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                              {pro}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-semibold text-red-700 mb-2">Cons:</h4>
+                        <ul className="text-sm text-slate-600 space-y-1">
+                          {method.cons.map((con, idx) => (
+                            <li key={idx} className="flex items-start">
+                              <AlertTriangle className="w-4 h-4 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
+                              {con}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Industry-Specific Section */}
+        <section id="industry-specific" className="py-16 bg-white">
+          <div className="container">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-slate-800">Industry-Specific Naming Strategies</h2>
+              </div>
+              
+              <p className="text-slate-600 leading-relaxed mb-8">
+                Different industries have unique naming conventions and audience expectations. Tailoring your naming strategy to your industry can significantly improve market acceptance and brand recognition.
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                {industryStrategies.map((strategy, index) => (
+                  <div key={index} className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 border border-slate-200">
+                    <h3 className="text-xl font-bold text-slate-800 mb-3">{strategy.industry}</h3>
+                    
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-slate-700 mb-2">Key Characteristics:</h4>
+                      <ul className="text-sm text-slate-600 space-y-1">
+                        {strategy.characteristics.map((char, idx) => (
+                          <li key={idx} className="flex items-start">
+                            <TrendingUp className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                            {char}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-slate-700 mb-2">Successful Examples:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {strategy.examples.map((example, idx) => (
+                          <span key={idx} className="bg-white text-slate-800 px-3 py-1 rounded-full text-sm font-medium border">
+                            {example}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-slate-700 mb-2">Naming Tips:</h4>
+                      <ul className="text-sm text-slate-600 space-y-1">
+                        {strategy.tips.map((tip, idx) => (
+                          <li key={idx} className="flex items-start">
+                            <Lightbulb className="w-4 h-4 text-yellow-500 mr-2 mt-0.5 flex-shrink-0" />
+                            {tip}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Common Mistakes Section */}
+        <section id="mistakes" className="py-16">
+          <div className="container">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center mr-4">
+                  <AlertTriangle className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-slate-800">Common Naming Mistakes to Avoid</h2>
+              </div>
+              
+              <p className="text-slate-600 leading-relaxed mb-8">
+                Learning from others' mistakes can save you time, money, and potential legal issues. Here are the most common naming pitfalls and how to avoid them.
+              </p>
+              
+              <div className="space-y-6">
+                {commonMistakes.map((mistake, index) => (
+                  <div key={index} className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-red-500">
+                    <div className="flex items-start">
+                      <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-4 mt-1">
+                        <AlertTriangle className="w-5 h-5 text-red-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-slate-800 mb-2">{mistake.mistake}</h3>
+                        <p className="text-slate-600 mb-3">{mistake.description}</p>
+                        
+                        <div className="bg-red-50 rounded-lg p-3 mb-3">
+                          <h4 className="font-semibold text-red-800 mb-1">Example:</h4>
+                          <p className="text-red-700 text-sm">{mistake.example}</p>
+                        </div>
+                        
+                        <div className="bg-green-50 rounded-lg p-3">
+                          <h4 className="font-semibold text-green-800 mb-1">Solution:</h4>
+                          <p className="text-green-700 text-sm">{mistake.solution}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white">
+          <div className="container text-center">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">
+              Ready to Name Your Startup?
+            </h2>
+            <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
+              Put these naming principles into practice with our AI-powered startup name generator. Create memorable, brandable names in seconds.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/naming-tool"
+                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
+              >
+                <Lightbulb className="w-5 h-5 mr-2 inline" />
+                Generate Names with AI
+              </Link>
+              <Link
+                to="/examples"
+                className="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/30 transition-all duration-300"
+              >
+                Browse Name Examples
+                <ArrowRight className="w-5 h-5 ml-2 inline" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default StartupNamingGuide;

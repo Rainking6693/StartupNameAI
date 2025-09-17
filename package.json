@@ -30,11 +30,12 @@
     "prepare": "husky install"
   },
   "engines": {
-    "node": ">=22.x",
-    "npm": "9.0.0"
+    "node": ">=18.17.0",
+    "npm": ">=9.0.0"
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "@playwright/test": "^1.55.0",
     "chokidar": "^3.5.3",
     "concurrently": "^8.2.0",
     "dotenv-cli": "^10.0.0",

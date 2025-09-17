@@ -9,12 +9,12 @@ const TestPremiumButton = () => {
       // Downgrade to free
       localStorage.removeItem('startupnamer_user_tier');
       localStorage.removeItem('startupnamer_premium_activated');
-      console.log('🔽 Downgraded to free tier');
+      console.log('ð½ Downgraded to free tier');
     } else {
       // Upgrade to premium
       localStorage.setItem('startupnamer_user_tier', 'pro');
       localStorage.setItem('startupnamer_premium_activated', new Date().toISOString());
-      console.log('⬆️ Upgraded to premium tier');
+      console.log('â¬ï¸ Upgraded to premium tier');
     }
     
     // Refresh page to update UI
@@ -41,4 +41,3 @@ const TestPremiumButton = () => {
 };
 
 export default TestPremiumButton;
-"

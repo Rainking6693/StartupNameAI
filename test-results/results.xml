@@ -1,0 +1,426 @@
+<testsuites id="" name="" tests="101" failures="0" skipped="101" errors="0" time="0.3312430000000002">
+<testsuite name="api\advanced-analytics.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="api-tests" tests="13" failures="0" skipped="13" time="0" errors="0">
+<testcase name="Advanced Analytics &amp; Intelligence API › should show Phase 4 services in health check" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should track analytics events during name generation" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should demonstrate machine learning predictions" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should handle concurrent analytics tracking" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should demonstrate business intelligence capabilities" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should validate A/B testing framework readiness" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should demonstrate personalization capabilities" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should track user engagement metrics" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should demonstrate trend analysis capabilities" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should validate real-time processing capabilities" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should demonstrate predictive analytics" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should validate data quality and consistency" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Advanced Analytics &amp; Intelligence API › should demonstrate advanced analytics integration" classname="api\advanced-analytics.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="api\enhanced-features.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="api-tests" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Enhanced AI Features API › should generate names using multi-agent system" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should handle streaming name generation" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should execute LangChain workflows" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should perform batch analysis with AI agents" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should provide cost optimization insights" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should check AI agent system status" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should perform competitive analysis" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should generate trend predictions" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should handle enhanced feature rate limiting" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should validate enhanced request parameters" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should handle cost optimization caching" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Enhanced AI Features API › should provide comprehensive error handling" classname="api\enhanced-features.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="api\name-generation.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="api-tests" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Name Generation API › should generate names successfully with valid input" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should handle enhanced AI features" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should return cached results on repeated requests" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should validate input parameters" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should handle rate limiting" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should analyze custom names" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should retrieve session data" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should handle AI service failures gracefully" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should provide telemetry and monitoring data" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should handle concurrent requests efficiently" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Name Generation API › should export names in different formats" classname="api\name-generation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="api\performance-optimization.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="api-tests" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Performance Optimization API › should show improved health check with Phase 3 services" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should handle load balancing admission control" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should demonstrate improved response times with optimization" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should handle concurrent requests efficiently" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should demonstrate advanced caching benefits" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should provide database optimization metrics" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should handle system overload gracefully" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should provide framework evaluation insights" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should demonstrate memory efficiency improvements" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should show improved error handling and recovery" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Optimization API › should validate Phase 3 performance benchmarks" classname="api\performance-optimization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="e2e-chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage › should load and display core elements" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper SEO meta tags" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be mobile responsive" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have fast loading performance" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should navigate to naming tool" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working navigation menu" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessibility features" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should handle errors gracefully" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\naming-tool.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="e2e-chromium" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Naming Tool › should load naming tool page" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have proper SEO meta tags" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should generate startup names" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should handle empty input gracefully" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should be mobile responsive" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have working filters and options" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should allow saving/favoriting names" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have working domain availability check" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should handle rate limiting gracefully" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have breadcrumb navigation" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="e2e-firefox" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage › should load and display core elements" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper SEO meta tags" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be mobile responsive" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have fast loading performance" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should navigate to naming tool" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working navigation menu" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessibility features" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should handle errors gracefully" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\naming-tool.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="e2e-firefox" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Naming Tool › should load naming tool page" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have proper SEO meta tags" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should generate startup names" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should handle empty input gracefully" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should be mobile responsive" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have working filters and options" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should allow saving/favoriting names" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have working domain availability check" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should handle rate limiting gracefully" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have breadcrumb navigation" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="e2e-webkit" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage › should load and display core elements" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper SEO meta tags" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be mobile responsive" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have fast loading performance" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should navigate to naming tool" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working navigation menu" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessibility features" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should handle errors gracefully" classname="e2e\homepage.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\naming-tool.spec.js" timestamp="2025-09-17T20:46:39.360Z" hostname="e2e-webkit" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Naming Tool › should load naming tool page" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have proper SEO meta tags" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should generate startup names" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should handle empty input gracefully" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should be mobile responsive" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have working filters and options" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should allow saving/favoriting names" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have working domain availability check" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should handle rate limiting gracefully" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Naming Tool › should have breadcrumb navigation" classname="e2e\naming-tool.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

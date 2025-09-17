@@ -545,4 +545,3 @@ describe('Phase 2 Comprehensive Testing Suite', () => {
 });
 
 // Export test suite for Jest
-export default Phase2ComprehensiveTests;

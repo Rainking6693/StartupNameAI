@@ -1,0 +1,2264 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\StartupNameAI\\playwright.config.js",
+    "rootDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "test-results/results.xml"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "api-tests",
+        "name": "api-tests",
+        "testDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/tests/api",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "e2e-chromium",
+        "name": "e2e-chromium",
+        "testDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "e2e-firefox",
+        "name": "e2e-firefox",
+        "testDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "e2e-webkit",
+        "name": "e2e-webkit",
+        "testDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/tests/mobile",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-safari",
+        "name": "mobile-safari",
+        "testDir": "C:/Users/Ben/OneDrive/Documents/GitHub/StartupNameAI/tests/mobile",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 8,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "api\\advanced-analytics.spec.js",
+      "file": "api/advanced-analytics.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Advanced Analytics & Intelligence API",
+          "file": "api/advanced-analytics.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should show Phase 4 services in health check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-20ef327aecddcc549023",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should track analytics events during name generation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-2d426ba7da969c386f0d",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate machine learning predictions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-901c1a1812daac3f6d1a",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 54,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent analytics tracking",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-ffdaff8792d6a2440f43",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 79,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate business intelligence capabilities",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-ebd53969a48b21eb5d79",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should validate A/B testing framework readiness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-009163acc31ecd58f3aa",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 145,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate personalization capabilities",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-9e1e8065a66acb76e66c",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 159,
+              "column": 3
+            },
+            {
+              "title": "should track user engagement metrics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-569f8af98915473cb7d4",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 190,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate trend analysis capabilities",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-8c611a062660ac0c97ac",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 231,
+              "column": 3
+            },
+            {
+              "title": "should validate real-time processing capabilities",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-22508e74348535be544a",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 261,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate predictive analytics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-6d8ad5e91e5b36726cd1",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 292,
+              "column": 3
+            },
+            {
+              "title": "should validate data quality and consistency",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-a2a406cc93473f2c6caa",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 325,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate advanced analytics integration",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "439f9e6223ec9b3751e0-71d7b7072ed6e5c26e59",
+              "file": "api/advanced-analytics.spec.js",
+              "line": 362,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api\\enhanced-features.spec.js",
+      "file": "api/enhanced-features.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Enhanced AI Features API",
+          "file": "api/enhanced-features.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should generate names using multi-agent system",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-7cee5656d5ca2c404a6a",
+              "file": "api/enhanced-features.spec.js",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should handle streaming name generation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-fe2d9bc363c440ee92b7",
+              "file": "api/enhanced-features.spec.js",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "should execute LangChain workflows",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-898070877d2e99a68772",
+              "file": "api/enhanced-features.spec.js",
+              "line": 69,
+              "column": 3
+            },
+            {
+              "title": "should perform batch analysis with AI agents",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-bebe4856a3c8f96e3b48",
+              "file": "api/enhanced-features.spec.js",
+              "line": 95,
+              "column": 3
+            },
+            {
+              "title": "should provide cost optimization insights",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-152fe3df7f48b035dedd",
+              "file": "api/enhanced-features.spec.js",
+              "line": 135,
+              "column": 3
+            },
+            {
+              "title": "should check AI agent system status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-4d649027b497ff524060",
+              "file": "api/enhanced-features.spec.js",
+              "line": 163,
+              "column": 3
+            },
+            {
+              "title": "should perform competitive analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-88faae29936e2a74d574",
+              "file": "api/enhanced-features.spec.js",
+              "line": 207,
+              "column": 3
+            },
+            {
+              "title": "should generate trend predictions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-b8f72404881c862f2226",
+              "file": "api/enhanced-features.spec.js",
+              "line": 246,
+              "column": 3
+            },
+            {
+              "title": "should handle enhanced feature rate limiting",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-b8d908711d76fc6c84e9",
+              "file": "api/enhanced-features.spec.js",
+              "line": 282,
+              "column": 3
+            },
+            {
+              "title": "should validate enhanced request parameters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-61e84abfb2c3430f77c8",
+              "file": "api/enhanced-features.spec.js",
+              "line": 309,
+              "column": 3
+            },
+            {
+              "title": "should handle cost optimization caching",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-44b702b828f30d30c39c",
+              "file": "api/enhanced-features.spec.js",
+              "line": 342,
+              "column": 3
+            },
+            {
+              "title": "should provide comprehensive error handling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "05820a2078a07f57e46a-7f9d3a3137bf90b0f260",
+              "file": "api/enhanced-features.spec.js",
+              "line": 372,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api\\name-generation.spec.js",
+      "file": "api/name-generation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Name Generation API",
+          "file": "api/name-generation.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should generate names successfully with valid input",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-d6e178bdf96136d7773e",
+              "file": "api/name-generation.spec.js",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should handle enhanced AI features",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-c789fd6d2d458dd96097",
+              "file": "api/name-generation.spec.js",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should return cached results on repeated requests",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-ed5ecd42e5f3b9c08eca",
+              "file": "api/name-generation.spec.js",
+              "line": 65,
+              "column": 3
+            },
+            {
+              "title": "should validate input parameters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-b5733524f7d4ae8eac5a",
+              "file": "api/name-generation.spec.js",
+              "line": 92,
+              "column": 3
+            },
+            {
+              "title": "should handle rate limiting",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-8176e248fcddf4d4d828",
+              "file": "api/name-generation.spec.js",
+              "line": 127,
+              "column": 3
+            },
+            {
+              "title": "should analyze custom names",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-2722da5c0af19ea47a95",
+              "file": "api/name-generation.spec.js",
+              "line": 147,
+              "column": 3
+            },
+            {
+              "title": "should retrieve session data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-9fd8243db0387c13a430",
+              "file": "api/name-generation.spec.js",
+              "line": 165,
+              "column": 3
+            },
+            {
+              "title": "should handle AI service failures gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-4ef7d91c15be8c8d59f9",
+              "file": "api/name-generation.spec.js",
+              "line": 200,
+              "column": 3
+            },
+            {
+              "title": "should provide telemetry and monitoring data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-49b927798c646e436e8b",
+              "file": "api/name-generation.spec.js",
+              "line": 219,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent requests efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-2cde391c83ecf15e6cbf",
+              "file": "api/name-generation.spec.js",
+              "line": 234,
+              "column": 3
+            },
+            {
+              "title": "should export names in different formats",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "dca8e133f3208ffbfb94-fa8b2400fc68c75eca79",
+              "file": "api/name-generation.spec.js",
+              "line": 266,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api\\performance-optimization.spec.js",
+      "file": "api/performance-optimization.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Performance Optimization API",
+          "file": "api/performance-optimization.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should show improved health check with Phase 3 services",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-fcf9f3cf0740131680a2",
+              "file": "api/performance-optimization.spec.js",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should handle load balancing admission control",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-ebaa5a297299b4e72977",
+              "file": "api/performance-optimization.spec.js",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate improved response times with optimization",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-732020c03c8bbc5709ac",
+              "file": "api/performance-optimization.spec.js",
+              "line": 54,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent requests efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-43c1542c53860d058a8d",
+              "file": "api/performance-optimization.spec.js",
+              "line": 81,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate advanced caching benefits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-3d83c8e5ceae5266949d",
+              "file": "api/performance-optimization.spec.js",
+              "line": 114,
+              "column": 3
+            },
+            {
+              "title": "should provide database optimization metrics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-0ce09372740980a6aec2",
+              "file": "api/performance-optimization.spec.js",
+              "line": 150,
+              "column": 3
+            },
+            {
+              "title": "should handle system overload gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-3a9697bea255a38e2c02",
+              "file": "api/performance-optimization.spec.js",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should provide framework evaluation insights",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-906d4a6ec71770052c49",
+              "file": "api/performance-optimization.spec.js",
+              "line": 212,
+              "column": 3
+            },
+            {
+              "title": "should demonstrate memory efficiency improvements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-50f8f1dc728421a589ef",
+              "file": "api/performance-optimization.spec.js",
+              "line": 224,
+              "column": 3
+            },
+            {
+              "title": "should show improved error handling and recovery",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-cbaf2b483c87083aba89",
+              "file": "api/performance-optimization.spec.js",
+              "line": 257,
+              "column": 3
+            },
+            {
+              "title": "should validate Phase 3 performance benchmarks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "api-tests",
+                  "projectName": "api-tests",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "657b8d7520db6ffb6bca-7d7b2c1dd6a723b03b2d",
+              "file": "api/performance-optimization.spec.js",
+              "line": 290,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "e2e\\homepage.spec.js",
+      "file": "e2e/homepage.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Homepage",
+          "file": "e2e/homepage.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load and display core elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-bf5d62e278f44735bedf",
+              "file": "e2e/homepage.spec.js",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-36dabc6552e031ed96c8",
+              "file": "e2e/homepage.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "should be mobile responsive",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-7f98e43c0c0122006a79",
+              "file": "e2e/homepage.spec.js",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "should have fast loading performance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-e5a6ca5e72001ce34f23",
+              "file": "e2e/homepage.spec.js",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "should navigate to naming tool",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-d1b5c9640886638c94a1",
+              "file": "e2e/homepage.spec.js",
+              "line": 94,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation menu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-47df376df9436936f0de",
+              "file": "e2e/homepage.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should have accessibility features",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-892f69ea74e9b62f05eb",
+              "file": "e2e/homepage.spec.js",
+              "line": 124,
+              "column": 3
+            },
+            {
+              "title": "should handle errors gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-71f7b2646acb9bdd9348",
+              "file": "e2e/homepage.spec.js",
+              "line": 147,
+              "column": 3
+            },
+            {
+              "title": "should load and display core elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-ff311eb4a602b7b96e95",
+              "file": "e2e/homepage.spec.js",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-fc734f5e85276ee86d1f",
+              "file": "e2e/homepage.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "should be mobile responsive",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-e26bd1f88311b33e0650",
+              "file": "e2e/homepage.spec.js",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "should have fast loading performance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-5f5f01bc7d9eb57d6dda",
+              "file": "e2e/homepage.spec.js",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "should navigate to naming tool",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-d3b2a083c9fd76c33aea",
+              "file": "e2e/homepage.spec.js",
+              "line": 94,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation menu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-35924510ed710982c246",
+              "file": "e2e/homepage.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should have accessibility features",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-77ae5e0f99e6ece24f61",
+              "file": "e2e/homepage.spec.js",
+              "line": 124,
+              "column": 3
+            },
+            {
+              "title": "should handle errors gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-9cef6b5195835e1d4d40",
+              "file": "e2e/homepage.spec.js",
+              "line": 147,
+              "column": 3
+            },
+            {
+              "title": "should load and display core elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-14c41f4d739ff9da75ba",
+              "file": "e2e/homepage.spec.js",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-c066057b74685415e3fa",
+              "file": "e2e/homepage.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "should be mobile responsive",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-35d2c26030c514fcd676",
+              "file": "e2e/homepage.spec.js",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "should have fast loading performance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-2c5032c01dc37f1d8c34",
+              "file": "e2e/homepage.spec.js",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "should navigate to naming tool",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-c3d00ea608da105cd5db",
+              "file": "e2e/homepage.spec.js",
+              "line": 94,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation menu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-4273e35c929d98973a3c",
+              "file": "e2e/homepage.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should have accessibility features",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-cfd0fa52001cc7331540",
+              "file": "e2e/homepage.spec.js",
+              "line": 124,
+              "column": 3
+            },
+            {
+              "title": "should handle errors gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-d097e72bf29c4c2e1e07",
+              "file": "e2e/homepage.spec.js",
+              "line": 147,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "e2e\\naming-tool.spec.js",
+      "file": "e2e/naming-tool.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Naming Tool",
+          "file": "e2e/naming-tool.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load naming tool page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-a6a22409430a3d579849",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-c68e4bb3242e0ea86261",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "should generate startup names",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-93fcdc619c246fcb239f",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle empty input gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-8e78f5fb8325e8daddbc",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 72,
+              "column": 3
+            },
+            {
+              "title": "should be mobile responsive",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-3ab3f27d3a8337dd3b93",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 86,
+              "column": 3
+            },
+            {
+              "title": "should have working filters and options",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-17fd1af80a1a0bea4be4",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should allow saving/favoriting names",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-41ec9c61794eb888a0d1",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 136,
+              "column": 3
+            },
+            {
+              "title": "should have working domain availability check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-4e50e7e2d7573b41e8b1",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 159,
+              "column": 3
+            },
+            {
+              "title": "should handle rate limiting gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-42bcf18497aefa523d7e",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should have breadcrumb navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-chromium",
+                  "projectName": "e2e-chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-982d621ed7925a9c40f4",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 207,
+              "column": 3
+            },
+            {
+              "title": "should load naming tool page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-650e9126af40745e47fc",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-81680f14f8d22c6dab46",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "should generate startup names",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-499af2268c11758c6064",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle empty input gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-2bb5d3f52b8d3d3d355b",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 72,
+              "column": 3
+            },
+            {
+              "title": "should be mobile responsive",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-6e0f0f35673812818cf8",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 86,
+              "column": 3
+            },
+            {
+              "title": "should have working filters and options",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-07ec29ce3600bd1fb507",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should allow saving/favoriting names",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-ad88adf13c0ee6a1954d",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 136,
+              "column": 3
+            },
+            {
+              "title": "should have working domain availability check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-e66a67defb8135da50d6",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 159,
+              "column": 3
+            },
+            {
+              "title": "should handle rate limiting gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-58976981916818e069e5",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should have breadcrumb navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-firefox",
+                  "projectName": "e2e-firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-2a60be9ac9296c0c95ea",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 207,
+              "column": 3
+            },
+            {
+              "title": "should load naming tool page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-4a5447210967cb75630a",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-285301b9624dc5b57b79",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "should generate startup names",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-17697e3cfa6fe4639df4",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should handle empty input gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-19ae6968fb64c8956982",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 72,
+              "column": 3
+            },
+            {
+              "title": "should be mobile responsive",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-c98d1341a9d56280063c",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 86,
+              "column": 3
+            },
+            {
+              "title": "should have working filters and options",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-84af47b99230b11ef896",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should allow saving/favoriting names",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-150217b8d62240aadc1c",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 136,
+              "column": 3
+            },
+            {
+              "title": "should have working domain availability check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-995e18d840f7bdd37c53",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 159,
+              "column": 3
+            },
+            {
+              "title": "should handle rate limiting gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-372dd74ce9e808de8d87",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 185,
+              "column": 3
+            },
+            {
+              "title": "should have breadcrumb navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "e2e-webkit",
+                  "projectName": "e2e-webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d01df0081cca46fd2449-758d2e25291c21504b75",
+              "file": "e2e/naming-tool.spec.js",
+              "line": 207,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-17T20:46:39.029Z",
+    "duration": 331.24300000000017,
+    "expected": 0,
+    "skipped": 101,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

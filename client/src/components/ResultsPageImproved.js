@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Star, 
-  Heart, 
-  Download, 
-  Share2, 
-  ArrowLeft, 
-  CheckCircle, 
-  Globe, 
-  Shield, 
-  Zap, 
-  Target, 
-  Star, 
+  Star,
+  Heart,
+  Download,
+  Share2,
+  ArrowLeft,
+  CheckCircle,
+  Globe,
+  Shield,
+  Zap,
+  Target,
   TrendingUp,
   ExternalLink,
   Clock,
@@ -19,8 +18,7 @@ import {
   Loader,
   Copy,
   Crown,
-  Lock,
-  Star
+  Lock
 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DomainService from '../utils/domainService';
@@ -69,12 +67,12 @@ const ResultsPageImproved = () => {
       if (data) {
         const parsed = JSON.parse(data);
         setSessionData(parsed);
-        console.log('✅ Loaded session data:', parsed);
+        console.log('â Loaded session data:', parsed);
       } else {
         setError('Session not found. Please generate names again.');
       }
     } catch (error) {
-      console.error('❌ Failed to load session data:', error);
+      console.error('â Failed to load session data:', error);
       setError('Failed to load results. Please try again.');
     }
   };
@@ -108,9 +106,9 @@ const ResultsPageImproved = () => {
     setError('');
     
     try {
-      console.log('🔍 Checking domains for:', nameData.name);
+      console.log('ð Checking domains for:', nameData.name);
       const results = await domainService.checkDomainAvailability(nameData.name);
-      console.log('✅ Domain check results:', results);
+      console.log('â Domain check results:', results);
       
       if (results.success) {
         setDomainResults(results);
@@ -118,7 +116,7 @@ const ResultsPageImproved = () => {
         setError(results.error || 'Failed to check domain availability');
       }
     } catch (error) {
-      console.error('❌ Domain check failed:', error);
+      console.error('â Domain check failed:', error);
       setError('Failed to check domains. Please try again.');
     } finally {
       setIsCheckingDomains(false);
@@ -130,7 +128,7 @@ const ResultsPageImproved = () => {
     setError('');
     
     try {
-      console.log('🔒 Reserving domain:', domainInfo.domain);
+      console.log('ð Reserving domain:', domainInfo.domain);
       
       const userInfo = {
         email: userEmail || 'user@example.com',
@@ -138,7 +136,7 @@ const ResultsPageImproved = () => {
       };
       
       const reservation = await domainService.reserveDomain(domainInfo, userInfo);
-      console.log('✅ Reservation result:', reservation);
+      console.log('â Reservation result:', reservation);
       
       if (reservation.success) {
         setReservationStatus({
@@ -153,7 +151,7 @@ const ResultsPageImproved = () => {
         setError(reservation.error || 'Failed to reserve domain');
       }
     } catch (error) {
-      console.error('❌ Domain reservation failed:', error);
+      console.error('â Domain reservation failed:', error);
       setError('Failed to reserve domain. Please try again.');
     } finally {
       setIsReserving(false);
@@ -384,7 +382,7 @@ const ResultsPageImproved = () => {
                 onClick={() => setError('')}
                 className="ml-auto text-red-400 hover:text-red-200"
               >
-                ×
+                Ã
               </button>
             </motion.div>
           </div>
@@ -471,7 +469,7 @@ const ResultsPageImproved = () => {
                   onClick={() => setDomainResults(null)}
                   className="text-white/60 hover:text-white transition-colors"
                 >
-                  ×
+                  Ã
                 </button>
               </div>
 
@@ -534,7 +532,7 @@ const ResultsPageImproved = () => {
 
               {domainResults.recommendations && domainResults.recommendations.length > 0 && (
                 <div className="mt-6 p-4 bg-blue-500/20 rounded-xl border border-blue-500/30">
-                  <h4 className="font-bold text-white mb-3">💡 Recommendations:</h4>
+                  <h4 className="font-bold text-white mb-3">ð¡ Recommendations:</h4>
                   <div className="space-y-2">
                     {domainResults.recommendations.map((rec, index) => (
                       <div key={index} className="text-blue-200 text-sm">
@@ -839,4 +837,3 @@ const FreemiumModal = ({ show, onClose, onUpgrade, totalNames, freeNamesShown, i
 };
 
 export default ResultsPageImproved;
-"

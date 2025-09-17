@@ -27,7 +27,7 @@ test.describe('Name Generation API', () => {
     expect(data.data.sessionId).toBeDefined();
     
     // Verify name structure
-    const firstNam = data.data.names[0];
+    const firstName = data.data.names[0];
     expect(firstName).toHaveProperty('name');
     expect(firstName).toHaveProperty('explanation');
     expect(firstName).toHaveProperty('brandability_score');
@@ -315,3 +315,4 @@ test.describe('Name Generation API', () => {
     }
   });
 });
+

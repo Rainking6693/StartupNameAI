@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import {
+import { 
   ArrowRight,
   CheckCircle,
   Crown,
   Lock,
-  Star,
   Star,
   X,
   Zap

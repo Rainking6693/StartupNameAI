@@ -1,1 +1,395 @@
-import React from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { \n  Cpu, \n  Star, \n  CheckCircle, \n  Zap, \n  Target, \n  Star,\n  Star,\n  Lightbulb,\n  Rocket,\n  Crown\n} from 'lucide-react';\n\n// Enhanced Loading States for Phase 3\n\n// Primary loading component with realistic timing\nexport const NameGenerationLoader = ({ stage = 'connecting', progress = 0 }) => {\n  const stages = {\n    connecting: {\n      title: 'Connecting to AI Backend',\n      subtitle: 'Establishing secure connection to our naming servers...',\n      icon: Zap,\n      color: 'from-blue-400 to-cyan-400'\n    },\n    processing: {\n      title: 'AI is Analyzing Your Input',\n      subtitle: 'Processing keywords and industry patterns...',\n      icon: Star,\n      color: 'from-purple-400 to-pink-400'\n    },\n    generating: {\n      title: 'Creating Your Startup Names',\n      subtitle: 'Advanced algorithms generating brandable combinations...',\n      icon: Star,\n      color: 'from-green-400 to-emerald-400'\n    },\n    scoring: {\n      title: 'Calculating Brandability Scores',\n      subtitle: 'Analyzing each name for market potential...',\n      icon: Target,\n      color: 'from-yellow-400 to-orange-400'\n    },\n    finalizing: {\n      title: 'Finalizing Your Results',\n      subtitle: 'Preparing your professional naming report...',\n      icon: Crown,\n      color: 'from-indigo-400 to-purple-400'\n    }\n  };\n\n  const currentStage = stages[stage] || stages.connecting;\n  const IconComponent = currentStage.icon;\n\n  return (\n    <div className=\"min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center\">\n      <div className=\"text-center max-w-lg mx-auto px-6\">\n        {/* Animated Icon */}\n        <motion.div\n          animate={{ \n            rotate: stage === 'connecting' ? 360 : 0,\n            scale: [1, 1.1, 1]\n          }}\n          transition={{ \n            rotate: { duration: 2, repeat: Infinity, ease: \"linear\" },\n            scale: { duration: 2, repeat: Infinity }\n          }}\n          className={`w-24 h-24 bg-gradient-to-r ${currentStage.color} rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl`}\n        >\n          <IconComponent className=\"w-12 h-12 text-white\" />\n        </motion.div>\n\n        {/* Title and Subtitle */}\n        <motion.h2 \n          key={stage}\n          initial={{ opacity: 0, y: 20 }}\n          animate={{ opacity: 1, y: 0 }}\n          className=\"text-3xl font-bold text-white mb-4\"\n        >\n          {currentStage.title}\n        </motion.h2>\n        \n        <motion.p \n          key={`${stage}-subtitle`}\n          initial={{ opacity: 0 }}\n          animate={{ opacity: 1 }}\n          className=\"text-white/80 mb-8 text-lg\"\n        >\n          {currentStage.subtitle}\n        </motion.p>\n\n        {/* Progress Bar */}\n        <div className=\"w-full bg-white/20 rounded-full h-3 mb-8\">\n          <motion.div\n            className={`bg-gradient-to-r ${currentStage.color} h-3 rounded-full`}\n            initial={{ width: 0 }}\n            animate={{ width: `${progress}%` }}\n            transition={{ duration: 0.5 }}\n          />\n        </div>\n\n        {/* Processing Steps */}\n        <div className=\"bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6\">\n          <h3 className=\"text-lg font-semibold text-white mb-4\">AI Processing Pipeline:</h3>\n          <ProcessingSteps currentStage={stage} />\n        </div>\n        \n        {/* Status Info */}\n        <div className=\"text-white/60 text-sm space-y-1\">\n          <p>Using Phase 2 backend infrastructure</p>\n          <p>Enhanced with Phase 3 improvements</p>\n          <p className=\"font-semibold text-white/80\">{progress}% Complete</p>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// Processing steps component\nconst ProcessingSteps = ({ currentStage }) => {\n  const steps = [\n    { id: 'connecting', label: 'Connecting to backend API', icon: Zap },\n    { id: 'processing', label: 'Processing keywords with AI', icon: Star },\n    { id: 'generating', label: 'Generating brandable combinations', icon: Lightbulb },\n    { id: 'scoring', label: 'Calculating brandability scores', icon: Target },\n    { id: 'finalizing', label: 'Preparing results', icon: Rocket }\n  ];\n\n  const getCurrentStepIndex = () => {\n    return steps.findIndex(step => step.id === currentStage);\n  };\n\n  const currentIndex = getCurrentStepIndex();\n\n  return (\n    <div className=\"space-y-3\">\n      {steps.map((step, index) => {\n        const isCompleted = index < currentIndex;\n        const isCurrent = index === currentIndex;\n        const IconComponent = step.icon;\n        \n        return (\n          <motion.div\n            key={step.id}\n            initial={{ opacity: 0, x: -20 }}\n            animate={{ opacity: 1, x: 0 }}\n            transition={{ delay: index * 0.2 }}\n            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${\n              isCompleted ? 'bg-green-500/20' :\n              isCurrent ? 'bg-white/20' : 'bg-white/5'\n            }`}\n          >\n            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${\n              isCompleted ? 'bg-green-500' :\n              isCurrent ? 'bg-white/30' : 'bg-white/10'\n            }`}>\n              {isCompleted ? (\n                <CheckCircle className=\"w-5 h-5 text-white\" />\n              ) : (\n                <IconComponent className={`w-4 h-4 ${\n                  isCurrent ? 'text-white' : 'text-white/50'\n                }`} />\n              )}\n            </div>\n            <span className={`text-sm ${\n              isCompleted ? 'text-green-300' :\n              isCurrent ? 'text-white' : 'text-white/60'\n            }`}>\n              {step.label}\n            </span>\n            {isCurrent && (\n              <motion.div\n                animate={{ opacity: [0.5, 1, 0.5] }}\n                transition={{ duration: 1.5, repeat: Infinity }}\n                className=\"ml-auto\"\n              >\n                <div className=\"w-2 h-2 bg-white rounded-full\" />\n              </motion.div>\n            )}\n          </motion.div>\n        );\n      })}\n    </div>\n  );\n};\n\n// Compact loading spinner for inline use\nexport const InlineLoader = ({ size = 'md', color = 'white' }) => {\n  const sizes = {\n    sm: 'w-4 h-4',\n    md: 'w-6 h-6',\n    lg: 'w-8 h-8'\n  };\n\n  return (\n    <motion.div\n      animate={{ rotate: 360 }}\n      transition={{ duration: 1, repeat: Infinity, ease: \"linear\" }}\n      className={`${sizes[size]} border-2 border-${color}/20 border-t-${color} rounded-full`}\n    />\n  );\n};\n\n// Success animation component\nexport const SuccessAnimation = ({ onComplete }) => {\n  return (\n    <motion.div\n      initial={{ scale: 0, opacity: 0 }}\n      animate={{ scale: 1, opacity: 1 }}\n      exit={{ scale: 0, opacity: 0 }}\n      onAnimationComplete={onComplete}\n      className=\"fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50\"\n    >\n      <motion.div\n        initial={{ scale: 0 }}\n        animate={{ scale: [0, 1.2, 1] }}\n        transition={{ duration: 0.6 }}\n        className=\"bg-white rounded-full p-8\"\n      >\n        <motion.div\n          initial={{ scale: 0 }}\n          animate={{ scale: 1 }}\n          transition={{ delay: 0.3, duration: 0.3 }}\n        >\n          <CheckCircle className=\"w-16 h-16 text-green-500\" />\n        </motion.div>\n      </motion.div>\n    </motion.div>\n  );\n};\n\n// Error state component\nexport const ErrorState = ({ error, onRetry, onGoBack }) => {\n  return (\n    <div className=\"min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-900 flex items-center justify-center\">\n      <div className=\"text-center max-w-md mx-auto px-6\">\n        <motion.div\n          initial={{ scale: 0 }}\n          animate={{ scale: 1 }}\n          className=\"w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6\"\n        >\n          <motion.div\n            animate={{ rotate: [0, 10, -10, 0] }}\n            transition={{ duration: 0.5, repeat: 3 }}\n          >\n            <span className=\"text-4xl\">⚠️</span>\n          </motion.div>\n        </motion.div>\n        \n        <h2 className=\"text-2xl font-bold text-white mb-4\">Generation Failed</h2>\n        <p className=\"text-white/80 mb-6\">{error}</p>\n        \n        <div className=\"space-y-3\">\n          <button\n            onClick={onRetry}\n            className=\"w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors\"\n          >\n            Try Again\n          </button>\n          <button\n            onClick={onGoBack}\n            className=\"w-full bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-xl transition-colors\"\n          >\n            Go Back\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// Step transition animation\nexport const StepTransition = ({ children, direction = 'forward' }) => {\n  return (\n    <motion.div\n      initial={{ \n        opacity: 0, \n        x: direction === 'forward' ? 50 : -50 \n      }}\n      animate={{ \n        opacity: 1, \n        x: 0 \n      }}\n      exit={{ \n        opacity: 0, \n        x: direction === 'forward' ? -50 : 50 \n      }}\n      transition={{ duration: 0.3 }}\n    >\n      {children}\n    </motion.div>\n  );\n};\n\n// Progress indicator for wizard steps\nexport const WizardProgress = ({ currentStep, totalSteps, stepTitles = [] }) => {\n  return (\n    <div className=\"w-full\">\n      <div className=\"flex items-center justify-between mb-2\">\n        <span className=\"text-sm font-medium text-white/80\">\n          Step {currentStep} of {totalSteps}\n        </span>\n        <span className=\"text-sm font-medium text-white/80\">\n          {Math.round((currentStep / totalSteps) * 100)}% Complete\n        </span>\n      </div>\n      \n      <div className=\"w-full bg-white/20 rounded-full h-3 mb-4\">\n        <motion.div\n          className=\"bg-gradient-to-r from-purple-400 to-pink-400 h-3 rounded-full flex items-center justify-end pr-2\"\n          initial={{ width: 0 }}\n          animate={{ width: `${(currentStep / totalSteps) * 100}%` }}\n          transition={{ duration: 0.5 }}\n        >\n          {currentStep > 1 && (\n            <CheckCircle className=\"w-4 h-4 text-white\" />\n          )}\n        </motion.div>\n      </div>\n      \n      {stepTitles.length > 0 && (\n        <div className=\"flex justify-between text-xs text-white/60\">\n          {stepTitles.map((title, index) => (\n            <span \n              key={index}\n              className={index + 1 <= currentStep ? 'text-white/80 font-medium' : ''}\n            >\n              {title}\n            </span>\n          ))}\n        </div>\n      )}\n    </div>\n  );\n};\n\n// Floating action button with loading state\nexport const FloatingActionButton = ({ \n  onClick, \n  loading = false, \n  disabled = false, \n  children,\n  className = ''\n}) => {\n  return (\n    <motion.button\n      onClick={onClick}\n      disabled={disabled || loading}\n      whileHover={{ scale: disabled ? 1 : 1.05 }}\n      whileTap={{ scale: disabled ? 1 : 0.95 }}\n      className={`\n        relative overflow-hidden\n        ${disabled || loading \n          ? 'bg-white/20 text-white/40 cursor-not-allowed' \n          : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'\n        }\n        font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg\n        ${className}\n      `}\n    >\n      <AnimatePresence mode=\"wait\">\n        {loading ? (\n          <motion.div\n            key=\"loading\"\n            initial={{ opacity: 0 }}\n            animate={{ opacity: 1 }}\n            exit={{ opacity: 0 }}\n            className=\"flex items-center space-x-2\"\n          >\n            <InlineLoader size=\"sm\" />\n            <span>Processing...</span>\n          </motion.div>\n        ) : (\n          <motion.div\n            key=\"content\"\n            initial={{ opacity: 0 }}\n            animate={{ opacity: 1 }}\n            exit={{ opacity: 0 }}\n          >\n            {children}\n          </motion.div>\n        )}\n      </AnimatePresence>\n    </motion.button>\n  );\n};\n\nexport default {\n  NameGenerationLoader,\n  InlineLoader,\n  SuccessAnimation,\n  ErrorState,\n  StepTransition,\n  WizardProgress,\n  FloatingActionButton\n};"
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Cpu,
+  Star,
+  CheckCircle,
+  Zap,
+  Target,
+  Lightbulb,
+  Rocket,
+  Crown
+} from 'lucide-react';
+
+// Enhanced Loading States for Phase 3
+
+// Primary loading component with realistic timing
+export const NameGenerationLoader = ({ stage = 'connecting', progress = 0 }) => {
+  const stages = {
+    connecting: {
+      title: 'Connecting to AI Backend',
+      subtitle: 'Establishing secure connection to our naming servers...',
+      icon: Zap,
+      color: 'from-blue-400 to-cyan-400'
+    },
+    processing: {
+      title: 'AI is Analyzing Your Input',
+      subtitle: 'Processing keywords and industry patterns...',
+      icon: Star,
+      color: 'from-purple-400 to-pink-400'
+    },
+    generating: {
+      title: 'Creating Your Startup Names',
+      subtitle: 'Advanced algorithms generating brandable combinations...',
+      icon: Star,
+      color: 'from-green-400 to-emerald-400'
+    },
+    scoring: {
+      title: 'Calculating Brandability Scores',
+      subtitle: 'Analyzing each name for market potential...',
+      icon: Target,
+      color: 'from-yellow-400 to-orange-400'
+    },
+    finalizing: {
+      title: 'Finalizing Your Results',
+      subtitle: 'Preparing your professional naming report...',
+      icon: Crown,
+      color: 'from-indigo-400 to-purple-400'
+    }
+  };
+
+  const currentStage = stages[stage] || stages.connecting;
+  const IconComponent = currentStage.icon;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
+      <div className="text-center max-w-lg mx-auto px-6">
+        {/* Animated Icon */}
+        <motion.div
+          animate={{ 
+            rotate: stage === 'connecting' ? 360 : 0,
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            rotate: { duration: 2, repeat: Infinity, ease: "linear" },
+            scale: { duration: 2, repeat: Infinity }
+          }}
+          className={`w-24 h-24 bg-gradient-to-r ${currentStage.color} rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl`}
+        >
+          <IconComponent className="w-12 h-12 text-white" />
+        </motion.div>
+
+        {/* Title and Subtitle */}
+        <motion.h2 
+          key={stage}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl font-bold text-white mb-4"
+        >
+          {currentStage.title}
+        </motion.h2>
+        
+        <motion.p 
+          key={`${stage}-subtitle`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-white/80 mb-8 text-lg"
+        >
+          {currentStage.subtitle}
+        </motion.p>
+
+        {/* Progress Bar */}
+        <div className="w-full bg-white/20 rounded-full h-3 mb-8">
+          <motion.div
+            className={`bg-gradient-to-r ${currentStage.color} h-3 rounded-full`}
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </div>
+
+        {/* Processing Steps */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
+          <h3 className="text-lg font-semibold text-white mb-4">AI Processing Pipeline:</h3>
+          <ProcessingSteps currentStage={stage} />
+        </div>
+        
+        {/* Status Info */}
+        <div className="text-white/60 text-sm space-y-1">
+          <p>Using Phase 2 backend infrastructure</p>
+          <p>Enhanced with Phase 3 improvements</p>
+          <p className="font-semibold text-white/80">{progress}% Complete</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Processing steps component
+const ProcessingSteps = ({ currentStage }) => {
+  const steps = [
+    { id: 'connecting', label: 'Connecting to backend API', icon: Zap },
+    { id: 'processing', label: 'Processing keywords with AI', icon: Star },
+    { id: 'generating', label: 'Generating brandable combinations', icon: Lightbulb },
+    { id: 'scoring', label: 'Calculating brandability scores', icon: Target },
+    { id: 'finalizing', label: 'Preparing results', icon: Rocket }
+  ];
+
+  const getCurrentStepIndex = () => {
+    return steps.findIndex(step => step.id === currentStage);
+  };
+
+  const currentIndex = getCurrentStepIndex();
+
+  return (
+    <div className="space-y-3">
+      {steps.map((step, index) => {
+        const isCompleted = index < currentIndex;
+        const isCurrent = index === currentIndex;
+        const IconComponent = step.icon;
+        
+        return (
+          <motion.div
+            key={step.id}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.2 }}
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${
+              isCompleted ? 'bg-green-500/20' :
+              isCurrent ? 'bg-white/20' : 'bg-white/5'
+            }`}
+          >
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+              isCompleted ? 'bg-green-500' :
+              isCurrent ? 'bg-white/30' : 'bg-white/10'
+            }`}>
+              {isCompleted ? (
+                <CheckCircle className="w-5 h-5 text-white" />
+              ) : (
+                <IconComponent className={`w-4 h-4 ${
+                  isCurrent ? 'text-white' : 'text-white/50'
+                }`} />
+              )}
+            </div>
+            <span className={`text-sm ${
+              isCompleted ? 'text-green-300' :
+              isCurrent ? 'text-white' : 'text-white/60'
+            }`}>
+              {step.label}
+            </span>
+            {isCurrent && (
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="ml-auto"
+              >
+                <div className="w-2 h-2 bg-white rounded-full" />
+              </motion.div>
+            )}
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
+
+// Compact loading spinner for inline use
+export const InlineLoader = ({ size = 'md', color = 'white' }) => {
+  const sizes = {
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8'
+  };
+
+  return (
+    <motion.div
+      animate={{ rotate: 360 }}
+      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+      className={`${sizes[size]} border-2 border-${color}/20 border-t-${color} rounded-full`}
+    />
+  );
+};
+
+// Success animation component
+export const SuccessAnimation = ({ onComplete }) => {
+  return (
+    <motion.div
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0, opacity: 0 }}
+      onAnimationComplete={onComplete}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: [0, 1.2, 1] }}
+        transition={{ duration: 0.6 }}
+        className="bg-white rounded-full p-8"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
+        >
+          <CheckCircle className="w-16 h-16 text-green-500" />
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Error state component
+export const ErrorState = ({ error, onRetry, onGoBack }) => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-900 flex items-center justify-center">
+      <div className="text-center max-w-md mx-auto px-6">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
+        >
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{ duration: 0.5, repeat: 3 }}
+          >
+            <span className="text-4xl">â ï¸</span>
+          </motion.div>
+        </motion.div>
+        
+        <h2 className="text-2xl font-bold text-white mb-4">Generation Failed</h2>
+        <p className="text-white/80 mb-6">{error}</p>
+        
+        <div className="space-y-3">
+          <button
+            onClick={onRetry}
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+          >
+            Try Again
+          </button>
+          <button
+            onClick={onGoBack}
+            className="w-full bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-xl transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Step transition animation
+export const StepTransition = ({ children, direction = 'forward' }) => {
+  return (
+    <motion.div
+      initial={{ 
+        opacity: 0, 
+        x: direction === 'forward' ? 50 : -50 
+      }}
+      animate={{ 
+        opacity: 1, 
+        x: 0 
+      }}
+      exit={{ 
+        opacity: 0, 
+        x: direction === 'forward' ? -50 : 50 
+      }}
+      transition={{ duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// Progress indicator for wizard steps
+export const WizardProgress = ({ currentStep, totalSteps, stepTitles = [] }) => {
+  return (
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium text-white/80">
+          Step {currentStep} of {totalSteps}
+        </span>
+        <span className="text-sm font-medium text-white/80">
+          {Math.round((currentStep / totalSteps) * 100)}% Complete
+        </span>
+      </div>
+      
+      <div className="w-full bg-white/20 rounded-full h-3 mb-4">
+        <motion.div
+          className="bg-gradient-to-r from-purple-400 to-pink-400 h-3 rounded-full flex items-center justify-end pr-2"
+          initial={{ width: 0 }}
+          animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
+          transition={{ duration: 0.5 }}
+        >
+          {currentStep > 1 && (
+            <CheckCircle className="w-4 h-4 text-white" />
+          )}
+        </motion.div>
+      </div>
+      
+      {stepTitles.length > 0 && (
+        <div className="flex justify-between text-xs text-white/60">
+          {stepTitles.map((title, index) => (
+            <span 
+              key={index}
+              className={index + 1 <= currentStep ? 'text-white/80 font-medium' : ''}
+            >
+              {title}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Floating action button with loading state
+export const FloatingActionButton = ({ 
+  onClick, 
+  loading = false, 
+  disabled = false, 
+  children,
+  className = ''
+}) => {
+  return (
+    <motion.button
+      onClick={onClick}
+      disabled={disabled || loading}
+      whileHover={{ scale: disabled ? 1 : 1.05 }}
+      whileTap={{ scale: disabled ? 1 : 0.95 }}
+      className={`
+        relative overflow-hidden
+        ${disabled || loading 
+          ? 'bg-white/20 text-white/40 cursor-not-allowed' 
+          : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
+        }
+        font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg
+        ${className}
+      `}
+    >
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center space-x-2"
+          >
+            <InlineLoader size="sm" />
+            <span>Processing...</span>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+};
+
+export default {
+  NameGenerationLoader,
+  InlineLoader,
+  SuccessAnimation,
+  ErrorState,
+  StepTransition,
+  WizardProgress,
+  FloatingActionButton
+};
