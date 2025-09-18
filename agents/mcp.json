@@ -8,7 +8,7 @@
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-git", "--repository", "C:\\Users\\Ben\\OneDrive\\Documents\\GitHub\\DirectoryBolt"]
     },
-    "shell": {
+    "my-shell": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-shell"],
       "env": {

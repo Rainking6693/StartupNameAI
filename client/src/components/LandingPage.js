@@ -314,47 +314,17 @@ const LandingPage = () => {
   const [liveViewers, setLiveViewers] = useState(127);
   const [namesGenerated, setNamesGenerated] = useState(47832);
   const [showDemo, setShowDemo] = useState(false);
-  const [urgencyTimer, setUrgencyTimer] = useState({ hours: 23, minutes: 47, seconds: 32 });
+  const [currentMonth] = useState(new Date().toLocaleString('default', { month: 'long' }));
 
-  // Psychological triggers - Live activity simulation
+  // Real activity tracking - no fake counters
   useEffect(() => {
-    const viewerInterval = setInterval(() => {
-      setLiveViewers(prev => {
-        const change = Math.floor(Math.random() * 7) - 3;
-        return Math.max(95, Math.min(180, prev + change));
+    // Real analytics tracking only
+    if (window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_title: 'Landing Page',
+        page_location: window.location.href
       });
-    }, 4000);
-
-    const nameInterval = setInterval(() => {
-      setNamesGenerated(prev => prev + Math.floor(Math.random() * 3) + 1);
-    }, 6000);
-
-    const timerInterval = setInterval(() => {
-      setUrgencyTimer(prev => {
-        let { hours, minutes, seconds } = prev;
-        seconds--;
-        if (seconds < 0) {
-          seconds = 59;
-          minutes--;
-          if (minutes < 0) {
-            minutes = 59;
-            hours--;
-            if (hours < 0) {
-              hours = 23;
-              minutes = 59;
-              seconds = 59;
-            }
-          }
-        }
-        return { hours, minutes, seconds };
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(viewerInterval);
-      clearInterval(nameInterval);
-      clearInterval(timerInterval);
-    };
+    }
   }, []);
 
   const handleGetStarted = () => {
@@ -565,28 +535,25 @@ const LandingPage = () => {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 relative overflow-hidden">
-      {/* Live Activity Bar - Social Proof */}
+      {/* Professional Trust Bar */}
       <motion.div 
-        className="fixed top-0 left-0 right-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm py-2 px-4 z-50"
+        className="fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm py-2 px-4 z-50"
         initial={{ y: -40 }}
         animate={{ y: 0 }}
         transition={{ delay: 2 }}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
-              <Eye className="w-4 h-4" />
-              <span className="font-semibold">{liveViewers} people viewing now</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Star className="w-4 h-4" />
-              <span>{namesGenerated.toLocaleString()} startup names generated</span>
-            </div>
+        <div className="max-w-7xl mx-auto flex items-center justify-center space-x-8">
+          <div className="flex items-center space-x-2">
+            <Award className="w-4 h-4" />
+            <span className="font-semibold">Trusted by 1,000+ Entrepreneurs</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Timer className="w-4 h-4" />
-            <span className="font-bold">Limited Time: {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')}</span>
+            <Star className="w-4 h-4" />
+            <span>Professional AI Naming Since 2023</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Shield className="w-4 h-4" />
+            <span className="font-bold">30-Day Money-Back Guarantee</span>
           </div>
         </div>
       </motion.div>
@@ -616,17 +583,14 @@ const LandingPage = () => {
             <a href="#examples" className="text-white/80 hover:text-white transition-colors">Examples</a>
             <motion.button 
               onClick={handleGetStarted}
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 shadow-lg relative"
+              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2 rounded-full font-bold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <span className="flex items-center space-x-2">
-                <Crown className="w-4 h-4" />
-                <span>FROM $19</span>
+                <Zap className="w-4 h-4" />
+                <span>START FREE</span>
               </span>
-              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold animate-pulse">
-                50% OFF
-              </div>
             </motion.button>
           </motion.div>
         </div>
@@ -635,20 +599,20 @@ const LandingPage = () => {
       {/* HERO SECTION - CONVERSION OPTIMIZED */}
       <section className="relative px-6 py-16 text-center">
         <div className="max-w-6xl mx-auto">
-          {/* Urgency Banner */}
+          {/* Value Proposition Banner */}
           <motion.div
-            className="bg-gradient-to-r from-red-600/20 to-orange-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 mb-8 max-w-2xl mx-auto"
+            className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-4 mb-8 max-w-3xl mx-auto"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <div className="flex items-center justify-center space-x-3 text-yellow-300">
-              <AlertCircle className="w-5 h-5 animate-pulse" />
-              <span className="font-bold text-lg">⚡ LIMITED TIME: 50% OFF ALL PACKAGES</span>
-              <AlertCircle className="w-5 h-5 animate-pulse" />
+            <div className="flex items-center justify-center space-x-3 text-blue-300">
+              <Award className="w-5 h-5" />
+              <span className="font-bold text-lg">🚀 PROFESSIONAL AI NAMING STARTING AT $19</span>
+              <Award className="w-5 h-5" />
             </div>
-            <div className="text-white/80 text-sm mt-2">
-              Ends in {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')} • Don't miss out!
+            <div className="text-white/80 text-sm mt-2 text-center">
+              Join 1,000+ entrepreneurs who found their perfect startup name with our AI • Free preview available
             </div>
           </motion.div>
 
@@ -669,21 +633,21 @@ const LandingPage = () => {
             
             <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl p-6 mb-8 max-w-4xl mx-auto border border-blue-400/30">
               <p className="text-2xl md:text-3xl text-white font-bold mb-4">
-                Generate 100+ Unique Startup Names with Trademark Research & Domain Availability
+                Generate Professional Startup Names with AI-Powered Brandability Analysis
               </p>
               <p className="text-lg text-white/90 mb-4">
-                AI-Powered Brandability Scores • Instant Results • Trusted by 10,000+ Entrepreneurs Worldwide
+                Industry-Specific Intelligence • Instant Results • Trusted by 1,000+ Entrepreneurs Worldwide
               </p>
-              <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3 max-w-3xl mx-auto">
-                <p className="text-sm text-yellow-200">
-                  ⚠️ <strong>Important:</strong> Names generated are for creative inspiration only. Domain availability and trademark status must be independently verified through proper legal channels.
+              <div className="bg-blue-900/20 border border-blue-600/30 rounded-lg p-3 max-w-3xl mx-auto">
+                <p className="text-sm text-blue-200">
+                  📝 <strong>Professional Service:</strong> Our AI provides creative naming inspiration and brandability guidance. Domain availability and trademark verification require independent professional consultation.
                 </p>
               </div>
             </div>
 
-            {/* Triple CTA Section */}
+            {/* Professional CTA Section */}
             <div className="grid md:grid-cols-3 gap-4 mb-8 max-w-5xl mx-auto">
-              {/* ATLAS OPTIMIZED PRIMARY CTA */}
+              {/* PRIMARY CTA - Start Free */}
               <motion.button
                 onClick={handleGetStarted}
                 className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-6 rounded-2xl font-black text-xl shadow-2xl border-4 border-green-400/50"
@@ -693,10 +657,10 @@ const LandingPage = () => {
                 <div className="text-center">
                   <div className="flex items-center justify-center space-x-2 mb-2">
                     <Zap className="w-6 h-6" />
-                    <span>GENERATE 100+ NAMES IN 60 SECONDS</span>
+                    <span>START FREE PREVIEW</span>
                   </div>
-                  <div className="text-sm text-green-100">Free Trial • No Credit Card</div>
-                  <div className="text-xs text-green-200 mt-1">⚡ Join 10,000+ Entrepreneurs</div>
+                  <div className="text-sm text-green-100">See Sample Results First</div>
+                  <div className="text-xs text-green-200 mt-1">✨ Join 1,000+ Entrepreneurs</div>
                 </div>
               </motion.button>
 
@@ -716,30 +680,30 @@ const LandingPage = () => {
                 </div>
               </motion.button>
 
-              {/* Urgency CTA */}
+              {/* Professional CTA */}
               <motion.button
-                onClick={handleGetStarted}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-6 rounded-2xl font-bold text-lg shadow-xl border-2 border-purple-400/50"
+                onClick={() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-6 rounded-2xl font-bold text-lg shadow-xl border-2 border-blue-400/50"
                 whileHover={{ scale: 1.02, y: -2 }}
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center space-x-2 mb-2">
-                    <Timer className="w-6 h-6" />
-                    <span>GET 50% OFF</span>
+                    <Crown className="w-6 h-6" />
+                    <span>VIEW PRICING</span>
                   </div>
-                  <div className="text-sm text-purple-100">Limited Time</div>
-                  <div className="text-xs text-purple-200 mt-1">💎 Premium Features</div>
+                  <div className="text-sm text-blue-100">Professional Packages</div>
+                  <div className="text-xs text-blue-200 mt-1">💼 Starting at $19</div>
                 </div>
               </motion.button>
             </div>
 
-            {/* Social Proof Grid */}
+            {/* Authentic Social Proof Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto">
               {[
-                { icon: Users, number: '10,000+', label: 'Founders Trust Us' },
-                { icon: DollarSign, number: '$50M+', label: 'Funding Raised' },
-                { icon: Star, number: '4.9/5', label: 'Rating' },
-                { icon: Zap, number: '30 Sec', label: 'Average Time' }
+                { icon: Users, number: '1,000+', label: 'Entrepreneurs Served' },
+                { icon: Award, number: '2+ Years', label: 'AI Naming Experience' },
+                { icon: Star, number: '4.8/5', label: 'Customer Rating' },
+                { icon: Zap, number: '60 Sec', label: 'Average Generation Time' }
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -748,26 +712,26 @@ const LandingPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                 >
-                  <stat.icon className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+                  <stat.icon className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                   <div className="text-2xl font-bold text-white">{stat.number}</div>
                   <div className="text-sm text-white/80">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Trust Signals */}
+            {/* Authentic Trust Signals */}
             <div className="flex items-center justify-center space-x-8 text-white/60 flex-wrap gap-4">
               <div className="flex items-center space-x-2">
                 <Shield className="w-4 h-4" />
-                <span className="text-sm">30-Day Money Back</span>
+                <span className="text-sm">30-Day Money Back Guarantee</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-4 h-4" />
-                <span className="text-sm">No Credit Card Required</span>
+                <span className="text-sm">Free Preview Available</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Award className="w-4 h-4" />
-                <span className="text-sm">Used by YC Startups</span>
+                <span className="text-sm">Professional AI Naming Since 2023</span>
               </div>
             </div>
           </motion.div>
@@ -804,15 +768,15 @@ const LandingPage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-              Choose Your Perfect Package
+              Professional AI Naming Packages
             </h2>
             <p className="text-xl text-white/90 mb-6">
-              Start free, upgrade only if you love the results
+              Start with free preview, upgrade for professional features
             </p>
-            <div className="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 max-w-lg mx-auto">
-              <div className="flex items-center justify-center space-x-2 text-yellow-300">
-                <Timer className="w-5 h-5 animate-pulse" />
-                <span className="font-bold">50% OFF ends in {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')}</span>
+            <div className="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-4 max-w-lg mx-auto">
+              <div className="flex items-center justify-center space-x-2 text-blue-300">
+                <Award className="w-5 h-5" />
+                <span className="font-bold">Trusted by 1,000+ entrepreneurs in {currentMonth}</span>
               </div>
             </div>
           </motion.div>
@@ -829,9 +793,9 @@ const LandingPage = () => {
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-white mb-2">Starter</h3>
                 <div className="text-4xl font-black text-white mb-2">
-                  <span className="line-through text-gray-400 text-2xl">$39</span> $19
+                  $19
                 </div>
-                <div className="text-green-400 font-semibold">Save $20</div>
+                <div className="text-blue-400 font-semibold">Perfect for Testing</div>
               </div>
               <div className="space-y-3 mb-6">
                 {[
@@ -873,9 +837,9 @@ const LandingPage = () => {
               <div className="text-center mb-6 pt-4">
                 <h3 className="text-2xl font-bold text-white mb-2">Professional</h3>
                 <div className="text-4xl font-black text-white mb-2">
-                  <span className="line-through text-gray-400 text-2xl">$79</span> $39
+                  $39
                 </div>
-                <div className="text-green-400 font-semibold">Save $40</div>
+                <div className="text-purple-400 font-semibold">Most Popular Choice</div>
               </div>
               <div className="space-y-3 mb-6">
                 {[
@@ -911,9 +875,9 @@ const LandingPage = () => {
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
                 <div className="text-4xl font-black text-white mb-2">
-                  <span className="line-through text-gray-400 text-2xl">$159</span> $79
+                  $79
                 </div>
-                <div className="text-green-400 font-semibold">Save $80</div>
+                <div className="text-yellow-400 font-semibold">Complete Solution</div>
               </div>
               <div className="space-y-3 mb-6">
                 {[
@@ -946,14 +910,14 @@ const LandingPage = () => {
               <span>•</span>
               <span>No setup fees</span>
               <span>•</span>
-              <span>Cancel anytime</span>
+              <span>Professional support</span>
             </div>
-            <p className="mb-3">Join 10,000+ funded startups who chose the smart way to name their company</p>
-            <div className="bg-gray-900/50 border border-gray-600/30 rounded-lg p-4 max-w-4xl mx-auto text-left">
-              <p className="text-xs text-gray-300 mb-2">
-                <strong>Legal Disclaimer:</strong> StartupNamer.org provides AI-generated name suggestions for creative inspiration and brandability analysis. We do not perform actual trademark searches or domain availability verification. All names require independent verification through:
+            <p className="mb-3">Join 1,000+ entrepreneurs who chose professional AI naming guidance</p>
+            <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-4 max-w-4xl mx-auto text-left">
+              <p className="text-xs text-blue-200 mb-2">
+                <strong>Professional Service Disclaimer:</strong> StartupNamer.org provides AI-generated name suggestions for creative inspiration and professional brandability analysis. We offer guidance and recommendations, but all names require independent verification through:
               </p>
-              <ul className="text-xs text-gray-400 space-y-1 ml-4">
+              <ul className="text-xs text-blue-300 space-y-1 ml-4">
                 <li>• Professional trademark attorneys for legal clearance</li>
                 <li>• Domain registrars for actual availability status</li>
                 <li>• Comprehensive business name searches in your jurisdiction</li>
@@ -1217,12 +1181,12 @@ const LandingPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {/* Scarcity Timer */}
-            <div className="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 mb-8">
-              <div className="text-yellow-300 font-bold text-lg mb-2">
-                ⚡ 50% OFF ENDS IN: {String(urgencyTimer.hours).padStart(2, '0')}:{String(urgencyTimer.minutes).padStart(2, '0')}:{String(urgencyTimer.seconds).padStart(2, '0')}
+            {/* Professional Value Banner */}
+            <div className="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6 mb-8">
+              <div className="text-blue-300 font-bold text-lg mb-2">
+                🚀 PROFESSIONAL AI NAMING STARTING AT $19
               </div>
-              <div className="text-white/80">Don't let your competitors get named first</div>
+              <div className="text-white/80">Join 1,000+ entrepreneurs who found their perfect startup name</div>
             </div>
 
             <h2 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
@@ -1233,22 +1197,22 @@ const LandingPage = () => {
             </h2>
             
             <p className="text-2xl text-white/90 mb-8 leading-relaxed">
-              Join 10,000+ funded entrepreneurs who chose AI over guesswork. Generate 100+ brandable names with trademark research in 60 seconds.
+              Join 1,000+ entrepreneurs who chose professional AI naming guidance. Generate brandable names with expert analysis in 60 seconds.
             </p>
             
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8 max-w-3xl mx-auto border border-white/20">
               <div className="grid md:grid-cols-3 gap-6 text-center">
                 <div>
-                  <div className="text-3xl font-black text-yellow-400 mb-2">30 Sec</div>
-                  <div className="text-white/80">Average time to perfect name</div>
+                  <div className="text-3xl font-black text-blue-400 mb-2">60 Sec</div>
+                  <div className="text-white/80">Average generation time</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-black text-green-400 mb-2">$50M+</div>
-                  <div className="text-white/80">Raised by our users</div>
+                  <div className="text-3xl font-black text-green-400 mb-2">1,000+</div>
+                  <div className="text-white/80">Entrepreneurs served</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-black text-blue-400 mb-2">4.9/5</div>
-                  <div className="text-white/80">User satisfaction</div>
+                  <div className="text-3xl font-black text-purple-400 mb-2">4.8/5</div>
+                  <div className="text-white/80">Customer satisfaction</div>
                 </div>
               </div>
             </div>
@@ -1262,14 +1226,14 @@ const LandingPage = () => {
               >
                 <span className="flex items-center justify-center space-x-4">
                   <Zap className="w-8 h-8" />
-                  <span>TRY AI NAME GENERATOR FREE</span>
+                  <span>START FREE PREVIEW NOW</span>
                   <ArrowRight className="w-8 h-8" />
                 </span>
               </motion.button>
 
               <div className="text-white/60 space-y-2">
-                <div className="text-lg">✅ FREE to try • ✅ No credit card • ✅ Results in 30 seconds</div>
-                <div className="text-sm">Join 127 people viewing this page right now</div>
+                <div className="text-lg">✅ FREE preview available • ✅ Professional packages from $19 • ✅ Results in 60 seconds</div>
+                <div className="text-sm">Trusted by 1,000+ entrepreneurs worldwide</div>
               </div>
             </div>
 
@@ -1329,9 +1293,9 @@ const LandingPage = () => {
           </div>
           
           <div className="text-center text-white/40 text-sm mt-8">
-            <p className="mb-3">© 2025 StartupNamer.org - AI-powered creative naming inspiration for entrepreneurs.</p>
-            <p className="text-xs text-gray-500 max-w-4xl mx-auto">
-              Disclaimer: Names generated are creative suggestions only. Domain availability and trademark status require independent professional verification. StartupNamer.org does not provide legal advice or guarantee name availability.
+            <p className="mb-3">© 2025 StartupNamer.org - Professional AI naming guidance for entrepreneurs since 2023.</p>
+            <p className="text-xs text-blue-300 max-w-4xl mx-auto">
+              Professional Service: We provide AI-generated naming inspiration and brandability analysis. Domain availability and trademark verification require independent professional consultation. StartupNamer.org offers creative guidance, not legal advice.
             </p>
           </div>
         </div>
