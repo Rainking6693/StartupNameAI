@@ -18,13 +18,13 @@ function executeCommand(command, args = []) {
   return new Promise((resolve, reject) => {
     console.log(`🔧 Running: ${command} ${args.join(' ')}`);
     
-    const process = spawn(command, args, {
+    const childProcess = spawn(command, args, {
       stdio: 'inherit',
       shell: true,
       env: { ...process.env, NETLIFY_AUTH_TOKEN: 'nfp_HAbpW9gHdsm43hq4yKt1qB8uoJB9uYKaef27' }
     });
 
-    process.on('close', (code) => {
+    childProcess.on('close', (code) => {
       if (code === 0) {
         console.log(`✅ Command completed successfully\n`);
         resolve();
@@ -34,7 +34,7 @@ function executeCommand(command, args = []) {
       }
     });
 
-    process.on('error', (error) => {
+    childProcess.on('error', (error) => {
       console.log(`❌ Command error: ${error.message}\n`);
       resolve(); // Continue with other commands
     });
