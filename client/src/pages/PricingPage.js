@@ -1,452 +1,331 @@
-import {
-  ArrowRight,
-  Star,
-  Check,
-  Crown,
-  Globe,
-  Rocket,
-  Shield,
-  TrendingUp,
-  X,
-  Zap
-} from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import paymentService from '../services/paymentService';
+import { motion } from 'framer-motion';
+import { 
+  CheckCircle, 
+  Star, 
+  Crown, 
+  Shield, 
+  Award,
+  Zap,
+  ArrowRight
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const PricingPage = () => {
-  const [isAnnual, setIsAnnual] = useState(false);
-  const [searchParams] = useSearchParams();
-  const [showAnalysisPromo, setShowAnalysisPromo] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user came from analysis page
-    const source = searchParams.get('source');
-    const feature = searchParams.get('feature');
-
-    if (source === 'analysis' && feature === 'premium-analysis') {
-      setShowAnalysisPromo(true);
+  const handleGetStarted = (plan) => {
+    // Track the plan selection
+    if (window.gtag) {
+      window.gtag('event', 'click', {
+        event_category: 'Pricing',
+        event_label: `${plan} Plan Selected`
+      });
     }
-
-    // Check for payment success or cancellation
-    const sessionId = searchParams.get('session_id');
-    const cancelled = searchParams.get('cancelled');
-
-    if (sessionId) {
-      handlePaymentSuccess(sessionId);
-    } else if (cancelled) {
-      handlePaymentCancellation();
-    }
-  }, [searchParams]);
-
-  // Payment Processing Functions
-  const handlePlanSelection = async (planName, planData) => {
-    if (planName === 'Free') {
-      // Redirect to naming tool for free plan
-      navigate('/naming-tool');
-      return;
-    }
-
-    try {
-      setIsProcessing(true);
-      console.log('💳 Processing plan selection:', planName, planData);
-
-      // Map plan names to payment service plan types
-      const planTypeMap = {
-        'Pro': 'pro',
-        'Enterprise': 'enterprise'
-      };
-
-      const planType = planTypeMap[planName];
-      const billingInterval = isAnnual ? 'year' : 'month';
-
-      // Redirect to Stripe checkout
-      await paymentService.redirectToCheckout(planType, billingInterval);
-
-    } catch (error) {
-      console.error('❌ Payment processing failed:', error);
-      alert(`Payment processing failed: ${error.message}`);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handlePaymentSuccess = (sessionId) => {
-    console.log('✅ Payment successful:', sessionId);
-    paymentService.handlePaymentSuccess(sessionId);
-
-    // Show success message
-    alert('Payment successful! Your premium features are now active.');
-
-    // Redirect to naming tool
     navigate('/naming-tool');
   };
-
-  const handlePaymentCancellation = () => {
-    console.log('❌ Payment cancelled');
-    paymentService.handlePaymentCancellation();
-
-    // Show cancellation message
-    alert('Payment was cancelled. You can try again anytime.');
-  };
-
-  const plans = [
-    {
-      name: "Free",
-      description: "Perfect for exploring ideas",
-      price: 0,
-      annualPrice: 0,
-      icon: Zap,
-      color: "from-gray-500 to-gray-600",
-      popular: false,
-      features: [
-        { text: "10 name generations per month", included: true },
-        { text: "Basic brandability scoring", included: true },
-        { text: "Domain availability check", included: true },
-        { text: "5 industries supported", included: true },
-        { text: "Email support", included: true },
-        { text: "Advanced AI analysis", included: false },
-        { text: "Trademark screening", included: false },
-        { text: "Priority support", included: false },
-        { text: "Custom naming styles", included: false },
-        { text: "Export to PDF", included: false }
-      ],
-      cta: "Get Started Free",
-      ctaLink: "/naming-tool"
-    },
-    {
-      name: "Pro",
-      description: "For serious entrepreneurs",
-      price: 19,
-      annualPrice: 15,
-      icon: Crown,
-      color: "from-blue-500 to-purple-600",
-      popular: true,
-      features: [
-        { text: "100 name generations per month", included: true },
-        { text: "Advanced brandability scoring", included: true },
-        { text: "Domain availability check", included: true },
-        { text: "All industries supported", included: true },
-        { text: "Priority email support", included: true },
-        { text: "Advanced AI analysis", included: true },
-        { text: "Basic trademark screening", included: true },
-        { text: "Custom naming styles", included: true },
-        { text: "Export to PDF", included: true },
-        { text: "Name history & favorites", included: true }
-      ],
-      cta: "Start Pro Trial",
-      ctaLink: "/naming-tool"
-    },
-    {
-      name: "Enterprise",
-      description: "For teams and agencies",
-      price: 99,
-      annualPrice: 79,
-      icon: Rocket,
-      color: "from-purple-600 to-pink-600",
-      popular: false,
-      features: [
-        { text: "Unlimited name generations", included: true },
-        { text: "Premium brandability scoring", included: true },
-        { text: "Domain availability check", included: true },
-        { text: "All industries + custom", included: true },
-        { text: "24/7 priority support", included: true },
-        { text: "Advanced AI analysis", included: true },
-        { text: "Full trademark screening", included: true },
-        { text: "Custom naming styles", included: true },
-        { text: "Export to PDF & CSV", included: true },
-        { text: "Team collaboration tools", included: true }
-      ],
-      cta: "Contact Sales",
-      ctaLink: "/contact"
-    }
-  ];
-
-  const features = [
-    {
-      icon: Star,
-      title: "Advanced AI Technology",
-      description: "Powered by cutting-edge language models trained on millions of brand names and market data."
-    },
-    {
-      icon: Globe,
-      title: "Global Brand Analysis",
-      description: "Names are evaluated for international appeal and cultural sensitivity across 50+ countries."
-    },
-    {
-      icon: TrendingUp,
-      title: "Market Intelligence",
-      description: "Real-time analysis of naming trends, competitor landscape, and consumer preferences."
-    },
-    {
-      icon: Shield,
-      title: "Trademark Protection",
-      description: "Advanced screening to help avoid potential trademark conflicts and legal issues."
-    }
-  ];
-
-  const faqs = [
-    {
-      question: "How does the free plan work?",
-      answer: "Our free plan gives you 10 name generations per month with basic features. Perfect for testing our AI and exploring initial ideas for your startup."
-    },
-    {
-      question: "Can I upgrade or downgrade my plan anytime?",
-      answer: "Yes, you can change your plan at any time. Upgrades take effect immediately, and downgrades apply at the end of your current billing cycle."
-    },
-    {
-      question: "Do you offer refunds?",
-      answer: "We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, we'll provide a full refund, no questions asked."
-    },
-    {
-      question: "What's included in trademark screening?",
-      answer: "Our trademark screening checks against registered trademarks in major jurisdictions. Pro includes basic screening, Enterprise includes comprehensive global screening."
-    },
-    {
-      question: "How accurate is domain availability checking?",
-      answer: "We check domain availability in real-time across popular TLDs (.com, .net, .org, etc.). However, domains can be registered quickly, so we recommend securing your domain immediately."
-    },
-    {
-      question: "Can I use the names commercially?",
-      answer: "Yes, all names generated are free to use commercially. We don't claim ownership of the names - they're yours to use for your business."
-    }
-  ];
 
   return (
     <>
       <Helmet>
-        <title>Pricing Plans - AI Startup Name Generator | StartupNamer.org</title>
-        <meta
-          name="description"
-          content="Choose the perfect plan for your startup naming needs. Free tier available. Pro and Enterprise plans with advanced AI features and trademark screening."
-        />
-        <meta name="keywords" content="startup name generator pricing, AI naming tool cost, business name generator plans, trademark screening" />
+        <title>Pricing - Professional AI Startup Naming | StartupNamer.org</title>
+        <meta name="description" content="Professional AI startup naming packages starting at $19. Get brandable business names with trademark research and domain guidance. 30-day money-back guarantee." />
+        <meta name="keywords" content="startup naming pricing, AI name generator cost, business naming packages, professional naming service" />
         <link rel="canonical" href="https://startupnamer.org/pricing" />
-
-        {/* Open Graph */}
-        <meta property="og:title" content="Affordable AI Startup Name Generator Plans" />
-        <meta property="og:description" content="Start free, upgrade when ready. Professional naming tools for entrepreneurs and enterprises." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://startupnamer.org/pricing" />
-
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AI Startup Name Generator - Pricing Plans" />
-        <meta name="twitter:description" content="Free tier available. Pro features for serious entrepreneurs." />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-        {/* Analysis Promo Banner */}
-        {showAnalysisPromo && (
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
-            <div className="container text-center">
-              <div className="flex items-center justify-center space-x-2">
-                <Star className="w-5 h-5" />
-                <span className="font-semibold">Unlock Advanced AI Analysis!</span>
-                <span className="text-blue-200">Get detailed brandability insights, competitor analysis, and trademark screening.</span>
-              </div>
-            </div>
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+        {/* Navigation */}
+        <nav className="px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <motion.div 
+              className="flex items-center space-x-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <Star className="w-8 h-8 text-white" />
+              <span className="text-2xl font-bold text-white">StartupNamer.org</span>
+              <span className="bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold ml-2">
+                #1 AI NAMING
+              </span>
+            </motion.div>
+            
+            <motion.div 
+              className="hidden md:flex items-center space-x-6"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <button onClick={() => navigate('/')} className="text-white/80 hover:text-white transition-colors">Home</button>
+              <button onClick={() => navigate('/#features')} className="text-white/80 hover:text-white transition-colors">Features</button>
+              <button onClick={() => navigate('/#examples')} className="text-white/80 hover:text-white transition-colors">Examples</button>
+              <motion.button 
+                onClick={() => handleGetStarted('Free')}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2 rounded-full font-bold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="flex items-center space-x-2">
+                  <Zap className="w-4 h-4" />
+                  <span>START FREE</span>
+                </span>
+              </motion.button>
+            </motion.div>
           </div>
-        )}
+        </nav>
 
         {/* Hero Section */}
-        <section className="relative py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-pink-600/5"></div>
-
-          <div className="container relative">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="flex items-center justify-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Star className="w-8 h-8 text-white" />
-                </div>
-              </div>
-
-              <h1 className="text-4xl md:text-6xl font-bold text-slate-800 mb-6">
-                Simple, Transparent
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Pricing</span>
+        <section className="px-6 py-16 text-center">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+                Professional AI Startup Naming
+                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent block">
+                  Packages
+                </span>
               </h1>
-
-              <p className="text-xl text-slate-600 mb-10 leading-relaxed">
-                Start free, scale as you grow. Choose the perfect plan for your startup naming needs.
+              
+              <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
+                Choose the perfect package for your startup naming needs. All plans include our advanced AI technology and professional brandability analysis.
               </p>
 
-              {/* Annual/Monthly Toggle */}
-              <div className="flex items-center justify-center mb-10">
-                <span className={`text-sm font-medium mr-3 ${!isAnnual ? 'text-slate-800' : 'text-slate-500'}`}>
-                  Monthly
-                </span>
-                <button
-                  onClick={() => setIsAnnual(!isAnnual)}
-                  className={`relative w-14 h-7 rounded-full transition-colors duration-200 ${isAnnual ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-slate-300'
-                    }`}
-                >
-                  <span
-                    className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ${isAnnual ? 'transform translate-x-7' : ''
-                      }`}
-                  />
-                </button>
-                <span className={`text-sm font-medium ml-3 ${isAnnual ? 'text-slate-800' : 'text-slate-500'}`}>
-                  Annual
-                </span>
-                {isAnnual && (
-                  <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
-                    Save 20%
-                  </span>
-                )}
+              <div className="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-4 max-w-lg mx-auto mb-8">
+                <div className="flex items-center justify-center space-x-2 text-blue-300">
+                  <Award className="w-5 h-5" />
+                  <span className="font-bold">Trusted by 1,000+ entrepreneurs worldwide</span>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Pricing Cards */}
-        <section className="py-20">
-          <div className="container">
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {plans.map((plan, index) => (
-                <div
-                  key={plan.name}
-                  className={`relative bg-white rounded-2xl shadow-xl p-8 transform hover:scale-105 transition-all duration-300 ${plan.popular ? 'ring-2 ring-blue-500 shadow-blue-200/50' : ''
-                    }`}
+        <section className="px-6 pb-20">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Starter Package */}
+              <motion.div
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-white mb-2">Starter</h3>
+                  <div className="text-5xl font-black text-white mb-2">
+                    $19
+                  </div>
+                  <div className="text-blue-400 font-semibold">Perfect for Testing</div>
+                </div>
+                
+                <div className="space-y-4 mb-8">
+                  {[
+                    '25 AI-generated names',
+                    'Industry-specific analysis',
+                    'Basic brandability scores',
+                    'Domain strategy guidance',
+                    'Email support',
+                    'Instant results'
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={() => handleGetStarted('Starter')}
+                  className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-bold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
-                  {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-                        Most Popular
-                      </div>
-                    </div>
-                  )}
+                  <span>Get Started</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </motion.div>
 
-                  <div className="text-center mb-8">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${plan.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
-                      <plan.icon className="w-8 h-8 text-white" />
-                    </div>
-
-                    <h3 className="text-2xl font-bold text-slate-800 mb-2">{plan.name}</h3>
-                    <p className="text-slate-600 mb-4">{plan.description}</p>
-
-                    <div className="mb-6">
-                      <span className="text-4xl font-bold text-slate-800">
-                        ${isAnnual ? plan.annualPrice : plan.price}
-                      </span>
-                      {plan.price > 0 && (
-                        <span className="text-slate-500 text-sm ml-1">
-                          /month
-                        </span>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => handlePlanSelection(plan.name, plan)}
-                      disabled={isProcessing}
-                      className={`block w-full py-3 px-6 rounded-xl font-semibold text-center transition-all duration-300 ${plan.popular
-                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed'
-                        }`}
-                    >
-                      {isProcessing ? 'Processing...' : plan.cta}
-                    </button>
-                  </div>
-
-                  <ul className="space-y-4">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start">
-                        {feature.included ? (
-                          <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                        ) : (
-                          <X className="w-5 h-5 text-slate-300 mr-3 mt-0.5 flex-shrink-0" />
-                        )}
-                        <span className={`text-sm ${feature.included ? 'text-slate-700' : 'text-slate-400'
-                          }`}>
-                          {feature.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 bg-gradient-to-br from-slate-800 to-slate-900 text-white">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                Why Choose
-                <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"> StartupNamer.org</span>
-              </h2>
-              <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-                Advanced AI technology and comprehensive features to help you find the perfect startup name.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {features.map((feature, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <feature.icon className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                  <p className="text-slate-300 text-sm leading-relaxed">{feature.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ Section */}
-        <section className="py-20">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-                Everything you need to know about our pricing and features.
-              </p>
-            </div>
-
-            <div className="max-w-4xl mx-auto space-y-6">
-              {faqs.map((faq, index) => (
-                <div key={index} className="bg-white rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-lg font-bold text-slate-800 mb-3">{faq.question}</h3>
-                  <p className="text-slate-600 leading-relaxed">{faq.answer}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white">
-          <div className="container text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              Ready to Find Your Perfect Name?
-            </h2>
-            <p className="text-xl mb-10 opacity-90 max-w-2xl mx-auto">
-              Join thousands of entrepreneurs who have discovered their ideal startup name with our AI-powered generator.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/naming-tool"
-                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
+              {/* Professional Package - Most Popular */}
+              <motion.div
+                className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-2xl p-8 border-2 border-purple-400/50 relative"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                whileHover={{ scale: 1.02 }}
               >
-                <Star className="w-5 h-5 mr-2 inline" />
-                Start Free Today
-              </Link>
-              <Link
-                to="/how-it-works"
-                className="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/30 transition-all duration-300"
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-6 py-2 rounded-full font-bold text-sm flex items-center space-x-2">
+                    <Crown className="w-4 h-4" />
+                    <span>MOST POPULAR</span>
+                  </div>
+                </div>
+                
+                <div className="text-center mb-8 pt-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">Professional</h3>
+                  <div className="text-5xl font-black text-white mb-2">
+                    $39
+                  </div>
+                  <div className="text-purple-400 font-semibold">Most Popular Choice</div>
+                </div>
+                
+                <div className="space-y-4 mb-8">
+                  {[
+                    '100+ premium name options',
+                    'Enhanced brandability analysis',
+                    'Trademark conflict guidance',
+                    'Logo design suggestions',
+                    'Social media handle check',
+                    'Priority support',
+                    'Competitor analysis',
+                    'Brand strategy insights'
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={() => handleGetStarted('Professional')}
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-xl font-bold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center justify-center space-x-2"
+                >
+                  <span>Choose Professional</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </motion.div>
+
+              {/* Enterprise Package */}
+              <motion.div
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ scale: 1.02 }}
               >
-                How It Works
-                <ArrowRight className="w-5 h-5 ml-2 inline" />
-              </Link>
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
+                  <div className="text-5xl font-black text-white mb-2">
+                    $79
+                  </div>
+                  <div className="text-yellow-400 font-semibold">Complete Solution</div>
+                </div>
+                
+                <div className="space-y-4 mb-8">
+                  {[
+                    'Unlimited name generation',
+                    'Comprehensive brand strategy',
+                    'Custom logo designs',
+                    '1-on-1 naming expert call',
+                    'Legal compliance review',
+                    'Market research insights',
+                    'Brand positioning guide',
+                    'Priority phone support'
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-white/90">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={() => handleGetStarted('Enterprise')}
+                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-black py-4 rounded-xl font-bold hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 flex items-center justify-center space-x-2"
+                >
+                  <span>Go Enterprise</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </motion.div>
             </div>
+
+            {/* Guarantee Section */}
+            <motion.div
+              className="text-center mt-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-4xl mx-auto border border-white/20">
+                <div className="flex items-center justify-center space-x-4 mb-4">
+                  <Shield className="w-8 h-8 text-green-400" />
+                  <h3 className="text-2xl font-bold text-white">30-Day Money-Back Guarantee</h3>
+                </div>
+                <p className="text-white/80 text-lg mb-6">
+                  If you don't get a name you love, we'll refund every penny. No questions asked.
+                </p>
+                
+                <div className="grid md:grid-cols-3 gap-6 text-center">
+                  <div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">1,000+</div>
+                    <div className="text-white/80">Happy Customers</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-green-400 mb-2">4.8/5</div>
+                    <div className="text-white/80">Average Rating</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-purple-400 mb-2">60 Sec</div>
+                    <div className="text-white/80">Average Generation Time</div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* FAQ Section */}
+            <motion.div
+              className="mt-16"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <h2 className="text-3xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
+              <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                {[
+                  {
+                    q: "Can I upgrade my plan later?",
+                    a: "Yes! You can upgrade to any higher plan at any time. We'll credit your previous purchase toward the upgrade."
+                  },
+                  {
+                    q: "What if I don't like any of the names?",
+                    a: "We offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your purchase completely."
+                  },
+                  {
+                    q: "How quickly will I get my names?",
+                    a: "Most customers receive their AI-generated names within 60 seconds. Professional analysis is delivered instantly."
+                  },
+                  {
+                    q: "Do you check trademarks?",
+                    a: "We provide trademark conflict guidance and recommendations, but professional legal verification is required for final clearance."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                    <h4 className="font-bold text-white mb-3">{faq.q}</h4>
+                    <p className="text-white/80">{faq.a}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Final CTA */}
+            <motion.div
+              className="text-center mt-16"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <h2 className="text-3xl font-bold text-white mb-6">Ready to Find Your Perfect Startup Name?</h2>
+              <button
+                onClick={() => handleGetStarted('Free')}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-12 py-4 rounded-2xl font-bold text-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-2xl"
+              >
+                Start Free Preview Now
+              </button>
+              <p className="text-white/60 mt-4">Join 1,000+ entrepreneurs who found their perfect name</p>
+            </motion.div>
           </div>
         </section>
       </div>

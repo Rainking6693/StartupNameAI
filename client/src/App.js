@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import LandingPage from './components/LandingPage';
 import NamingTool from './components/NamingTool';
 import NameResults from './components/NameResults';
+import PricingPage from './pages/PricingPage';
 import './App.css';
 
 function App() {
@@ -31,14 +32,7 @@ function App() {
               </div>
             } />
             
-            <Route path="/pricing" element={
-              <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
-                <div className="text-center">
-                  <h1 className="text-4xl font-bold text-white mb-4">Pricing</h1>
-                  <p className="text-white/80 text-lg">Coming Soon!</p>
-                </div>
-              </div>
-            } />
+            <Route path="/pricing" element={<PricingPage />} />
             
             {/* 404 Page */}
             <Route path="*" element={
