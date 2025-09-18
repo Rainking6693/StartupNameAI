@@ -236,7 +236,7 @@ const SuccessfulTechStartupNames = () => {
       commonPatterns: ['Intelligence words', 'Technical terms', 'Human concepts'],
       avgBrandability: 8.4,
       keyInsights: 'AI companies balance technical credibility with human accessibility in their naming.',
-      namingTips: ['Balance technical and human', 'Suggest intelligence', 'Avoid sci-fi clichÃ©s', 'Consider global pronunciation']
+      namingTips: ['Balance technical and human', 'Suggest intelligence', 'Avoid sci-fi clichés', 'Consider global pronunciation']
     },
     {
       industry: 'E-commerce & Marketplaces',
@@ -271,7 +271,7 @@ const SuccessfulTechStartupNames = () => {
       description: 'How distinctive the name is in the market',
       goodExample: 'Spotify - invented but meaningful',
       badExample: 'Generic descriptive names',
-      tips: ['Check competitor names', 'Avoid industry clichÃ©s', 'Create new combinations', 'Test trademark availability']
+      tips: ['Check competitor names', 'Avoid industry clichés', 'Create new combinations', 'Test trademark availability']
     },
     {
       factor: 'Scalability',
@@ -357,7 +357,7 @@ const SuccessfulTechStartupNames = () => {
               onClick={() => navigate('/')}
               className="text-white/80 hover:text-white transition-colors"
             >
-              â Back to Home
+              ← Back to Home
             </button>
           </div>
         </header>
@@ -444,7 +444,7 @@ const SuccessfulTechStartupNames = () => {
                         <div>
                           <h3 className="text-2xl font-bold text-white">{company.name}</h3>
                           <div className="text-emerald-400 font-semibold">{company.valuation}</div>
-                          <div className="text-white/60 text-sm">{company.category} â¢ {company.founded}</div>
+                          <div className="text-white/60 text-sm">{company.category} • {company.founded}</div>
                         </div>
                       </div>
                       
@@ -554,18 +554,18 @@ const SuccessfulTechStartupNames = () => {
                     
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <h5 className="text-green-400 font-semibold mb-2 text-sm">â Pros:</h5>
+                        <h5 className="text-green-400 font-semibold mb-2 text-sm">✅ Pros:</h5>
                         <ul className="space-y-1">
                           {pattern.pros.map((pro, pidx) => (
-                            <li key={pidx} className="text-white/70 text-xs">â¢ {pro}</li>
+                            <li key={pidx} className="text-white/70 text-xs">• {pro}</li>
                           ))}
                         </ul>
                       </div>
                       <div>
-                        <h5 className="text-red-400 font-semibold mb-2 text-sm">â Cons:</h5>
+                        <h5 className="text-red-400 font-semibold mb-2 text-sm">❌ Cons:</h5>
                         <ul className="space-y-1">
                           {pattern.cons.map((con, cidx) => (
-                            <li key={cidx} className="text-white/70 text-xs">â¢ {con}</li>
+                            <li key={cidx} className="text-white/70 text-xs">• {con}</li>
                           ))}
                         </ul>
                       </div>
@@ -693,20 +693,20 @@ const SuccessfulTechStartupNames = () => {
                   
                   <div className="space-y-3">
                     <div>
-                      <div className="text-green-400 text-xs font-semibold mb-1">â Good Example:</div>
+                      <div className="text-green-400 text-xs font-semibold mb-1">✅ Good Example:</div>
                       <div className="text-white/70 text-xs">{factor.goodExample}</div>
                     </div>
                     
                     <div>
-                      <div className="text-red-400 text-xs font-semibold mb-1">â Bad Example:</div>
+                      <div className="text-red-400 text-xs font-semibold mb-1">❌ Bad Example:</div>
                       <div className="text-white/70 text-xs">{factor.badExample}</div>
                     </div>
                     
                     <div>
-                      <div className="text-blue-400 text-xs font-semibold mb-2">ð¡ Tips:</div>
+                      <div className="text-blue-400 text-xs font-semibold mb-2">💡 Tips:</div>
                       <ul className="space-y-1">
                         {factor.tips.map((tip, tidx) => (
-                          <li key={tidx} className="text-white/60 text-xs">â¢ {tip}</li>
+                          <li key={tidx} className="text-white/60 text-xs">• {tip}</li>
                         ))}
                       </ul>
                     </div>
@@ -750,7 +750,7 @@ const SuccessfulTechStartupNames = () => {
               </motion.button>
               
               <div className="text-white/60 mt-6">
-                <div className="text-lg">â Apply proven patterns â¢ â Brandability scoring â¢ â Success-driven AI</div>
+                <div className="text-lg">✅ Apply proven patterns • ✅ Brandability scoring • ✅ Success-driven AI</div>
               </div>
             </motion.div>
           </div>

@@ -4,6 +4,24 @@ const { defineConfig, devices } = require('@playwright/test');
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
+const useRealApi = !!process.env.USE_REAL_API;
+const apiCommand = useRealApi ? 'cd server && npm run dev' : 'cd server && node mock-server.js';
+const webServers = [
+  {
+    command: apiCommand,
+    port: 5000,
+    reuseExistingServer: !process.env.CI,
+  }
+];
+
+if (process.env.SKIP_CLIENT !== '1') {
+  webServers.push({
+    command: 'npm run dev:client',
+    port: 3000,
+    reuseExistingServer: !process.env.CI,
+  });
+}
+
 module.exports = defineConfig({
   testDir: './tests',
   timeout: 30000,
@@ -64,16 +82,5 @@ module.exports = defineConfig({
       dependencies: ['api-tests']
     }
   ],
-  webServer: [
-    {
-      command: 'cd server && npm run dev',
-      port: 5000,
-      reuseExistingServer: !process.env.CI
-    },
-    {
-      command: 'npm run dev:client',
-      port: 3000,
-      reuseExistingServer: !process.env.CI
-    }
-  ]
+  webServer: webServers
 });

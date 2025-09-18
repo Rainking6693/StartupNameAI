@@ -347,7 +347,7 @@ const AiVsHumanNaming = () => {
               onClick={() => navigate('/')}
               className="text-white/80 hover:text-white transition-colors"
             >
-              â Back to Home
+              ← Back to Home
             </button>
           </div>
         </header>
@@ -554,7 +554,7 @@ const AiVsHumanNaming = () => {
                           <span className="text-red-400 font-semibold">Common Issues:</span>
                           <ul className="mt-2 space-y-1">
                             {scenario.humanApproach.issues.map((issue, iidx) => (
-                              <li key={iidx} className="text-red-300 text-sm">â¢ {issue}</li>
+                              <li key={iidx} className="text-red-300 text-sm">• {issue}</li>
                             ))}
                           </ul>
                         </div>
@@ -603,7 +603,7 @@ const AiVsHumanNaming = () => {
                           <span className="text-green-400 font-semibold">Key Benefits:</span>
                           <ul className="mt-2 space-y-1">
                             {scenario.aiApproach.benefits.map((benefit, bidx) => (
-                              <li key={bidx} className="text-green-300 text-sm">â¢ {benefit}</li>
+                              <li key={bidx} className="text-green-300 text-sm">• {benefit}</li>
                             ))}
                           </ul>
                         </div>
@@ -809,7 +809,7 @@ const AiVsHumanNaming = () => {
               </motion.button>
               
               <div className="text-white/60 mt-6">
-                <div className="text-lg">â 87% success rate â¢ â 30-second results â¢ â Data-driven approach</div>
+                <div className="text-lg">✅ 87% success rate • ✅ 30-second results • ✅ Data-driven approach</div>
               </div>
             </motion.div>
           </div>

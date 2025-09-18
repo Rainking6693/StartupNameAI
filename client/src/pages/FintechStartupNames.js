@@ -77,7 +77,7 @@ const FintechStartupNames = () => {
       company: 'PayVault',
       funding: '$25M Series B',
       quote: 'PayVault immediately conveyed security and payments expertise. Our enterprise clients trust the name before they even see our product.',
-      avatar: 'ð¨âð¼',
+      avatar: '👨‍💼',
       industry: 'Payment Processing'
     },
     {
@@ -85,7 +85,7 @@ const FintechStartupNames = () => {
       company: 'LendFlow',
       funding: '$18M Series A',
       quote: 'LendFlow perfectly captured our streamlined lending process. The name helped us close our first enterprise deal within 3 months.',
-      avatar: 'ð©âð¼',
+      avatar: '👩‍💼',
       industry: 'Digital Lending'
     },
     {
@@ -93,7 +93,7 @@ const FintechStartupNames = () => {
       company: 'TradeSync',
       funding: '$42M Series C',
       quote: 'TradeSync resonated with both retail and institutional traders. The brandability score of 9.2 proved accurate in our market success.',
-      avatar: 'ð¨âð»',
+      avatar: '👨‍💻',
       industry: 'Trading Platform'
     }
   ];
@@ -144,7 +144,7 @@ const FintechStartupNames = () => {
               onClick={() => navigate('/')}
               className="text-white/80 hover:text-white transition-colors"
             >
-              â Back to Home
+              ← Back to Home
             </button>
           </div>
         </header>
@@ -283,7 +283,7 @@ const FintechStartupNames = () => {
                   </div>
                   <p className="text-white/70 text-sm mb-4">{example.description}</p>
                   <div className="flex items-center space-x-2 text-xs">
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full">â Trust-Ready</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full">✓ Trust-Ready</span>
                     <span className="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-full">Fintech-Optimized</span>
                   </div>
                 </motion.div>
@@ -447,7 +447,7 @@ const FintechStartupNames = () => {
               </motion.button>
               
               <div className="text-white/60 mt-6">
-                <div className="text-lg">â Free to try â¢ â 250+ trusted options â¢ â Financial-grade names</div>
+                <div className="text-lg">✅ Free to try • ✅ 250+ trusted options • ✅ Financial-grade names</div>
               </div>
             </motion.div>
           </div>

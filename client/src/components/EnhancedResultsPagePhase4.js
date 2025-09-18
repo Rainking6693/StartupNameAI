@@ -58,14 +58,14 @@ const EnhancedResultsPagePhase4 = () => {
 
   const loadSessionData = async () => {
     try {
-      console.log('ð Loading Phase 4 enhanced session data:', sessionId);
+      console.log('📋 Loading Phase 4 enhanced session data:', sessionId);
       
       // Try backend first, then localStorage fallback
       const response = await apiServicePhase3.getSessionWithFallback(sessionId);
       
       if (response.success) {
         setSessionData(response.data);
-        console.log('â Loaded enhanced session data:', response.data);
+        console.log('✅ Loaded enhanced session data:', response.data);
         
         // Check if user has premium access
         if (response.data.packageConfig || response.data.isPremium) {
@@ -76,7 +76,7 @@ const EnhancedResultsPagePhase4 = () => {
         setError('Session not found. Please generate names again.');
       }
     } catch (error) {
-      console.error('â Failed to load session data:', error);
+      console.error('❌ Failed to load session data:', error);
       setError('Failed to load results. Please try again.');
     }
   };
@@ -120,7 +120,7 @@ const EnhancedResultsPagePhase4 = () => {
     setExportFormat(format);
     
     try {
-      console.log(`ð Exporting results as ${format}...`);
+      console.log(`📄 Exporting results as ${format}...`);
       
       const exportData = {
         sessionId,
@@ -134,14 +134,14 @@ const EnhancedResultsPagePhase4 = () => {
       // For now, we'll simulate the export process
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      console.log('â Export completed:', format);
+      console.log('✅ Export completed:', format);
       
       // Trigger download (simulated)
       const filename = `startup-names-${sessionId}.${format}`;
-      console.log(`ð¥ Download triggered: ${filename}`);
+      console.log(`📥 Download triggered: ${filename}`);
       
     } catch (error) {
-      console.error('â Export failed:', error);
+      console.error('❌ Export failed:', error);
       setError(`Failed to export as ${format}. Please try again.`);
     } finally {
       setIsExporting(false);
@@ -385,7 +385,7 @@ const EnhancedResultsPagePhase4 = () => {
                 onClick={() => setError('')}
                 className="ml-auto text-red-400 hover:text-red-200"
               >
-                Ã
+                ×
               </button>
             </motion.div>
           </div>

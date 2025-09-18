@@ -218,7 +218,7 @@ const StartupNamingGuide = () => {
                 </p>
                 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 my-8">
-                  <h4 className="font-bold text-blue-800 mb-2">ð¡ Pro Tip: The Mere Exposure Effect</h4>
+                  <h4 className="font-bold text-blue-800 mb-2">💡 Pro Tip: The Mere Exposure Effect</h4>
                   <p className="text-blue-700">
                     People develop preferences for things they're familiar with. This is why consistent use of your startup name across all touchpoints is crucial for building brand recognition and trust.
                   </p>

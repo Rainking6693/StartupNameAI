@@ -50,7 +50,7 @@ class EnhancedAINameGenerator {
 
   generateIntelligentNames(input) {
     const { industry, keywords, style, description } = input;
-    console.log('ð§  Generating intelligent names for:', { industry, keywords, style });
+    console.log('🧠 Generating intelligent names for:', { industry, keywords, style });
     
     // Generate names using multiple sophisticated techniques
     const techniques = [
@@ -66,11 +66,11 @@ class EnhancedAINameGenerator {
     
     // Combine all generated names
     const allNames = techniques.flat();
-    console.log('ð¯ Generated', allNames.length, 'total names before filtering');
+    console.log('🎯 Generated', allNames.length, 'total names before filtering');
     
     // Apply intelligent filtering
     const filteredNames = this.applyIntelligentFiltering(allNames, input);
-    console.log('â¨ Filtered to', filteredNames.length, 'high-quality names');
+    console.log('✨ Filtered to', filteredNames.length, 'high-quality names');
     
     // Rank by quality and return top 50
     const rankedNames = this.rankByQuality(filteredNames, input);

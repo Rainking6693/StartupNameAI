@@ -35,22 +35,22 @@ const EnhancedNamingToolPhase3 = () => {
 
   // Industry options
   const industries = [
-    { id: 'tech', name: 'Technology', icon: 'ð»', desc: 'SaaS, apps, software platforms' },
-    { id: 'health', name: 'Healthcare', icon: 'ð¥', desc: 'Medical, wellness, fitness' },
-    { id: 'fintech', name: 'FinTech', icon: 'ð³', desc: 'Banking, payments, crypto' },
-    { id: 'ecommerce', name: 'E-commerce', icon: 'ð', desc: 'Online retail, marketplaces' },
-    { id: 'education', name: 'Education', icon: 'ð', desc: 'EdTech, learning, training' },
-    { id: 'food', name: 'Food & Beverage', icon: 'ð½ï¸', desc: 'Restaurants, delivery, food tech' },
-    { id: 'travel', name: 'Travel', icon: 'âï¸', desc: 'Tourism, booking, hospitality' },
-    { id: 'ai', name: 'Artificial Intelligence', icon: 'ð¤', desc: 'AI, machine learning, automation' }
+    { id: 'tech', name: 'Technology', icon: '💻', desc: 'SaaS, apps, software platforms' },
+    { id: 'health', name: 'Healthcare', icon: '🏥', desc: 'Medical, wellness, fitness' },
+    { id: 'fintech', name: 'FinTech', icon: '💳', desc: 'Banking, payments, crypto' },
+    { id: 'ecommerce', name: 'E-commerce', icon: '🛒', desc: 'Online retail, marketplaces' },
+    { id: 'education', name: 'Education', icon: '🎓', desc: 'EdTech, learning, training' },
+    { id: 'food', name: 'Food & Beverage', icon: '🍽️', desc: 'Restaurants, delivery, food tech' },
+    { id: 'travel', name: 'Travel', icon: '✈️', desc: 'Tourism, booking, hospitality' },
+    { id: 'ai', name: 'Artificial Intelligence', icon: '🤖', desc: 'AI, machine learning, automation' }
   ];
 
   // Style preferences
   const styles = [
-    { id: 'modern', name: 'Modern', icon: 'â¡', desc: 'Clean, tech-forward, innovative' },
-    { id: 'classic', name: 'Classic', icon: 'ðï¸', desc: 'Timeless, established, trustworthy' },
-    { id: 'creative', name: 'Creative', icon: 'ð¨', desc: 'Unique, artistic, memorable' },
-    { id: 'professional', name: 'Professional', icon: 'ð¼', desc: 'Corporate, enterprise-ready' }
+    { id: 'modern', name: 'Modern', icon: '⚡', desc: 'Clean, tech-forward, innovative' },
+    { id: 'classic', name: 'Classic', icon: '🏛️', desc: 'Timeless, established, trustworthy' },
+    { id: 'creative', name: 'Creative', icon: '🎨', desc: 'Unique, artistic, memorable' },
+    { id: 'professional', name: 'Professional', icon: '💼', desc: 'Corporate, enterprise-ready' }
   ];
 
   const handleNext = () => {
@@ -93,12 +93,12 @@ const EnhancedNamingToolPhase3 = () => {
   };
 
   const handleGenerate = async () => {
-    console.log('ð PHASE 3 GENERATE - Starting backend API integration...');
+    console.log('🚀 PHASE 3 GENERATE - Starting backend API integration...');
     setIsLoading(true);
     setError('');
     
     try {
-      console.log('ð Form data to process:', formData);
+      console.log('📊 Form data to process:', formData);
       
       // Validate form data
       if (!formData.industry || !formData.style || formData.keywords.length === 0) {
@@ -106,7 +106,7 @@ const EnhancedNamingToolPhase3 = () => {
       }
       
       // Use Phase 2 backend API for name generation
-      console.log('ð Connecting to Phase 2 backend API...');
+      console.log('🔗 Connecting to Phase 2 backend API...');
       
       const response = await apiService.generateNames({
         keywords: formData.keywords,
@@ -116,7 +116,7 @@ const EnhancedNamingToolPhase3 = () => {
         description: formData.description
       });
       
-      console.log('â Backend API response:', response);
+      console.log('✅ Backend API response:', response);
       
       if (!response.success || !response.names || response.names.length === 0) {
         throw new Error('Failed to generate names from backend API');
@@ -135,12 +135,12 @@ const EnhancedNamingToolPhase3 = () => {
         phase3Enhanced: true
       };
       
-      console.log('ð¾ Saving Phase 3 session data:', sessionId, sessionData);
+      console.log('💾 Saving Phase 3 session data:', sessionId, sessionData);
       
       // Store in localStorage with error handling
       try {
         localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));
-        console.log('â Phase 3 session data saved to localStorage');
+        console.log('✅ Phase 3 session data saved to localStorage');
         
         // Verify the data was saved
         const savedData = localStorage.getItem(`naming_session_${sessionId}`);
@@ -149,17 +149,17 @@ const EnhancedNamingToolPhase3 = () => {
         }
         
       } catch (storageError) {
-        console.error('â Failed to save to localStorage:', storageError);
+        console.error('❌ Failed to save to localStorage:', storageError);
         // Continue anyway - results page can handle missing data
       }
 
-      console.log('ð§­ Navigating to results with backend data:', `/results/${sessionId}`);
+      console.log('🧭 Navigating to results with backend data:', `/results/${sessionId}`);
       
       // Navigate to results page
       navigate(`/results/${sessionId}`, { replace: true });
 
     } catch (error) {
-      console.error('â Phase 3 name generation failed:', error);
+      console.error('❌ Phase 3 name generation failed:', error);
       setError(error.message || 'Failed to generate names. Please try again.');
       setIsLoading(false);
     }
@@ -272,7 +272,7 @@ const EnhancedNamingToolPhase3 = () => {
             onClick={() => navigate('/')}
             className="text-white/80 hover:text-white transition-colors"
           >
-            â Back to Home
+            ← Back to Home
           </button>
         </div>
       </div>
@@ -314,7 +314,7 @@ const EnhancedNamingToolPhase3 = () => {
                 onClick={() => setError('')}
                 className="ml-auto text-red-400 hover:text-red-200"
               >
-                Ã
+                ×
               </button>
             </motion.div>
           </div>
@@ -664,7 +664,7 @@ const KeywordInput = ({ keywords, onAdd, onRemove, maxKeywords = 5 }) => {
               onClick={() => onRemove(keyword)}
               className="text-purple-300/70 hover:text-purple-300 transition-colors font-bold"
             >
-              Ã
+              ×
             </button>
           </motion.div>
         ))}

@@ -291,7 +291,7 @@ const UltimateStartupNamingGuide = () => {
               onClick={() => navigate('/')}
               className="text-white/80 hover:text-white transition-colors"
             >
-              â Back to Home
+              ← Back to Home
             </button>
           </div>
         </header>
@@ -523,15 +523,15 @@ const UltimateStartupNamingGuide = () => {
                 >
                   <div className="grid md:grid-cols-3 gap-6">
                     <div>
-                      <h3 className="text-lg font-bold text-red-400 mb-2">â {mistake.mistake}</h3>
+                      <h3 className="text-lg font-bold text-red-400 mb-2">❌ {mistake.mistake}</h3>
                       <div className="text-red-300 text-sm font-semibold">{mistake.impact}</div>
                     </div>
                     <div>
-                      <h4 className="text-green-400 font-semibold mb-2">â Solution:</h4>
+                      <h4 className="text-green-400 font-semibold mb-2">✅ Solution:</h4>
                       <p className="text-white/80 text-sm">{mistake.solution}</p>
                     </div>
                     <div>
-                      <h4 className="text-blue-400 font-semibold mb-2">ð¡ Example:</h4>
+                      <h4 className="text-blue-400 font-semibold mb-2">💡 Example:</h4>
                       <p className="text-white/70 text-sm">{mistake.example}</p>
                     </div>
                   </div>
@@ -635,7 +635,7 @@ const UltimateStartupNamingGuide = () => {
               </motion.button>
               
               <div className="text-white/60 mt-6">
-                <div className="text-lg">â Apply all 7 frameworks â¢ â Industry-specific optimization â¢ â Instant results</div>
+                <div className="text-lg">✅ Apply all 7 frameworks • ✅ Industry-specific optimization • ✅ Instant results</div>
               </div>
             </motion.div>
           </div>

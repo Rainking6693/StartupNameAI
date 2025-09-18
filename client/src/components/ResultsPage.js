@@ -48,12 +48,12 @@ const ResultsPage = () => {
       if (data) {
         const parsed = JSON.parse(data);
         setSessionData(parsed);
-        console.log('â Loaded session data:', parsed);
+        console.log('✅ Loaded session data:', parsed);
       } else {
         setError('Session not found. Please generate names again.');
       }
     } catch (error) {
-      console.error('â Failed to load session data:', error);
+      console.error('❌ Failed to load session data:', error);
       setError('Failed to load results. Please try again.');
     }
   };
@@ -72,9 +72,9 @@ const ResultsPage = () => {
     setError('');
     
     try {
-      console.log('ð Checking domains for:', nameData.name);
+      console.log('🔍 Checking domains for:', nameData.name);
       const results = await domainService.checkDomainAvailability(nameData.name);
-      console.log('â Domain check results:', results);
+      console.log('✅ Domain check results:', results);
       
       if (results.success) {
         setDomainResults(results);
@@ -82,7 +82,7 @@ const ResultsPage = () => {
         setError(results.error || 'Failed to check domain availability');
       }
     } catch (error) {
-      console.error('â Domain check failed:', error);
+      console.error('❌ Domain check failed:', error);
       setError('Failed to check domains. Please try again.');
     } finally {
       setIsCheckingDomains(false);
@@ -94,7 +94,7 @@ const ResultsPage = () => {
     setError('');
     
     try {
-      console.log('ð Reserving domain:', domainInfo.domain);
+      console.log('🔒 Reserving domain:', domainInfo.domain);
       
       const userInfo = {
         email: userEmail || 'user@example.com', // In real app, get from form
@@ -102,7 +102,7 @@ const ResultsPage = () => {
       };
       
       const reservation = await domainService.reserveDomain(domainInfo, userInfo);
-      console.log('â Reservation result:', reservation);
+      console.log('✅ Reservation result:', reservation);
       
       if (reservation.success) {
         setReservationStatus({
@@ -117,7 +117,7 @@ const ResultsPage = () => {
         setError(reservation.error || 'Failed to reserve domain');
       }
     } catch (error) {
-      console.error('â Domain reservation failed:', error);
+      console.error('❌ Domain reservation failed:', error);
       setError('Failed to reserve domain. Please try again.');
     } finally {
       setIsReserving(false);
@@ -282,7 +282,7 @@ const ResultsPage = () => {
                 onClick={() => setError('')}
                 className="ml-auto text-red-400 hover:text-red-200"
               >
-                Ã
+                ×
               </button>
             </div>
           </div>
@@ -412,7 +412,7 @@ const ResultsPage = () => {
                   onClick={() => setDomainResults(null)}
                   className="text-white/60 hover:text-white transition-colors"
                 >
-                  Ã
+                  ×
                 </button>
               </div>
 
@@ -475,7 +475,7 @@ const ResultsPage = () => {
 
               {domainResults.recommendations && domainResults.recommendations.length > 0 && (
                 <div className="mt-6 p-4 bg-blue-500/20 rounded-xl border border-blue-500/30">
-                  <h4 className="font-bold text-white mb-3">ð¡ Recommendations:</h4>
+                  <h4 className="font-bold text-white mb-3">💡 Recommendations:</h4>
                   <div className="space-y-2">
                     {domainResults.recommendations.map((rec, index) => (
                       <div key={index} className="text-blue-200 text-sm">

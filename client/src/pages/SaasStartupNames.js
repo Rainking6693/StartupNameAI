@@ -66,7 +66,7 @@ const SaasStartupNames = () => {
       company: 'DataFlow',
       funding: '$5.2M Series A',
       quote: 'Our AI-generated name DataFlow perfectly captured our data pipeline vision. Investors immediately understood our value proposition.',
-      avatar: 'ð©âð¼',
+      avatar: '👩‍💼',
       industry: 'Data Integration'
     },
     {
@@ -74,7 +74,7 @@ const SaasStartupNames = () => {
       company: 'TeamSync',
       funding: '$3.8M Seed',
       quote: 'TeamSync was instantly memorable and available across all domains. The brandability score was 9.1 and it shows in our user adoption.',
-      avatar: 'ð¨âð»',
+      avatar: '👨‍💻',
       industry: 'Team Collaboration'
     },
     {
@@ -82,7 +82,7 @@ const SaasStartupNames = () => {
       company: 'CloudVault',
       funding: '$12M Series B',
       quote: 'CloudVault conveyed security and cloud expertise in two words. Our enterprise customers love the professional, trustworthy feel.',
-      avatar: 'ð©âð¬',
+      avatar: '👩‍🔬',
       industry: 'Cloud Security'
     }
   ];
@@ -133,7 +133,7 @@ const SaasStartupNames = () => {
               onClick={() => navigate('/')}
               className="text-white/80 hover:text-white transition-colors"
             >
-              â Back to Home
+              ← Back to Home
             </button>
           </div>
         </header>
@@ -228,7 +228,7 @@ const SaasStartupNames = () => {
                   </div>
                   <p className="text-white/70 text-sm mb-4">{example.description}</p>
                   <div className="flex items-center space-x-2 text-xs">
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full">â B2B Ready</span>
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full">✓ B2B Ready</span>
                     <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded-full">SaaS-Optimized</span>
                   </div>
                 </motion.div>
@@ -466,7 +466,7 @@ const SaasStartupNames = () => {
               </motion.button>
               
               <div className="text-white/60 mt-6">
-                <div className="text-lg">â Free to try â¢ â 300+ B2B options â¢ â Enterprise-ready names</div>
+                <div className="text-lg">✅ Free to try • ✅ 300+ B2B options • ✅ Enterprise-ready names</div>
               </div>
             </motion.div>
           </div>

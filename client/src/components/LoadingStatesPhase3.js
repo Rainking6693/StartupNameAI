@@ -242,7 +242,7 @@ export const ErrorState = ({ error, onRetry, onGoBack }) => {
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 0.5, repeat: 3 }}
           >
-            <span className="text-4xl">â ï¸</span>
+            <span className="text-4xl">⚠️</span>
           </motion.div>
         </motion.div>
         

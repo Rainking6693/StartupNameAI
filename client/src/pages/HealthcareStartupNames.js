@@ -76,7 +76,7 @@ const HealthcareStartupNames = () => {
       company: 'CareFlow',
       funding: '$15M Series A',
       quote: 'CareFlow immediately conveyed our mission to streamline patient care. Healthcare professionals trusted the name before seeing our platform.',
-      avatar: 'ð©ââï¸',
+      avatar: '👩‍⚕️',
       industry: 'Patient Management'
     },
     {
@@ -84,7 +84,7 @@ const HealthcareStartupNames = () => {
       company: 'HealthSync',
       funding: '$22M Series B',
       quote: 'HealthSync perfectly captured our data integration vision. Hospital systems understood our value proposition instantly.',
-      avatar: 'ð¨ââï¸',
+      avatar: '👨‍⚕️',
       industry: 'Healthcare Data'
     },
     {
@@ -92,7 +92,7 @@ const HealthcareStartupNames = () => {
       company: 'MindBridge',
       funding: '$8M Seed',
       quote: 'MindBridge resonated with both patients and therapists. The name helped us establish trust in the sensitive mental health space.',
-      avatar: 'ð©âð¬',
+      avatar: '👩‍🔬',
       industry: 'Mental Health'
     }
   ];
@@ -150,7 +150,7 @@ const HealthcareStartupNames = () => {
               onClick={() => navigate('/')}
               className="text-white/80 hover:text-white transition-colors"
             >
-              â Back to Home
+              ← Back to Home
             </button>
           </div>
         </header>
@@ -289,7 +289,7 @@ const HealthcareStartupNames = () => {
                   </div>
                   <p className="text-white/70 text-sm mb-4">{example.description}</p>
                   <div className="flex items-center space-x-2 text-xs">
-                    <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded-full">â HIPAA Ready</span>
+                    <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded-full">✓ HIPAA Ready</span>
                     <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">Medical-Grade</span>
                   </div>
                 </motion.div>
@@ -491,7 +491,7 @@ const HealthcareStartupNames = () => {
               </motion.button>
               
               <div className="text-white/60 mt-6">
-                <div className="text-lg">â Free to try â¢ â 200+ trusted options â¢ â HIPAA-compliant ready</div>
+                <div className="text-lg">✅ Free to try • ✅ 200+ trusted options • ✅ HIPAA-compliant ready</div>
               </div>
             </motion.div>
           </div>

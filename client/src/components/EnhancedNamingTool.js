@@ -50,56 +50,56 @@ const EnhancedNamingTool = () => {
     { 
       id: 'tech', 
       name: 'Technology', 
-      icon: 'ð»', 
+      icon: '💻', 
       desc: 'SaaS, apps, software platforms',
       aiInsights: 'AI optimized for tech naming patterns'
     },
     { 
       id: 'health', 
       name: 'Healthcare', 
-      icon: 'ð¥', 
+      icon: '🏥', 
       desc: 'Medical, wellness, fitness',
       aiInsights: 'Trust-focused naming algorithms'
     },
     { 
       id: 'fintech', 
       name: 'FinTech', 
-      icon: 'ð³', 
+      icon: '💳', 
       desc: 'Banking, payments, crypto',
       aiInsights: 'Security-oriented name generation'
     },
     { 
       id: 'ecommerce', 
       name: 'E-commerce', 
-      icon: 'ð', 
+      icon: '🛒', 
       desc: 'Online retail, marketplaces',
       aiInsights: 'Conversion-optimized naming'
     },
     { 
       id: 'education', 
       name: 'Education', 
-      icon: 'ð', 
+      icon: '🎓', 
       desc: 'EdTech, learning, training',
       aiInsights: 'Authority-building name patterns'
     },
     { 
       id: 'food', 
       name: 'Food & Beverage', 
-      icon: 'ð½ï¸', 
+      icon: '🍽️', 
       desc: 'Restaurants, delivery, food tech',
       aiInsights: 'Appetite-appealing linguistics'
     },
     { 
       id: 'travel', 
       name: 'Travel', 
-      icon: 'âï¸', 
+      icon: '✈️', 
       desc: 'Tourism, booking, hospitality',
       aiInsights: 'Adventure-inspiring names'
     },
     { 
       id: 'other', 
       name: 'Other', 
-      icon: 'ð¯', 
+      icon: '🎯', 
       desc: 'Tell us more about your industry',
       aiInsights: 'Custom AI analysis'
     }
@@ -110,28 +110,28 @@ const EnhancedNamingTool = () => {
     { 
       id: 'modern', 
       name: 'Modern', 
-      icon: 'â¡', 
+      icon: '⚡', 
       desc: 'Clean, tech-forward, innovative',
       psychology: 'Appeals to early adopters and tech-savvy users'
     },
     { 
       id: 'classic', 
       name: 'Classic', 
-      icon: 'ðï¸', 
+      icon: '🏛️', 
       desc: 'Timeless, established, trustworthy',
       psychology: 'Builds trust with traditional audiences'
     },
     { 
       id: 'creative', 
       name: 'Creative', 
-      icon: 'ð¨', 
+      icon: '🎨', 
       desc: 'Unique, artistic, memorable',
       psychology: 'Attracts creative and artistic demographics'
     },
     { 
       id: 'professional', 
       name: 'Professional', 
-      icon: 'ð¼', 
+      icon: '💼', 
       desc: 'Corporate, enterprise-ready',
       psychology: 'Resonates with B2B and enterprise clients'
     }
@@ -191,12 +191,12 @@ const EnhancedNamingTool = () => {
 
   // Brand personality options
   const brandPersonalities = [
-    { id: 'innovative', name: 'Innovative', icon: 'ð' },
-    { id: 'trustworthy', name: 'Trustworthy', icon: 'ð¡ï¸' },
-    { id: 'friendly', name: 'Friendly', icon: 'ð' },
-    { id: 'premium', name: 'Premium', icon: 'ð' },
-    { id: 'playful', name: 'Playful', icon: 'ð®' },
-    { id: 'sophisticated', name: 'Sophisticated', icon: 'ð©' }
+    { id: 'innovative', name: 'Innovative', icon: '🚀' },
+    { id: 'trustworthy', name: 'Trustworthy', icon: '🛡️' },
+    { id: 'friendly', name: 'Friendly', icon: '😊' },
+    { id: 'premium', name: 'Premium', icon: '👑' },
+    { id: 'playful', name: 'Playful', icon: '🎮' },
+    { id: 'sophisticated', name: 'Sophisticated', icon: '🎩' }
   ];
 
   const handleNext = () => {
@@ -242,14 +242,14 @@ const EnhancedNamingTool = () => {
   };
 
   const handleGenerate = async () => {
-    console.log('ð ENHANCED GENERATE CLICKED - Starting AI process...');
+    console.log('🚀 ENHANCED GENERATE CLICKED - Starting AI process...');
     setIsLoading(true);
     setError('');
     
     try {
-      console.log('ð Enhanced form data:', formData);
-      console.log('âï¸ Advanced options:', advancedOptions);
-      console.log('ð¦ Selected package:', selectedPackage);
+      console.log('📊 Enhanced form data:', formData);
+      console.log('⚙️ Advanced options:', advancedOptions);
+      console.log('📦 Selected package:', selectedPackage);
       
       // Validate form data
       if (!formData.industry || !formData.style || formData.keywords.length === 0) {
@@ -260,7 +260,7 @@ const EnhancedNamingTool = () => {
       const packageConfig = packages[selectedPackage];
       const nameCount = packageConfig.names;
       
-      console.log('ð Generating', nameCount, 'names with enhanced AI...');
+      console.log('🔄 Generating', nameCount, 'names with enhanced AI...');
       
       // Generate names using enhanced AI service
       const result = await enhancedAI.generateBatchNames(formData, {
@@ -270,7 +270,7 @@ const EnhancedNamingTool = () => {
         industryDeepDive: advancedOptions.industryDeepDive
       });
       
-      console.log('â Enhanced AI generation complete:', result);
+      console.log('✅ Enhanced AI generation complete:', result);
       
       if (!result || !result.names || result.names.length === 0) {
         throw new Error('No names were generated by enhanced AI');
@@ -289,12 +289,12 @@ const EnhancedNamingTool = () => {
         enhanced: true
       };
       
-      console.log('ð¾ Saving enhanced session data:', sessionId);
+      console.log('💾 Saving enhanced session data:', sessionId);
       
       // Store in localStorage with enhanced data
       try {
         localStorage.setItem(`naming_session_${sessionId}`, JSON.stringify(sessionData));
-        console.log('â Enhanced session data saved');
+        console.log('✅ Enhanced session data saved');
         
         // Verify the data was saved
         const savedData = localStorage.getItem(`naming_session_${sessionId}`);
@@ -303,17 +303,17 @@ const EnhancedNamingTool = () => {
         }
         
       } catch (storageError) {
-        console.error('â Failed to save to localStorage:', storageError);
+        console.error('❌ Failed to save to localStorage:', storageError);
         // Continue anyway - results page can handle missing data
       }
 
-      console.log('ð§­ Navigating to enhanced results:', `/results/${sessionId}`);
+      console.log('🧭 Navigating to enhanced results:', `/results/${sessionId}`);
       
       // Navigate to results
       navigate(`/results/${sessionId}`, { replace: true });
 
     } catch (error) {
-      console.error('â Enhanced name generation failed:', error);
+      console.error('❌ Enhanced name generation failed:', error);
       setError(error.message || 'Failed to generate names. Please try again.');
       setIsLoading(false);
     }
@@ -397,7 +397,7 @@ const EnhancedNamingTool = () => {
             onClick={() => navigate('/')}
             className="text-white/80 hover:text-white transition-colors"
           >
-            â Back to Home
+            ← Back to Home
           </button>
         </div>
       </div>
@@ -431,7 +431,7 @@ const EnhancedNamingTool = () => {
                 onClick={() => setError('')}
                 className="ml-auto text-red-400 hover:text-red-200"
               >
-                Ã
+                ×
               </button>
             </div>
           </div>
@@ -951,7 +951,7 @@ const KeywordInput = ({ keywords, onAdd, onRemove, maxKeywords = 8 }) => {
               onClick={() => onRemove(keyword)}
               className="text-yellow-300/70 hover:text-yellow-300 transition-colors font-bold"
             >
-              Ã
+              ×
             </button>
           </motion.div>
         ))}
