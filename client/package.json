@@ -46,7 +46,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "node build-optimized.js",
     "build:original": "react-scripts build",
     "build:netlify": "node build-netlify.js",
     "test": "react-scripts test",
