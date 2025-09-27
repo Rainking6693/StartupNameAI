@@ -41,13 +41,12 @@
     "postcss": "8.5.6",
     "prettier": "3.0.0",
     "puppeteer": "21.5.2",
-    "react-snap": "1.23.0",
     "tailwindcss": "3.4.17"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "node build-optimized.js",
-    "build:original": "react-scripts build",
+    "build": "react-scripts build",
+    "build:optimized": "node build-optimized.js",
     "build:netlify": "node build-netlify.js",
     "test": "react-scripts test",
     "test:ci": "react-scripts test --coverage --watchAll=false",
@@ -72,56 +71,6 @@
   "resolutions": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
-  },
-  "reactSnap": {
-    "inlineCss": true,
-    "minifyHtml": {
-      "collapseWhitespace": false,
-      "removeComments": false
-    },
-    "crawlFrom": "/",
-    "include": [
-      "/",
-      "/naming-tool",
-      "/features",
-      "/pricing",
-      "/how-it-works",
-      "/examples",
-      "/faq",
-      "/contact",
-      "/blog",
-      "/privacy-policy",
-      "/terms-of-service"
-    ],
-    "skipThirdPartyRequests": true,
-    "cacheAjaxRequests": false,
-    "waitFor": 3000,
-    "fixWebpackChunksIssue": "CRA2",
-    "removeBlobs": true,
-    "fixInsertRule": true,
-    "preconnectThirdParty": false,
-    "removeStyleTags": false,
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-web-security",
-      "--disable-features=VizDisplayCompositor"
-    ],
-    "puppeteerExecutablePath": null,
-    "puppeteerLaunchOptions": {
-      "headless": true,
-      "args": [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-web-security",
-        "--disable-features=VizDisplayCompositor",
-        "--disable-gpu",
-        "--disable-dev-shm-usage",
-        "--disable-extensions",
-        "--no-zygote",
-        "--single-process"
-      ]
-    }
   },
   "eslintConfig": {
     "extends": [

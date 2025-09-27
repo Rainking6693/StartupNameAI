@@ -1,9 +1,12 @@
 [build]
   base = "client"
-  command = "npm ci --only=production --no-audit --no-fund && npm run build"
-  publish = "build"
+  command = "npm ci && npm run build"
+  publish = "client/build"
   ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- client/"
   environment = { NODE_VERSION = "18", NPM_VERSION = "9.8.1", NODE_OPTIONS = "--max-old-space-size=2048", NODE_ENV = "production", GENERATE_SOURCEMAP = "false" }
+
+[functions]
+  directory = "client/netlify/functions"
 
 # Security Headers for Enterprise-Grade Protection
 [[headers]]

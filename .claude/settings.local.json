@@ -34,7 +34,9 @@
       "Bash(npm install:*)",
       "Bash(npm info:*)",
       "Bash(git add:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm ci:*)"
     ],
     "deny": [],
     "ask": []
