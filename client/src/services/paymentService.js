@@ -7,12 +7,14 @@ class PaymentService {
   constructor() {
     this.stripe = null;
     this.stripePromise = null;
-    this.apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+    // Use Netlify Functions for API calls
+    this.apiBaseUrl = window.location.origin;
     this.publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder';
 
     this.initializeStripe();
 
-    console.log('💳 Frontend Payment Service initialized');
+    console.log('💳 Frontend Payment Service initialized with Netlify Functions');
+    console.log('🌐 API Base URL:', this.apiBaseUrl);
   }
 
   // Initialize Stripe
@@ -132,8 +134,11 @@ class PaymentService {
       const successUrl = `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
       const cancelUrl = `${window.location.origin}/pricing?cancelled=true`;
 
-      const result = await this.apiRequest('/create-checkout-session', {
+      const response = await fetch(`${this.apiBaseUrl}/.netlify/functions/create-checkout`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           planType,
           billingInterval,
@@ -142,6 +147,13 @@ class PaymentService {
           customerEmail
         })
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
 
       console.log('✅ Checkout session created:', result);
       return result;
@@ -159,14 +171,25 @@ class PaymentService {
         throw new Error('Stripe not initialized');
       }
 
-      const { sessionId } = await this.createCheckoutSession(planType, billingInterval, customerEmail);
+      const result = await this.createCheckoutSession(planType, billingInterval, customerEmail);
+      
+      // Use the URL directly from Stripe checkout session
+      if (result.url) {
+        window.location.href = result.url;
+        return;
+      }
+      
+      // Fallback to sessionId method
+      if (result.sessionId) {
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: result.sessionId
+        });
 
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: sessionId
-      });
-
-      if (error) {
-        throw error;
+        if (error) {
+          throw error;
+        }
+      } else {
+        throw new Error('No checkout URL or session ID received');
       }
 
       console.log('✅ Redirected to checkout');

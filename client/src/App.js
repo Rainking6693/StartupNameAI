@@ -5,6 +5,7 @@ import LandingPage from './components/LandingPage';
 import NamingTool from './components/NamingTool';
 import NameResults from './components/NameResults';
 import PricingPage from './pages/PricingPage';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import './App.css';
 
 function App() {
@@ -33,6 +34,9 @@ function App() {
             } />
             
             <Route path="/pricing" element={<PricingPage />} />
+            
+            {/* Payment Success */}
+            <Route path="/payment-success" element={<PaymentSuccessPage />} />
             
             {/* 404 Page */}
             <Route path="*" element={

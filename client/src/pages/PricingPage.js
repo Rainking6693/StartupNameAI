@@ -11,11 +11,13 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import paymentService from '../services/paymentService';
+import toast, { Toaster } from 'react-hot-toast';
 
 const PricingPage = () => {
   const navigate = useNavigate();
 
-  const handleGetStarted = (plan) => {
+  const handleGetStarted = async (plan) => {
     // Track the plan selection
     if (window.gtag) {
       window.gtag('event', 'click', {
@@ -23,7 +25,21 @@ const PricingPage = () => {
         event_label: `${plan} Plan Selected`
       });
     }
-    navigate('/naming-tool');
+    
+    // Handle free plan
+    if (plan === 'Free') {
+      navigate('/naming-tool');
+      return;
+    }
+    
+    // Handle paid plans
+    try {
+      toast.loading('Redirecting to checkout...');
+      await paymentService.redirectToCheckout(plan.toLowerCase(), 'month');
+    } catch (error) {
+      console.error('Payment redirect failed:', error);
+      toast.error('Failed to start checkout. Please try again.');
+    }
   };
 
   return (
@@ -140,10 +156,10 @@ const PricingPage = () => {
                 </div>
                 
                 <button
-                  onClick={() => handleGetStarted('Starter')}
+                  onClick={() => handleGetStarted('starter')}
                   className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-bold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
-                  <span>Get Started</span>
+                  <span>Start Now - $19</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </motion.div>
@@ -329,6 +345,7 @@ const PricingPage = () => {
           </div>
         </section>
       </div>
+      <Toaster position="top-center" />
     </>
   );
 };

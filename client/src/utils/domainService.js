@@ -1,1 +1,269 @@
-// Domain Checking and Reservation Service\n// Handles domain availability checking and reservation functionality\n\nclass DomainService {\n  constructor() {\n    this.apiEndpoint = process.env.REACT_APP_DOMAIN_API || 'https://api.startupnamer.org';\n    this.reservationEndpoint = process.env.REACT_APP_RESERVATION_API || 'https://reservations.startupnamer.org';\n  }\n\n  // Check domain availability for a startup name\n  async checkDomainAvailability(name) {\n    try {\n      // Simulate domain checking (replace with real API)\n      const domains = this.generateDomainOptions(name);\n      const results = await Promise.all(\n        domains.map(domain => this.checkSingleDomain(domain))\n      );\n      \n      return {\n        success: true,\n        name: name,\n        domains: results,\n        recommendations: this.getDomainRecommendations(results)\n      };\n    } catch (error) {\n      console.error('Domain check failed:', error);\n      return {\n        success: false,\n        error: 'Failed to check domain availability',\n        name: name,\n        domains: []\n      };\n    }\n  }\n\n  // Generate domain options for a name\n  generateDomainOptions(name) {\n    const cleanName = name.toLowerCase().replace(/[^a-z0-9]/g, '');\n    const extensions = ['.com', '.io', '.co', '.net', '.org', '.ai', '.app', '.tech'];\n    \n    return extensions.map(ext => ({\n      domain: cleanName + ext,\n      extension: ext,\n      priority: this.getExtensionPriority(ext)\n    }));\n  }\n\n  // Check availability of a single domain\n  async checkSingleDomain(domainInfo) {\n    // Simulate API call with realistic response times\n    await this.delay(200 + Math.random() * 300);\n    \n    // Simulate availability (in real implementation, call domain API)\n    const isAvailable = Math.random() > 0.6; // 40% availability rate\n    const price = this.getDomainPrice(domainInfo.extension, isAvailable);\n    \n    return {\n      ...domainInfo,\n      available: isAvailable,\n      price: price,\n      registrar: isAvailable ? this.getRecommendedRegistrar(domainInfo.extension) : null,\n      alternatives: !isAvailable ? this.generateAlternatives(domainInfo.domain) : []\n    };\n  }\n\n  // Get domain price based on extension and availability\n  getDomainPrice(extension, isAvailable) {\n    if (!isAvailable) return null;\n    \n    const basePrices = {\n      '.com': 12.99,\n      '.io': 39.99,\n      '.co': 24.99,\n      '.net': 14.99,\n      '.org': 13.99,\n      '.ai': 89.99,\n      '.app': 19.99,\n      '.tech': 29.99\n    };\n    \n    return basePrices[extension] || 15.99;\n  }\n\n  // Get extension priority for sorting\n  getExtensionPriority(extension) {\n    const priorities = {\n      '.com': 1,\n      '.io': 2,\n      '.co': 3,\n      '.ai': 4,\n      '.app': 5,\n      '.tech': 6,\n      '.net': 7,\n      '.org': 8\n    };\n    \n    return priorities[extension] || 9;\n  }\n\n  // Get recommended registrar for extension\n  getRecommendedRegistrar(extension) {\n    const registrars = {\n      '.com': 'Namecheap',\n      '.io': 'Porkbun',\n      '.co': 'GoDaddy',\n      '.ai': 'Name.com',\n      '.app': 'Google Domains',\n      '.tech': 'Radix',\n      '.net': 'Namecheap',\n      '.org': 'Namecheap'\n    };\n    \n    return registrars[extension] || 'Namecheap';\n  }\n\n  // Generate alternative domain suggestions\n  generateAlternatives(domain) {\n    const baseName = domain.split('.')[0];\n    const extension = '.' + domain.split('.')[1];\n    \n    const alternatives = [\n      `get${baseName}${extension}`,\n      `${baseName}app${extension}`,\n      `${baseName}hq${extension}`,\n      `${baseName}pro${extension}`,\n      `try${baseName}${extension}`\n    ];\n    \n    return alternatives.slice(0, 3);\n  }\n\n  // Get domain recommendations based on results\n  getDomainRecommendations(results) {\n    const available = results.filter(r => r.available);\n    const recommendations = [];\n    \n    // Recommend .com if available\n    const comDomain = available.find(r => r.extension === '.com');\n    if (comDomain) {\n      recommendations.push({\n        type: 'primary',\n        domain: comDomain.domain,\n        reason: '.com is the most trusted and memorable extension',\n        priority: 'high'\n      });\n    }\n    \n    // Recommend .io for tech companies\n    const ioDomain = available.find(r => r.extension === '.io');\n    if (ioDomain && !comDomain) {\n      recommendations.push({\n        type: 'tech',\n        domain: ioDomain.domain,\n        reason: '.io is popular among tech startups and developers',\n        priority: 'medium'\n      });\n    }\n    \n    // Recommend .ai for AI companies\n    const aiDomain = available.find(r => r.extension === '.ai');\n    if (aiDomain) {\n      recommendations.push({\n        type: 'ai',\n        domain: aiDomain.domain,\n        reason: '.ai perfectly matches AI and tech companies',\n        priority: 'medium'\n      });\n    }\n    \n    return recommendations;\n  }\n\n  // Reserve a domain\n  async reserveDomain(domainInfo, userInfo) {\n    try {\n      // Validate input\n      if (!domainInfo || !domainInfo.domain) {\n        throw new Error('Domain information is required');\n      }\n      \n      if (!userInfo || !userInfo.email) {\n        throw new Error('User email is required for reservation');\n      }\n      \n      // Simulate reservation API call\n      await this.delay(1000 + Math.random() * 1000);\n      \n      // Generate reservation ID\n      const reservationId = this.generateReservationId();\n      \n      // Simulate success/failure (95% success rate)\n      const success = Math.random() > 0.05;\n      \n      if (!success) {\n        throw new Error('Domain reservation failed. Please try again.');\n      }\n      \n      return {\n        success: true,\n        reservationId: reservationId,\n        domain: domainInfo.domain,\n        price: domainInfo.price,\n        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours\n        paymentUrl: this.generatePaymentUrl(reservationId),\n        instructions: this.getReservationInstructions(domainInfo)\n      };\n    } catch (error) {\n      console.error('Domain reservation failed:', error);\n      return {\n        success: false,\n        error: error.message || 'Failed to reserve domain',\n        domain: domainInfo?.domain\n      };\n    }\n  }\n\n  // Generate unique reservation ID\n  generateReservationId() {\n    const timestamp = Date.now().toString(36);\n    const random = Math.random().toString(36).substring(2, 8);\n    return `RES-${timestamp}-${random}`.toUpperCase();\n  }\n\n  // Generate payment URL for reservation\n  generatePaymentUrl(reservationId) {\n    return `${this.reservationEndpoint}/payment/${reservationId}`;\n  }\n\n  // Get reservation instructions\n  getReservationInstructions(domainInfo) {\n    return {\n      steps: [\n        'Complete payment within 24 hours to secure your domain',\n        `Visit ${domainInfo.registrar || 'your preferred registrar'} to complete registration`,\n        'Use the provided reservation code during checkout',\n        'Domain will be registered in your name upon payment confirmation'\n      ],\n      notes: [\n        'Reservation expires in 24 hours if payment is not completed',\n        'Domain prices may vary by registrar',\n        'Additional fees may apply for privacy protection and other services'\n      ]\n    };\n  }\n\n  // Check reservation status\n  async checkReservationStatus(reservationId) {\n    try {\n      await this.delay(300);\n      \n      // Simulate status check\n      const statuses = ['pending', 'confirmed', 'expired', 'cancelled'];\n      const status = statuses[Math.floor(Math.random() * statuses.length)];\n      \n      return {\n        success: true,\n        reservationId: reservationId,\n        status: status,\n        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),\n        paymentRequired: status === 'pending'\n      };\n    } catch (error) {\n      return {\n        success: false,\n        error: 'Failed to check reservation status'\n      };\n    }\n  }\n\n  // Get domain suggestions for unavailable names\n  async getDomainSuggestions(name) {\n    try {\n      const suggestions = [];\n      const baseName = name.toLowerCase().replace(/[^a-z0-9]/g, '');\n      \n      // Add prefixes\n      const prefixes = ['get', 'try', 'use', 'my', 'the'];\n      prefixes.forEach(prefix => {\n        suggestions.push(`${prefix}${baseName}.com`);\n      });\n      \n      // Add suffixes\n      const suffixes = ['app', 'hq', 'pro', 'hub', 'lab'];\n      suffixes.forEach(suffix => {\n        suggestions.push(`${baseName}${suffix}.com`);\n      });\n      \n      // Alternative extensions\n      const altExtensions = ['.io', '.co', '.ai', '.app'];\n      altExtensions.forEach(ext => {\n        suggestions.push(`${baseName}${ext}`);\n      });\n      \n      // Check availability of suggestions\n      const results = await Promise.all(\n        suggestions.slice(0, 10).map(async (domain) => {\n          const available = Math.random() > 0.3; // 70% availability for suggestions\n          return {\n            domain: domain,\n            available: available,\n            price: available ? this.getDomainPrice('.' + domain.split('.')[1], true) : null\n          };\n        })\n      );\n      \n      return {\n        success: true,\n        suggestions: results.filter(r => r.available).slice(0, 5)\n      };\n    } catch (error) {\n      return {\n        success: false,\n        error: 'Failed to generate domain suggestions'\n      };\n    }\n  }\n\n  // Utility function for delays\n  delay(ms) {\n    return new Promise(resolve => setTimeout(resolve, ms));\n  }\n\n  // Validate domain name format\n  isValidDomainName(domain) {\n    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\\.[a-zA-Z]{2,}$/;\n    return domainRegex.test(domain);\n  }\n\n  // Get domain registration tips\n  getDomainTips() {\n    return {\n      choosing: [\n        'Keep it short and memorable (under 15 characters)',\n        'Avoid hyphens and numbers when possible',\n        'Choose .com if available for maximum trust',\n        'Consider your target audience and industry',\n        'Make sure it\\'s easy to spell and pronounce'\n      ],\n      registration: [\n        'Register for multiple years to save money',\n        'Enable domain privacy protection',\n        'Set up auto-renewal to avoid losing your domain',\n        'Consider registering common variations',\n        'Keep your contact information up to date'\n      ],\n      alternatives: [\n        'If .com is taken, consider .io for tech companies',\n        '.ai domains work well for AI/tech startups',\n        '.co is a good alternative to .com',\n        'Country-specific domains can work for local businesses',\n        'New extensions like .app or .tech can be brandable'\n      ]\n    };\n  }\n}\n\n// Export the domain service\nexport default DomainService;\n\n// Example usage:\n// const domainService = new DomainService();\n// const availability = await domainService.checkDomainAvailability('MyStartup');\n// const reservation = await domainService.reserveDomain(domainInfo, userInfo);"
+// Domain Checking and Guidance Service
+// Provides honest domain recommendations without false availability claims
+
+class DomainService {
+  constructor() {
+    this.apiEndpoint = process.env.REACT_APP_DOMAIN_API || 'https://api.startupnamer.org';
+    this.reservationEndpoint = process.env.REACT_APP_RESERVATION_API || 'https://reservations.startupnamer.org';
+  }
+
+  // Check domain availability for a startup name
+  async checkDomainAvailability(name) {
+    try {
+      // Generate domain options and provide guidance
+      const domains = this.generateDomainOptions(name);
+      const results = await Promise.all(
+        domains.map(domain => this.provideDomainGuidance(domain))
+      );
+      
+      return {
+        success: true,
+        name: name,
+        domains: results,
+        recommendations: this.getDomainRecommendations(results),
+        disclaimer: 'Domain availability must be verified with a domain registrar. We provide guidance only.'
+      };
+    } catch (error) {
+      console.error('Domain guidance generation failed:', error);
+      return {
+        success: false,
+        error: 'Failed to generate domain guidance',
+        name: name,
+        domains: []
+      };
+    }
+  }
+
+  // Generate domain options for a name
+  generateDomainOptions(name) {
+    const cleanName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const extensions = ['.com', '.io', '.co', '.net', '.org', '.ai', '.app', '.tech'];
+    
+    return extensions.map(ext => ({
+      domain: cleanName + ext,
+      extension: ext,
+      priority: this.getExtensionPriority(ext)
+    }));
+  }
+
+  // Provide honest domain guidance (no false availability claims)
+  async provideDomainGuidance(domainInfo) {
+    // Add realistic delay for UX
+    await this.delay(200 + Math.random() * 300);
+    
+    // HONEST: We provide guidance, not availability checks
+    const registrar = this.getRecommendedRegistrar(domainInfo.extension);
+    const estimatedPrice = this.getDomainPrice(domainInfo.extension);
+    const registrarUrl = this.getRegistrarUrl(domainInfo.domain, registrar);
+    
+    return {
+      ...domainInfo,
+      status: 'check-required',
+      message: `Check availability at ${registrar}`,
+      estimatedPrice: estimatedPrice,
+      registrar: registrar,
+      registrarUrl: registrarUrl,
+      checkNowButton: true,
+      disclaimer: 'Click to check real-time availability',
+      alternatives: this.generateAlternatives(domainInfo.domain),
+      guidance: this.getDomainGuidance(domainInfo.extension)
+    };
+  }
+
+  // Get domain price estimates
+  getDomainPrice(extension) {
+    const basePrices = {
+      '.com': '~$12-15/year',
+      '.io': '~$35-50/year',
+      '.co': '~$20-30/year',
+      '.net': '~$12-18/year',
+      '.org': '~$12-15/year',
+      '.ai': '~$80-120/year',
+      '.app': '~$15-25/year',
+      '.tech': '~$25-40/year'
+    };
+    
+    return basePrices[extension] || '~$15-30/year';
+  }
+
+  // Get extension priority for sorting
+  getExtensionPriority(extension) {
+    const priorities = {
+      '.com': 1,
+      '.io': 2,
+      '.co': 3,
+      '.ai': 4,
+      '.app': 5,
+      '.tech': 6,
+      '.net': 7,
+      '.org': 8
+    };
+    
+    return priorities[extension] || 9;
+  }
+
+  // Get recommended registrar for extension
+  getRecommendedRegistrar(extension) {
+    const registrars = {
+      '.com': 'Namecheap',
+      '.io': 'Porkbun',
+      '.co': 'GoDaddy',
+      '.ai': 'Name.com',
+      '.app': 'Google Domains',
+      '.tech': 'Radix',
+      '.net': 'Namecheap',
+      '.org': 'Namecheap'
+    };
+    
+    return registrars[extension] || 'Namecheap';
+  }
+
+  // Get registrar URL for checking domain
+  getRegistrarUrl(domain, registrar) {
+    const domainName = domain.split('.')[0];
+    
+    const registrarUrls = {
+      'Namecheap': `https://www.namecheap.com/domains/registration/results/?domain=${domainName}`,
+      'Porkbun': `https://porkbun.com/checkout/search?q=${domainName}`,
+      'GoDaddy': `https://www.godaddy.com/domainsearch/find?domainToCheck=${domainName}`,
+      'Name.com': `https://www.name.com/domain/search/${domainName}`,
+      'Google Domains': `https://domains.google.com/registrar/search?searchTerm=${domainName}`,
+      'Radix': `https://radix.website/search/?domain=${domainName}`
+    };
+    
+    return registrarUrls[registrar] || `https://www.namecheap.com/domains/registration/results/?domain=${domainName}`;
+  }
+
+  // Generate alternative domain suggestions
+  generateAlternatives(domain) {
+    const baseName = domain.split('.')[0];
+    const extension = '.' + domain.split('.')[1];
+    
+    const alternatives = [
+      `get${baseName}${extension}`,
+      `${baseName}app${extension}`,
+      `${baseName}hq${extension}`,
+      `${baseName}pro${extension}`,
+      `try${baseName}${extension}`
+    ];
+    
+    return alternatives.slice(0, 3).map(alt => ({
+      domain: alt,
+      action: 'Check availability',
+      registrarUrl: this.getRegistrarUrl(alt, 'Namecheap')
+    }));
+  }
+
+  // Get domain-specific guidance
+  getDomainGuidance(extension) {
+    const guidance = {
+      '.com': 'Most trusted and memorable. Check this first.',
+      '.io': 'Popular with tech startups. Premium pricing.',
+      '.co': 'Good .com alternative. Growing acceptance.',
+      '.ai': 'Perfect for AI companies. Premium pricing (~$100/year).',
+      '.app': 'Great for applications. HTTPS required.',
+      '.tech': 'Clear tech branding. Moderate pricing.',
+      '.net': 'Classic alternative. Wide acceptance.',
+      '.org': 'Best for non-profits and communities.'
+    };
+    
+    return guidance[extension] || 'Check availability and pricing.';
+  }
+
+  // Get honest domain recommendations
+  getDomainRecommendations(results) {
+    const recommendations = [];
+    
+    // Always recommend checking .com first
+    const comDomain = results.find(r => r.extension === '.com');
+    if (comDomain) {
+      recommendations.push({
+        type: 'primary',
+        domain: comDomain.domain,
+        reason: '.com is the most trusted and memorable extension',
+        priority: 'high',
+        action: 'Check Availability Now',
+        registrarUrl: comDomain.registrarUrl,
+        disclaimer: 'Most valuable if available'
+      });
+    }
+    
+    // Tech company recommendations
+    const techExtensions = ['.io', '.ai', '.app', '.tech'];
+    const techDomains = results.filter(r => techExtensions.includes(r.extension));
+    
+    techDomains.forEach(domain => {
+      recommendations.push({
+        type: 'alternative',
+        domain: domain.domain,
+        reason: domain.guidance,
+        priority: 'medium',
+        action: 'Check Availability',
+        registrarUrl: domain.registrarUrl,
+        estimatedPrice: domain.estimatedPrice
+      });
+    });
+    
+    // Add helpful guidance
+    recommendations.push({
+      type: 'tips',
+      title: 'Domain Registration Tips',
+      tips: [
+        'Check multiple registrars for best pricing',
+        'Consider registering multiple extensions',
+        'Enable privacy protection',
+        'Set up auto-renewal to avoid losing your domain',
+        'Register for 2+ years for better SEO'
+      ]
+    });
+    
+    return recommendations;
+  }
+
+  // Get domain registration tips
+  getDomainTips() {
+    return {
+      choosing: [
+        'Keep it short and memorable (under 15 characters)',
+        'Avoid hyphens and numbers when possible',
+        'Choose .com if available for maximum trust',
+        'Consider your target audience and industry',
+        'Make sure it\'s easy to spell and pronounce'
+      ],
+      registration: [
+        'Compare prices across multiple registrars',
+        'Enable domain privacy protection',
+        'Set up auto-renewal to avoid losing your domain',
+        'Consider registering common variations',
+        'Keep your contact information up to date'
+      ],
+      alternatives: [
+        'If .com is taken, consider .io for tech companies',
+        '.ai domains work well for AI/tech startups (~$100/year)',
+        '.co is a good alternative to .com',
+        '.app requires HTTPS (built-in security)',
+        'New extensions can be more brandable and available'
+      ],
+      disclaimer: 'All domain availability and pricing must be verified with registrars. Prices and availability change in real-time.'
+    };
+  }
+
+  // Utility function for delays
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // Validate domain name format
+  isValidDomainName(domain) {
+    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+    return domainRegex.test(domain);
+  }
+}
+
+// Export the domain service
+export default DomainService;
+
+// Example usage:
+// const domainService = new DomainService();
+// const guidance = await domainService.checkDomainAvailability('MyStartup');
+// User clicks registrar links to check actual availability
